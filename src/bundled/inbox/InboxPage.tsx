@@ -1,3 +1,4 @@
+import { viewerMember } from "../../features/relay/membership";
 import {
   type ReactNode,
   useCallback,
@@ -878,7 +879,7 @@ function InboxList({
         (!current.readOnly || current.viewerRole === "guest") &&
         !current.archived &&
         current.channelType === channel.channelType &&
-        !!current.members?.includes(scope.viewer) &&
+        viewerMember(current, scope.viewer) &&
         [...current.members].sort().join(":") === membership &&
         session.unread.generation() === generation &&
         session.unread
