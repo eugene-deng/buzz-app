@@ -83,7 +83,8 @@ async function fixture(
   {
     outboxStorage = { load: () => [], save() {} },
     viewer = keypair(),
-  }: { outboxStorage?: OutboxStorage; viewer?: Key } = {},
+    kind = 9,
+  }: { outboxStorage?: OutboxStorage; viewer?: Key; kind?: number } = {},
 ) {
   let role = viewerRole,
     rosterTime = 1700000000;
@@ -104,8 +105,9 @@ async function fixture(
         : agentOwner === "other"
           ? keypair()
           : undefined;
-  const original = message(
-    own ? viewer : (agent ?? peer),
+  const originalAuthor = own ? viewer : (agent ?? peer);
+  const template = message(
+    originalAuthor,
     "room",
     chatCard
       ? "[Session: Saved work](buzz://channel/source)"
@@ -128,6 +130,8 @@ async function fixture(
       ...(originalMention ? [["p", peer.pubkey]] : []),
     ],
   );
+  const original =
+    kind === 9 ? template : signed(originalAuthor, { ...template, kind });
   let agentProfile =
     agent && agentOwnerKey
       ? eventDto(
@@ -983,23 +987,41 @@ it("cancelling deletion never publishes", async () => {
   expect(h.owner.session.channels.window("room").rows).toHaveLength(1);
 });
 
-it("recovers an uncertain deletion after the row and dialog disappear", async () => {
-  const h = await fixture();
-  fireEvent.click(
-    await screen.findByRole("menuitem", { name: "Delete message" }),
-  );
-  fireEvent.click(await screen.findByRole("button", { name: "Delete" }));
-  await waitFor(() => expect(h.publications).toHaveLength(1));
-  await act(async () =>
-    h.publication(0).result.reject(new Error("Connection lost")),
-  );
-  await waitFor(() => expect(screen.queryByRole("alertdialog")).toBeNull());
-  expect(screen.queryByRole("button", { name: "Message actions" })).toBeNull();
-  fireEvent.click(screen.getByRole("button", { name: "Retry message update" }));
-  await waitFor(() => expect(h.publications).toHaveLength(2));
-  expect(h.publication(1).event.id).toBe(h.publication(0).event.id);
-  await act(async () => h.publication(1).result.resolve());
-});
+it.each([9, 45001, 45003])(
+  "recovers an uncertain deletion after the row and dialog disappear (kind %s)",
+  async (kind) => {
+    const h = await fixture(
+      true,
+      false,
+      false,
+      false,
+      false,
+      undefined,
+      false,
+      undefined,
+      "member",
+      { kind },
+    );
+    fireEvent.click(
+      await screen.findByRole("menuitem", { name: "Delete message" }),
+    );
+    fireEvent.click(await screen.findByRole("button", { name: "Delete" }));
+    await waitFor(() => expect(h.publications).toHaveLength(1));
+    await act(async () =>
+      h.publication(0).result.reject(new Error("Connection lost")),
+    );
+    await waitFor(() => expect(screen.queryByRole("alertdialog")).toBeNull());
+    expect(
+      screen.queryByRole("button", { name: "Message actions" }),
+    ).toBeNull();
+    fireEvent.click(
+      screen.getByRole("button", { name: "Retry message update" }),
+    );
+    await waitFor(() => expect(h.publications).toHaveLength(2));
+    expect(h.publication(1).event.id).toBe(h.publication(0).event.id);
+    await act(async () => h.publication(1).result.resolve());
+  },
+);
 
 it.each(["failed", "unknown"] as const)(
   "disables %s own-message deletion retry after demotion to Guest",
