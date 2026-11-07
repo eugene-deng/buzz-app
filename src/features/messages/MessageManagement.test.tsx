@@ -479,9 +479,13 @@ it("keeps the delete dialog open with Retry when deletion fails before it closes
   expect(dialog).not.toBeInTheDocument();
 });
 
-it.each(["member", "guest"] as const)(
-  "offers confirmed owner-agent deletion and retry to a joined %s",
-  async (role) => {
+it.each(
+  (["member", "guest"] as const).flatMap((role) =>
+    [9, 40002, 45001, 45003].map((kind) => ({ role, kind })),
+  ),
+)(
+  "offers owner-agent deletion only for chat kinds ($role, kind $kind)",
+  async ({ role, kind }) => {
     const h = await fixture(
       false,
       false,
@@ -492,16 +496,29 @@ it.each(["member", "guest"] as const)(
       false,
       undefined,
       role,
+      { kind },
     );
-    const item = await screen.findByRole("menuitem", {
-      name: "Delete message",
-    });
     await waitFor(() =>
       expect(h.owner.session.profiles.owner?.(h.original.pubkey)).toBe(
         h.owner.session.viewer,
       ),
     );
-    expect(item).toBeVisible();
+    await waitFor(() =>
+      expect(
+        screen.getByRole("menuitem", { name: /follow thread/i }),
+      ).toBeVisible(),
+    );
+    if (kind === 45001 || kind === 45003) {
+      expect(
+        screen.queryByRole("menuitem", { name: "Delete message" }),
+      ).toBeNull();
+      expect(h.publications).toHaveLength(0);
+      return;
+    }
+    const item = await screen.findByRole("menuitem", {
+      name: "Delete message",
+    });
+    await waitFor(() => expect(item).toBeVisible());
     fireEvent.click(item);
     const confirmation = await screen.findByRole("alertdialog", {
       name: "Delete message?",
@@ -992,7 +1009,7 @@ it("cancelling deletion never publishes", async () => {
 });
 
 it.each([9, 45001, 45003])(
-  "offers editing/reactions only for compatible chat rows, preserving forum deletion (kind %s)",
+  "offers edit/reaction/read actions only for chat rows, preserving forum deletion (kind %s)",
   async (kind) => {
     const h = await fixture(
       true,
@@ -1020,6 +1037,9 @@ it.each([9, 45001, 45003])(
     expect(!!screen.queryByRole("menuitem", { name: "Edit message" })).toBe(
       kind === 9,
     );
+    expect(!!screen.queryByRole("menuitem", { name: /^Mark (un)?read$/ })).toBe(
+      kind === 9,
+    );
     expect(lastEditableMessage(session, rows)?.id).toBe(
       kind === 9 ? row.id : undefined,
     );
@@ -1029,6 +1049,22 @@ it.each([9, 45001, 45003])(
         screen.queryByRole("menuitem", { name: "Delete message" }),
       ).toBeNull(),
     );
+    const keys: { unread: boolean; remove: boolean }[] = [];
+    const KeyActions = () => {
+      const actions = useMessageKeyActions(session);
+      assert.exists(actions);
+      keys.push({
+        unread: actions.canMarkUnread(row),
+        remove: actions.canDelete(row),
+      });
+      return null;
+    };
+    render(
+      <MessageManagement session={session} channelId="room">
+        <KeyActions />
+      </MessageManagement>,
+    );
+    expect(keys.at(-1)).toEqual({ unread: kind === 9, remove: true });
     const none: never[] = [];
     const tools: Contribution<ComposerTool>[] = [
       {
