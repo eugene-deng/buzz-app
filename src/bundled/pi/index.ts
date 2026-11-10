@@ -10,6 +10,7 @@ import { repositoriesContext } from "../../features/communities/repositories";
 import type { PluginModule } from "../../plugins/api";
 import { PiLogoIcon } from "../../shared/design-system/icons";
 import { type Config, config, DEFAULT_CONFIG, PiRuntime } from "./runtime";
+import { explainTurn } from "./setup";
 import { createTabs } from "./tabs";
 import { readModelSettings } from "../../features/agents/model-settings";
 
@@ -50,6 +51,12 @@ export const apply: PluginModule["apply"] = (ctx) => {
     (key, listener) => agents.relay(key)?.subscribe(listener) ?? (() => {}),
     agents.storage,
   );
+  // Failed turns' reports link to where Pi's provider keys are saved.
+  runtime.explain = (error) =>
+    explainTurn(
+      error,
+      `buzz://settings?section=agents&provider=${encodeURIComponent(typeKey)}`,
+    );
   ctx.agentProtection.registerModels({
     label: "Pi",
     models: async () => {
