@@ -1576,6 +1576,12 @@ available rather than silently discarding it.
   out, and **Sign out** once it is signed in; signing out also signs out the
   Codex CLI on this computer, which shares the sign-in. API key and keyring
   sign-ins can't run them.
+  Goose and Pi provider settings show **Remove key** beside a key saved there:
+  Goose deletes it from its secret store, Pi from `~/.pi/agent/auth.json`,
+  which the `pi` command shares. Keys set in the environment, and Pi sign-ins
+  made with the `pi` command, are not removed there. Signing out of Buzz with
+  **Also erase everything else Buzz stores on this device** also deletes the
+  saved Claude and TypeSafe keys.
 - **Agent gateway access**: in builds that route local agents through a gateway,
   a refused sign-in or access check stops the turn and asks you to sign in again.
   Later turns stay blocked while access is rechecked, even if that check stalls

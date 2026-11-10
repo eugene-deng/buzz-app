@@ -435,6 +435,7 @@ export function createTabs({
       </Button>
     );
     const saveKey = async () => {
+      if (saving || removing) return;
       setSaving(true);
       setError("");
       try {
@@ -494,7 +495,7 @@ export function createTabs({
             type="password"
             autoComplete="off"
             value={key}
-            disabled={saving}
+            disabled={saving || removing}
             onValueChange={setKey}
             onKeyDown={(event) => {
               if (event.key !== "Enter" || event.nativeEvent.isComposing)
