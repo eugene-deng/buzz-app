@@ -1,6 +1,6 @@
 import { readApiFailure, type createApiAdmission } from "./http-admission.ts";
 import { eventDto, type RelayEvent } from "./events.ts";
-import { ReadError } from "./errors.ts";
+import { httpReadError, ReadError } from "./errors.ts";
 import { record } from "./read-state-model.ts";
 
 export const MEMBERSHIP_TYPES = [
@@ -38,9 +38,13 @@ export type MembershipSnapshot = Readonly<{
   snapshotId: string;
 }>;
 
-/** Explicit lack of support starts another authority generation, never an empty list. */
+/** Explicit lack of support starts another authority generation, never an empty list.
+ * `capability` comes from the best-effort recheck: present means support is still
+ * advertised (possibly by a mixed fleet); absent means gone/newer or recheck failed.
+ * Consumers should back off before probing again in either case.
+ */
 export class MembershipUnsupported extends Error {
-  constructor() {
+  constructor(readonly capability?: MembershipCapability) {
     super("Compact membership unsupported for this generation");
   }
 }
@@ -94,6 +98,19 @@ export const membershipFilter = (
   { kinds: [39008], "#p": [viewer], "#t": [...types], membership_snapshot: 1 },
 ];
 
+/** Sorted, unique, known types are the canonical compact-membership scope. */
+export function validMembershipTypes(types: readonly string[]): boolean {
+  return (
+    types.length > 0 &&
+    types.length <= MEMBERSHIP_TYPES.length &&
+    !types.some(
+      (type, index) =>
+        !(MEMBERSHIP_TYPES as readonly string[]).includes(type) ||
+        (index > 0 && (types[index - 1] ?? "") >= type),
+    )
+  );
+}
+
 /** Exact disabled response only. Authentication, other 404s and outages never select legacy. */
 export function membershipDisabled(status: number, raw: unknown): boolean {
   return (
@@ -137,7 +154,7 @@ export async function parseMembershipSnapshot(
   signal?: AbortSignal,
 ): Promise<MembershipSnapshot> {
   signal?.throwIfAborted();
-  if (Array.isArray(raw)) throw new MembershipUnsupported();
+  if (Array.isArray(raw)) throw invalid();
   const { origin, viewer, requestId, capability } = binding;
   const types = binding.types ?? MEMBERSHIP_TYPES;
   const url = new URL(origin);
@@ -150,17 +167,10 @@ export async function parseMembershipSnapshot(
     !["http:", "https:"].includes(url.protocol) ||
     !key.test(viewer) ||
     !key.test(requestId) ||
-    !types.length ||
-    types.some(
-      (type, i) =>
-        !MEMBERSHIP_TYPES.includes(type as (typeof MEMBERSHIP_TYPES)[number]) ||
-        (i > 0 && type <= (types[i - 1] ?? "")),
-    ) ||
+    !validMembershipTypes(types) ||
     !record(raw) ||
     !exact(raw, ["membership_snapshot", "event"]) ||
-    raw.membership_snapshot !== 1 ||
-    new TextEncoder().encode(JSON.stringify(raw)).byteLength >
-      capability.max_response_bytes
+    raw.membership_snapshot !== 1
   )
     throw invalid();
   const event = eventDto(raw.event);
@@ -299,16 +309,7 @@ export async function readMembershipSnapshot(
   types: readonly string[],
   signal: AbortSignal,
 ): Promise<MembershipSnapshot> {
-  if (
-    !types.length ||
-    types.length > MEMBERSHIP_TYPES.length ||
-    types.some(
-      (type, index) =>
-        !(MEMBERSHIP_TYPES as readonly string[]).includes(type) ||
-        (index > 0 && (types[index - 1] ?? "") >= type),
-    )
-  )
-    throw invalid();
+  if (!validMembershipTypes(types)) throw invalid();
   const discover = async () => {
     const info = await host.info(signal);
     signal.throwIfAborted();
@@ -336,20 +337,20 @@ export async function readMembershipSnapshot(
   } catch {
     throw invalid();
   }
-  if (result.status === 404 || Array.isArray(raw)) {
-    await discover();
-    if (
-      membershipDisabled(result.status, raw) ||
-      (result.status === 200 && Array.isArray(raw))
-    )
-      throw new MembershipUnsupported();
+  if (
+    membershipDisabled(result.status, raw) ||
+    (result.status === 200 && Array.isArray(raw))
+  ) {
+    let refreshed: MembershipCapability | undefined;
+    try {
+      refreshed = await discover();
+    } catch {
+      signal.throwIfAborted();
+      // Explicit unsupported behavior still selects legacy if the recheck fails.
+    }
+    throw new MembershipUnsupported(refreshed);
   }
-  if (result.status !== 200)
-    throw new ReadError(
-      "unavailable",
-      `Membership request failed (${result.status})`,
-      result.status,
-    );
+  if (result.status !== 200) throw httpReadError(result.status);
   return parseMembershipSnapshot(
     raw,
     {

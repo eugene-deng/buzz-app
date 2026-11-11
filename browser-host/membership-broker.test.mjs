@@ -221,14 +221,25 @@ it("preserves exact unsupported 404s, rejects other failures and cancels an in-f
   const before = h.discoveries.length;
   await expect(h.read()).rejects.toBeInstanceOf(MembershipUnsupported);
   expect(h.discoveries.length - before).toBe(2);
-  for (const [status, error] of [
-    [404, "no community is configured for this host"],
-    [403, "denied"],
-    [503, "unavailable"],
+  for (const [status, error, kind] of [
+    [404, "no community is configured for this host", "unavailable"],
+    [401, "denied", "denied"],
+    [403, "denied", "denied"],
+    [502, "unavailable", "unavailable"],
+    [503, "unavailable", "unavailable"],
   ]) {
     h.respond = () => Response.json({ error }, { status });
-    await expect(h.read()).rejects.not.toBeInstanceOf(MembershipUnsupported);
+    await expect(h.read()).rejects.toMatchObject({ kind, status });
   }
+  h.respond = () =>
+    new Response("<html>Forbidden</html>", {
+      status: 403,
+      headers: { "Content-Type": "text/html" },
+    });
+  await expect(h.read()).rejects.toMatchObject({
+    kind: "unavailable",
+    status: 502,
+  });
   const started = gate(),
     stopped = gate();
   h.respond = (call) =>

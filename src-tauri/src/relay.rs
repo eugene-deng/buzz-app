@@ -1085,26 +1085,39 @@ async fn send(
 /// (buzz-relay `api/mod.rs` `admit_member`, and its media routes'
 /// `membership_denial`), and the sign-in this device no longer has. Anything
 /// else stays with its caller.
+#[cfg(test)]
 fn community_refusal(result: &Result<RelayResponse>) -> Option<&'static str> {
+    community_refusal_with(result, |response| response)
+}
+
+fn community_refusal_with<T>(
+    result: &Result<T>,
+    response: impl Fn(&T) -> &RelayResponse,
+) -> Option<&'static str> {
     match result {
-        Ok(response) => match (response.status, response.body.as_str()) {
-            (401, "authentication required\n") | (403, "evidence rejected\n") => Some("sign-in"),
-            (403, "authorization denied\n") => Some("access"),
-            (403, body) => serde_json::from_str::<serde_json::Value>(body)
-                .ok()
-                .filter(|body| {
-                    matches!(
-                        body["error"].as_str(),
-                        Some(
-                            "relay_membership_required"
-                                | "relay membership required"
-                                | "blocked: you are banned from this community"
+        Ok(value) => {
+            let response = response(value);
+            match (response.status, response.body.as_str()) {
+                (401, "authentication required\n") | (403, "evidence rejected\n") => {
+                    Some("sign-in")
+                }
+                (403, "authorization denied\n") => Some("access"),
+                (403, body) => serde_json::from_str::<serde_json::Value>(body)
+                    .ok()
+                    .filter(|body| {
+                        matches!(
+                            body["error"].as_str(),
+                            Some(
+                                "relay_membership_required"
+                                    | "relay membership required"
+                                    | "blocked: you are banned from this community"
+                            )
                         )
-                    )
-                })
-                .map(|_| "access"),
-            _ => None,
-        },
+                    })
+                    .map(|_| "access"),
+                _ => None,
+            }
+        }
         Err(error) if error == SIGNED_OUT => Some("sign-in"),
         Err(_) => None,
     }
@@ -1124,7 +1137,11 @@ fn refusals() -> &'static tokio::sync::broadcast::Sender<Refusal> {
 /// Every signed relay request passes here, so a community's refusal reaches
 /// the window whichever command met it first.
 fn observe_refusal(url: &Url, result: &Result<RelayResponse>) {
-    if let Some(refusal) = community_refusal(result) {
+    observe_refusal_with(url, result, |response| response);
+}
+
+fn observe_refusal_with<T>(url: &Url, result: &Result<T>, response: impl Fn(&T) -> &RelayResponse) {
+    if let Some(refusal) = community_refusal_with(result, response) {
         let _ = refusals().send(Refusal {
             community: url.origin().ascii_serialization(),
             refusal,

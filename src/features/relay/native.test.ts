@@ -2483,6 +2483,26 @@ it("rejects swapped auth and account changes on native compact reads", async () 
   }
 });
 
+it.each([401, 403])(
+  "native compact reads preserve HTTP %i denial classification",
+  async (status) => {
+    const fixture = await compactNativeFixture();
+    try {
+      const denied = expect(fixture.read()).rejects.toMatchObject({
+        kind: "denied",
+        status,
+      });
+      await (await fixture.next()).reply({
+        status,
+        body: JSON.stringify({ error: "denied" }),
+      });
+      await denied;
+    } finally {
+      fixture.finish();
+    }
+  },
+);
+
 it("cancels native compact reads and discovers disabled capability afresh", async () => {
   const { MembershipUnsupported } = await import("./membership-snapshot");
   const fixture = await compactNativeFixture();

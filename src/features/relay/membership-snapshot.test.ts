@@ -9,6 +9,7 @@ import {
   membershipIdentity,
   membershipText,
   parseMembershipSnapshot,
+  validMembershipTypes,
   type ViewerMembership,
 } from "./membership-snapshot";
 
@@ -121,6 +122,19 @@ describe("NIP-CL compact membership authority", () => {
     ).toBe(false);
   });
 
+  test("accepts only canonical membership type scopes", () => {
+    expect(validMembershipTypes(MEMBERSHIP_TYPES)).toBe(true);
+    expect(validMembershipTypes(["dm", "system"])).toBe(true);
+    for (const types of [
+      [],
+      ["dm", "dm"],
+      ["system", "dm"],
+      ["unknown"],
+      [...MEMBERSHIP_TYPES, "dm"],
+    ])
+      expect(validMembershipTypes(types)).toBe(false);
+  });
+
   test("verifies signed empty or scoped memberships without using the event clock as freshness", async () => {
     const result = await parseMembershipSnapshot(
       signed(await payload()),
@@ -220,7 +234,7 @@ describe("NIP-CL compact membership authority", () => {
     for (const array of [[], [signed(body).event]])
       await expect(
         parseMembershipSnapshot(array, binding),
-      ).rejects.toBeInstanceOf(MembershipUnsupported);
+      ).rejects.toMatchObject({ kind: "invalid-response" });
     const small = {
       ...binding,
       capability: { ...binding.capability, max_channels: 1 },
@@ -246,14 +260,36 @@ describe("NIP-CL compact membership authority", () => {
   test("bounds actual UTF-8 response bytes before parsing", async () => {
     await expect(membershipText(new Response("éé"), 3)).rejects.toThrow();
     expect(await membershipText(new Response("éé"), 4)).toBe("éé");
-    const raw = signed(await payload());
-    await expect(
-      parseMembershipSnapshot(raw, {
-        ...binding,
-        capability: { ...binding.capability, max_response_bytes: 16 },
-      }),
-    ).rejects.toThrow();
   });
+});
+
+test("rejects a valid signed body over the descriptor wire limit", async () => {
+  const small = { ...descriptor, max_response_bytes: 16 };
+  const { readMembershipSnapshot } = await import("./membership-snapshot");
+  const host = {
+    origin: binding.origin,
+    viewer,
+    relay,
+    async info() {
+      return { self: relay, membership_snapshot: small };
+    },
+    async request() {
+      return {
+        origin: binding.origin,
+        signer_pubkey: viewer,
+        request_id: requestId,
+        status: 200,
+        body: JSON.stringify(signed(await payload())),
+      };
+    },
+  };
+  await expect(
+    readMembershipSnapshot(
+      host,
+      MEMBERSHIP_TYPES,
+      new AbortController().signal,
+    ),
+  ).rejects.toMatchObject({ kind: "invalid-response" });
 });
 
 test("refreshes capability per generation and after explicit fallback, without hiding failures", async () => {
@@ -308,7 +344,12 @@ test("refreshes capability per generation and after explicit fallback, without h
   };
   await expect(
     readMembershipSnapshot(host, MEMBERSHIP_TYPES, signal),
-  ).rejects.not.toBeInstanceOf(MembershipUnsupported);
+  ).rejects.toMatchObject({ kind: "unavailable", status: 404 });
+  expect(discoveries).toBe(7);
+  result = { ...result, status: 500, body: "[]" };
+  await expect(
+    readMembershipSnapshot(host, MEMBERSHIP_TYPES, signal),
+  ).rejects.toMatchObject({ kind: "unavailable", status: 500 });
   expect(discoveries).toBe(8);
   for (const change of [
     { signer_pubkey: relay },
@@ -328,3 +369,126 @@ test("refreshes capability per generation and after explicit fallback, without h
     ).rejects.toThrow();
   }
 });
+
+test("explicit legacy fallback survives descriptor recheck failures", async () => {
+  const { readMembershipSnapshot } = await import("./membership-snapshot");
+  for (const response of [
+    { status: 200, body: "[]" },
+    {
+      status: 404,
+      body: JSON.stringify({ error: "membership_snapshot unsupported" }),
+    },
+  ]) {
+    let discoveries = 0;
+    const host = {
+      origin: binding.origin,
+      viewer,
+      relay,
+      async info() {
+        discoveries++;
+        if (discoveries === 2) throw new Error("descriptor unavailable");
+        return { self: relay, membership_snapshot: descriptor };
+      },
+      async request() {
+        return {
+          origin: binding.origin,
+          signer_pubkey: viewer,
+          request_id: requestId,
+          ...response,
+        };
+      },
+    };
+    await expect(
+      readMembershipSnapshot(
+        host,
+        MEMBERSHIP_TYPES,
+        new AbortController().signal,
+      ),
+    ).rejects.toBeInstanceOf(MembershipUnsupported);
+    expect(discoveries).toBe(2);
+  }
+});
+
+test("explicit legacy fallback returns the refreshed capability", async () => {
+  const { readMembershipSnapshot } = await import("./membership-snapshot");
+  const refreshed = { ...descriptor, max_channels: 1024 };
+  for (const response of [
+    { status: 200, body: "[]" },
+    {
+      status: 404,
+      body: JSON.stringify({ error: "membership_snapshot unsupported" }),
+    },
+  ]) {
+    let discoveries = 0;
+    const host = {
+      origin: binding.origin,
+      viewer,
+      relay,
+      async info() {
+        discoveries++;
+        return {
+          self: relay,
+          membership_snapshot: discoveries === 1 ? descriptor : refreshed,
+        };
+      },
+      async request() {
+        return {
+          origin: binding.origin,
+          signer_pubkey: viewer,
+          request_id: requestId,
+          ...response,
+        };
+      },
+    };
+    const error = await readMembershipSnapshot(
+      host,
+      MEMBERSHIP_TYPES,
+      new AbortController().signal,
+    ).catch((error: unknown) => error);
+    expect(error).toBeInstanceOf(MembershipUnsupported);
+    expect(error).toMatchObject({ capability: refreshed });
+    expect(discoveries).toBe(2);
+  }
+});
+
+test.each([
+  { name: "200 array", status: 200, body: "[]" },
+  {
+    name: "disabled 404",
+    status: 404,
+    body: JSON.stringify({ error: "membership_snapshot unsupported" }),
+  },
+])(
+  "descriptor rechecks preserve caller cancellation for $name",
+  async ({ status, body }) => {
+    const { readMembershipSnapshot } = await import("./membership-snapshot");
+    const controller = new AbortController();
+    let discoveries = 0;
+    const host = {
+      origin: binding.origin,
+      viewer,
+      relay,
+      async info() {
+        discoveries++;
+        if (discoveries === 2) {
+          controller.abort();
+          throw new DOMException("Relay read cancelled", "AbortError");
+        }
+        return { self: relay, membership_snapshot: descriptor };
+      },
+      async request() {
+        return {
+          origin: binding.origin,
+          signer_pubkey: viewer,
+          request_id: requestId,
+          status,
+          body,
+        };
+      },
+    };
+    await expect(
+      readMembershipSnapshot(host, MEMBERSHIP_TYPES, controller.signal),
+    ).rejects.toMatchObject({ name: "AbortError" });
+    expect(discoveries).toBe(2);
+  },
+);

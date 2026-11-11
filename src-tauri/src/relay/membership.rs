@@ -44,23 +44,30 @@ async fn snapshot(
         "POST",
         "/query",
         async {
-            let viewer = host.viewer().await?;
-            let body = filter(&viewer, types)?;
-            let assertion = evidence(host, Some(fi), &url).await?;
-            let (response, identity) = send_correlated(
-                host,
-                AuthorizationContext {
-                    fi: Some(fi),
-                    assertion: assertion.as_ref(),
-                },
-                url.clone(),
-                "POST",
-                Some(body),
-                true,
-                MAX_BYTES,
-            )
-            .await?;
-            let identity = identity.ok_or("Missing request identity")?;
+            let result = async {
+                let viewer = host.viewer().await?;
+                let body = filter(&viewer, types)?;
+                let assertion = evidence(host, Some(fi), &url).await?;
+                let (response, identity) = send_correlated(
+                    host,
+                    AuthorizationContext {
+                        fi: Some(fi),
+                        assertion: assertion.as_ref(),
+                    },
+                    url.clone(),
+                    "POST",
+                    Some(body),
+                    true,
+                    MAX_BYTES,
+                )
+                .await?;
+                let identity = identity.ok_or("Missing request identity")?;
+                Ok((response, identity))
+            }
+            .await;
+            // Cancellation drops this future before it can broadcast an unfinished attempt.
+            observe_refusal_with(&url, &result, |(response, _)| response);
+            let (response, identity) = result?;
             Ok(MembershipResponse {
                 request_id: identity.request_id,
                 signer_pubkey: identity.signer_pubkey,
@@ -92,6 +99,72 @@ fn filter(viewer: &str, types: &[String]) -> Result<String> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::federated_identity::testing::{community, reply};
+
+    async fn next_refusal(
+        refused: &mut tokio::sync::broadcast::Receiver<Refusal>,
+        origin: &Url,
+    ) -> &'static str {
+        let community = origin.origin().ascii_serialization();
+        tokio::time::timeout(std::time::Duration::from_secs(5), async {
+            loop {
+                let event = refused.recv().await.unwrap();
+                if event.community == community {
+                    break event.refusal;
+                }
+            }
+        })
+        .await
+        .expect("membership snapshot did not broadcast its refusal")
+    }
+
+    #[tokio::test]
+    async fn snapshot_observes_a_community_refusal_response() {
+        let community = community(false).await;
+        let server = community.serve(vec![reply("403 Forbidden", "authorization denied\n")]);
+        let mut refused = refusals().subscribe();
+        let response = snapshot(
+            &community.host,
+            &community.fi,
+            community.origin.as_str(),
+            &["dm".into()],
+            &uuid::Uuid::new_v4().to_string(),
+        )
+        .await
+        .unwrap();
+        assert_eq!(response.status, 403);
+        server.heads().await;
+        assert_eq!(
+            next_refusal(&mut refused, &community.origin).await,
+            "access"
+        );
+    }
+
+    #[tokio::test]
+    async fn snapshot_observes_signed_out_evidence_failure() {
+        let community = community(true).await;
+        let server = community.serve(vec![reply("401 Unauthorized", "authentication required\n")]);
+        community.fi.sign_out_for_test();
+        let mut refused = refusals().subscribe();
+        let error = match snapshot(
+            &community.host,
+            &community.fi,
+            community.origin.as_str(),
+            &["dm".into()],
+            &uuid::Uuid::new_v4().to_string(),
+        )
+        .await
+        {
+            Ok(_) => panic!("signed-out compact read unexpectedly succeeded"),
+            Err(error) => error,
+        };
+        assert_eq!(error, SIGNED_OUT);
+        server.heads().await;
+        assert_eq!(
+            next_refusal(&mut refused, &community.origin).await,
+            "sign-in"
+        );
+    }
 
     #[test]
     fn filter_is_host_scoped_and_bounded() {
