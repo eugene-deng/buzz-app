@@ -54,9 +54,10 @@ import {
   REMOTE_UNATTRIBUTED,
   type ProviderConfig,
 } from "./gateway";
-import type {
-  EligibleRoute,
-  GatewayRoute,
+import {
+  fallbackNotice,
+  type EligibleRoute,
+  type GatewayRoute,
 } from "../../features/agents/gateway/route";
 import {
   VECTOR_IDENTITY,
