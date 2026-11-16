@@ -140,6 +140,7 @@ function setup({
   initial = undefined as unknown,
   mounted = [] as { id: string; y: number }[],
   initialRows = undefined as ChannelMessage[] | undefined,
+  clientHeight = 668,
 } = {}) {
   Object.assign(hooks, {
     refs: [],
@@ -220,7 +221,7 @@ function setup({
   };
   const element = {
     clientWidth: 1124,
-    clientHeight: 668,
+    clientHeight,
     scrollHeight: 3706,
     scrollTop: 2388,
     ownerDocument: Object.assign(new EventTarget(), {
@@ -594,6 +595,15 @@ it("paints an opening's history only once it is positioned, and only hides it on
   h.measureRows();
   h.gesture();
   expect(set).not.toHaveBeenCalled();
+  h.unmount();
+});
+it("presents a positioning history when focus enters it", () => {
+  // An unmeasured viewport cannot be positioned yet.
+  const h = setup({ clientHeight: 0 });
+  const remove = vi.mocked(h.element.removeAttribute);
+  expect(remove).not.toHaveBeenCalled();
+  h.focus("last");
+  expect(remove).toHaveBeenCalledWith("data-positioning");
   h.unmount();
 });
 it("persists the event target's reading position at real component cleanup, not the previous virtualizer offset", () => {

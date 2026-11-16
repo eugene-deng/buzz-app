@@ -2110,6 +2110,8 @@ function Timeline({
         savePosition();
       }}
       onFocus={(event) => {
+        // A focused row must be visible, whether a reveal or Tab put it there.
+        presentPositioned();
         setFocusedActivityId(
           event.target.closest<HTMLElement>("[data-activity-group-id]")?.dataset
             .activityGroupId,
