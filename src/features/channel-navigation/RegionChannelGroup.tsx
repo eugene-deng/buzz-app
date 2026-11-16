@@ -19,6 +19,7 @@ import { IconButton } from "../../shared/design-system/ui/IconButton";
 import { MenuItem } from "../../shared/design-system/ui/Menu";
 import { PencilSimpleIcon } from "../../shared/design-system/icons";
 import type { ChannelSummary } from "../relay/contracts";
+import { viewerMember } from "../relay/membership";
 import type { RelaySession } from "../relay/session";
 import type { SoloChannelGroupProps } from "./solo-navigation-contract";
 import { RegionDestinationContext } from "./SoloDestination";
@@ -63,7 +64,7 @@ export function RegionChannelGroup(props: SoloChannelGroupProps) {
       context.session.viewer &&
       item &&
       (item.channelType === "stream" || item.channelType === "forum") &&
-      item.members?.includes(context.session.viewer)
+      viewerMember(item, context.session.viewer)
     );
   if (!context || !eligible(channel) || !channel) return null;
   const { session, navigator, scope, active } = context;
