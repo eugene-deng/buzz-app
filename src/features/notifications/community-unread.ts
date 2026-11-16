@@ -2,6 +2,7 @@ import type { Communities } from "../communities/service";
 import { communityDestination } from "../communities/destination";
 import type { RelayData } from "../relay/service";
 import type { RelaySession } from "../relay/session";
+import { viewerMember } from "../relay/membership";
 import { rowUnread } from "../relay/unread";
 import type { OpenTarget } from "../navigation/targets";
 
@@ -69,7 +70,7 @@ export function observeCommunityUnread(
           (channel) =>
             !channel.huddle &&
             !channel.metadataPending &&
-            channel.members?.includes(viewer) &&
+            viewerMember(channel, viewer) &&
             (!gates ||
               gates.allows({
                 version: 1,
