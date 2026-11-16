@@ -49,6 +49,21 @@ import { config } from "./config";
 import type { AddedTool } from "../../buzz-mcp/session-tools";
 import { wake } from "../../features/agent-harness/wakes";
 import type { Wire } from "./rpc";
+import {
+  COMPACT_ORDINARY,
+  ROUTE_CHANGED,
+  TO_GATEWAY,
+  UNCERTAIN,
+  type ProviderConfig,
+} from "./gateway";
+import type {
+  EligibleRoute,
+  GatewayRoute,
+} from "../../features/agents/gateway/route";
+import {
+  VECTOR_IDENTITY,
+  VECTOR_PROFILE,
+} from "../../features/agents/gateway/vectors";
 
 vi.mock("./voice", () => ({
   openVoice: vi.fn(async () => ({ input: vi.fn(), close: vi.fn() })),
@@ -91,7 +106,7 @@ function fixture(
     model_reasoning_effort?: string;
     model_reasoning_summary?: string;
     features?: { hooks?: boolean; codex_hooks?: boolean };
-  } = {},
+  } & ProviderConfig = {},
   repositories?: (scope: string | undefined) => string,
   hooks?: ConstructorParameters<typeof CodexRuntime>[7],
   execution?: ConstructorParameters<typeof CodexRuntime>[8],
@@ -104,6 +119,8 @@ function fixture(
   resolveDirectory?: ConstructorParameters<typeof CodexRuntime>[14],
 ) {
   let terminals = remainingTerminals;
+  /** What `thread/unsubscribe` reports. */
+  const release = { status: "unsubscribed" };
   let options: HostProcessOptions | undefined;
   let thread = 0;
   const sent: Wire[] = [];

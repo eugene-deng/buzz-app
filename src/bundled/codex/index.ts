@@ -15,6 +15,11 @@ import { readUsage } from "./usage";
 import { reviewModel } from "./security-review";
 import { followRecommended } from "../../features/agents/recommended";
 import { AppServer, listModels } from "./rpc";
+import { HARNESS } from "./gateway";
+/** Whether Codex declares its harness to the gateway, which sends the Buzz
+ * context on turns its own configuration routes there and gates compaction
+ * on the route. Off until its wire proof. */
+const GATEWAY = false;
 /** How often Buzz's copy of Codex looks for a new release. */
 const UPDATE_MS = 6 * 60 * 60_000;
 export const inject = ["agents", "host", "agentProtection"];
@@ -176,6 +181,7 @@ export const apply: PluginModule["apply"] = (ctx) => {
     hooks: { events: CODEX_HOOK_EVENTS },
     retire: (pubkey) => runtime.retire(pubkey),
     protection: true,
+    ...(GATEWAY ? { gateway: { harness: HARNESS } } : {}),
     title: "Codex",
     icon: CodexLogoIcon,
     description:
