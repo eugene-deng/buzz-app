@@ -201,6 +201,7 @@ export function SoloDraft({
   projectId,
   extensions,
   focusRequest = 0,
+  submitRequest,
   agent,
   linkedId,
   source,
@@ -221,6 +222,8 @@ export function SoloDraft({
   /** Start with this agent chosen, as when search opens a new chat with it. */
   agent?: string | undefined;
   focusRequest?: number | AbortSignal;
+  /** Starts one host-seeded request as soon as the shared composer is ready. */
+  submitRequest?: string | undefined;
   extensions?: ConversationExtensions | undefined;
   session: RelaySession;
   scope: string;
@@ -877,6 +880,7 @@ export function SoloDraft({
       <MessageComposer
         key={restored.count}
         focusRequest={restored.focus ? restored.count : 0}
+        submitRequest={submitRequest}
         chatPresentation
         ownSoloConversation
         session={session}

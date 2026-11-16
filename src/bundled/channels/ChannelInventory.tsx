@@ -32,6 +32,7 @@ import {
   sortSidebarRows,
   type SidebarRows,
   type RegisteredSidebarRows,
+  type SidebarRowMenuProps,
 } from "../../features/channel-navigation/sidebar-rows-service";
 import { useSidebarRowUnread } from "../../features/channel-navigation/useSidebarRowUnread";
 import type { SidebarSortMode } from "../../features/relay/sidebar-sort";
@@ -112,6 +113,7 @@ import { splitPartition } from "../../features/relay/partition";
 import styles from "./Channels.module.css";
 import { avatarMedia } from "../../shared/avatar-source";
 import { useBestieConversation } from "../../app/shell/bestie-context";
+import { OwnedContribution } from "../../plugins/OwnedContribution";
 
 /** The sidebar entry selected by a destination, excluding nested message state. */
 export function sidebarEntryLocation(target: OpenTarget) {
@@ -809,6 +811,25 @@ export function ChannelInventory({
     surface?: ChannelMenuSurface,
   ) => {
     const actions: ReactNode[] = [];
+    if (!surface && contributedRows)
+      actions.push(
+        <SidebarRowMenuContributions
+          key="contributed-row-actions"
+          entries={rowContributions}
+          registry={contributedRows}
+          row={sidebarRow(
+            channel,
+            sectionKey,
+            queries.unread.snapshot({
+              kind: "channel",
+              channelId: channel.id,
+            }),
+          )}
+          session={queries}
+          target={target}
+          close={() => closeRowMenu()}
+        />,
+      );
     if (placementWritable && channel.channelType !== "forum") {
       const currentSectionId = sectionKey.startsWith("group:")
         ? sectionKey.slice("group:".length)
@@ -1980,5 +2001,29 @@ export function ChannelInventory({
         />
       </>
     ),
+  });
+}
+
+function SidebarRowMenuContributions({
+  entries,
+  registry,
+  ...props
+}: Omit<SidebarRowMenuProps, "available"> & {
+  entries: readonly RegisteredSidebarRows[];
+  registry: SidebarRows;
+}) {
+  return entries.map((entry) => {
+    const Menu = entry.menu;
+    return Menu ? (
+      <OwnedContribution
+        key={contributionKey(entry)}
+        entry={entry}
+        registry={registry}
+        fallback={null}
+        resetIdentity={props.row}
+      >
+        {(_, available) => <Menu {...props} available={available} />}
+      </OwnedContribution>
+    ) : null;
   });
 }
