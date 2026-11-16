@@ -74,6 +74,25 @@ vi.mock("./voice", () => ({
 
 // The plugin registers only in the Mac/Linux desktop app.
 vi.mock("@tauri-apps/api/core", () => ({ isTauri: () => true }));
+/** What the gateway's own route module reports, where a test sets it. */
+const liveRoutes = vi.hoisted(() => ({
+  route: undefined as unknown,
+  upstream: undefined as unknown,
+}));
+vi.mock("../../features/agents/gateway/route", async (importOriginal) => {
+  const actual =
+    await importOriginal<
+      typeof import("../../features/agents/gateway/route")
+    >();
+  return {
+    ...actual,
+    routeFor: (key: string) =>
+      (liveRoutes.route as GatewayRoute | undefined) ?? actual.routeFor(key),
+    upstreamFor: (harness: string) =>
+      (liveRoutes.upstream as { base: string } | undefined) ??
+      actual.upstreamFor(harness),
+  };
+});
 
 const owner = "a".repeat(64);
 const pubkey = "b".repeat(64);

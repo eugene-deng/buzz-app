@@ -15,7 +15,7 @@ import { readUsage } from "./usage";
 import { reviewModel } from "./security-review";
 import { followRecommended } from "../../features/agents/recommended";
 import { AppServer, listModels } from "./rpc";
-import { HARNESS } from "./gateway";
+import { CODEX_ROUTES, HARNESS } from "./gateway";
 /** Whether Codex declares its harness to the gateway, which sends the Buzz
  * context on turns its own configuration routes there and gates compaction
  * on the route. Off until its wire proof. */

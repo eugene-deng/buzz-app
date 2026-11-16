@@ -40,11 +40,12 @@ export const CODEX_ROUTES: CodexRoutes = Object.freeze({
 });
 
 /** The route a session control (compaction) goes by, read now, as the
- * runner reads a turn's: undefined where it wouldn't send the agent's turns
- * to the gateway; else the eligible route that enables Codex with its
- * upstream, or the blocked one its turns would fall back from. */
+ * runner reads a turn's: undefined with gateway mode off (no routes) or
+ * where it wouldn't send the agent's turns to the gateway; else the
+ * eligible route that enables Codex with its upstream, or the blocked one
+ * its turns would fall back from. */
 export function controlRoute(
-  routes: CodexRoutes,
+  routes: CodexRoutes | undefined,
   agent: AgentKey,
 ):
   | Readonly<{ kind: "eligible"; gateway: CodexRoute }>
@@ -53,6 +54,7 @@ export function controlRoute(
       route: Extract<GatewayRoute, { kind: "blocked" }>;
     }>
   | undefined {
+  if (!routes) return undefined;
   const upstream = routes.upstreamFor(HARNESS);
   if (!upstream) return undefined;
   const route = routes.routeFor(agent);

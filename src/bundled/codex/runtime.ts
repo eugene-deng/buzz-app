@@ -112,7 +112,6 @@ import {
 } from "../../features/agents/gateway/forwarding";
 import { fallbackNotice } from "../../features/agents/gateway/route";
 import {
-  CODEX_ROUTES,
   COMPACT_GATEWAY,
   COMPACT_ORDINARY,
   controlRoute,
@@ -1975,7 +1974,9 @@ export class CodexRuntime {
                 (request.effort && request.effort !== active.effort) ||
                 // A gateway turn's requests carry its delivery's context: a
                 // request with any other, or a gateway request into a turn
-                // without that context, runs as its own turn.
+                // without that context, runs as its own turn. So does one
+                // that would run unattributed: its provenance is still its
+                // own delivery's.
                 gatewayMark(request.gateway) !== active.gateway
               ) {
                 queue();
@@ -2856,7 +2857,10 @@ export class CodexRuntime {
   ) {
     // Only a local agent: Codex elsewhere has its own configuration.
     const provider =
-      gateway && !this.target && gatewayProvider(prepared.providers);
+      gateway &&
+      this.routes &&
+      !this.target &&
+      gatewayProvider(prepared.providers);
     if (!gateway || !provider) return undefined;
     return (binding: GatewayBinding, turn: TurnContext): Params => {
       const bundle = inferenceBundle(gateway.route.profile, binding, turn);
@@ -2881,12 +2885,13 @@ export class CodexRuntime {
     gateway: CodexRoute | undefined,
     abort: (error: Error) => void,
   ) {
-    if (!gateway) return undefined;
+    const { routes } = this;
+    if (!gateway || !routes) return undefined;
     const check = () => {
-      if (this.routes.routeFor(agent).revision !== gateway.route.revision)
+      if (routes.routeFor(agent).revision !== gateway.route.revision)
         abort(new Error(ROUTE_CHANGED));
     };
-    const off = this.routes.subscribeRoute(agent, check);
+    const off = routes.subscribeRoute(agent, check);
     check();
     return off;
   }
