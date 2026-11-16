@@ -83,8 +83,11 @@ export type GatewayProvider = Readonly<{
 
 /** The provider a local agent's gateway turns go through: Codex's active
  * one, which the gateway's setup of the person's `config.toml` points at
- * the gateway. Only a provider that configuration defines takes headers;
- * with Codex's built-in one there is none, and Buzz sends nothing. */
+ * the gateway. A local Codex on a gateway route is taken to use the gateway,
+ * so its endpoint isn't checked: the context goes to the provider configured.
+ * Only a provider that configuration defines takes headers; Codex refuses
+ * any override of its built-in one (`openai`), so with it Buzz sends nothing
+ * and says so. */
 export function gatewayProvider(
   config: ProviderConfig,
 ): GatewayProvider | undefined {
@@ -111,6 +114,10 @@ export const threadConfig = (
   ),
 });
 
+export const NO_PROVIDER =
+  "Ran without the Buzz context: Codex's configuration has no model provider of its own to send the gateway headers with.";
+export const REMOTE_UNATTRIBUTED =
+  "Ran without the Buzz context: Codex on another machine doesn't send the gateway headers yet.";
 export const ROUTE_CHANGED =
   "This agent's gateway access changed, so the turn was stopped. Try again.";
 export const UNCERTAIN =

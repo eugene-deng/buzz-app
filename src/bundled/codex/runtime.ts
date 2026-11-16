@@ -118,6 +118,8 @@ import {
   controlRoute,
   FROM_GATEWAY,
   gatewayProvider,
+  NO_PROVIDER,
+  REMOTE_UNATTRIBUTED,
   ROUTE_CHANGED,
   threadConfig,
   TO_GATEWAY,
@@ -1971,10 +1973,10 @@ export class CodexRuntime {
                   active.reply.conversation.topLevel ||
                 (request.model && request.model !== active.model) ||
                 (request.effort && request.effort !== active.effort) ||
-                // A gateway turn's requests carry its delivery's context; a
-                // request with any other runs as its own turn.
-                (active.gateway !== undefined &&
-                  gatewayMark(request.gateway) !== active.gateway)
+                // A gateway turn's requests carry its delivery's context: a
+                // request with any other, or a gateway request into a turn
+                // without that context, runs as its own turn.
+                gatewayMark(request.gateway) !== active.gateway
               ) {
                 queue();
                 return;
@@ -2124,7 +2126,8 @@ export class CodexRuntime {
       turnSignal,
       routeAbort.signal,
     ]);
-    const { gatewayFallback } = delivery;
+    /** Why this turn ran without the Buzz context, for its Activity status. */
+    let notice = delivery.gatewayFallback?.notice;
     let unwatch: (() => void) | undefined;
     let release!: () => void;
     const once: Once = {
@@ -2160,6 +2163,7 @@ export class CodexRuntime {
       // Through the gateway when Codex's configuration goes there, in a
       // Buzz session of its own: the thread is never resumed or saved.
       const headed = this.gatewayParams(prepared, delivery.gateway);
+      if (!headed && delivery.gateway) notice = this.unattributed();
       if (headed && delivery.gateway) {
         const { gateway } = delivery;
         unwatch = this.stayOnRoute(agent.key, gateway, (error) =>
@@ -2204,16 +2208,15 @@ export class CodexRuntime {
         },
       );
       once.turnId ??= turnStarted.turn.id;
-      this.status(agent.key, key, "Working", gatewayFallback?.notice);
+      this.status(agent.key, key, "Working", notice);
       const status = await followed.completed;
       if (status === "interrupted") {
-        this.status(agent.key, key, "Interrupted", gatewayFallback?.notice);
+        this.status(agent.key, key, "Interrupted", notice);
         return { ok: false, error: "Codex’s turn was interrupted" };
       }
       // A finished wake leaves nothing to show; a failed one stays listed,
       // as does one that ran without the gateway it routes through.
-      if (gatewayFallback)
-        this.status(agent.key, key, "Idle", gatewayFallback.notice);
+      if (notice) this.status(agent.key, key, "Idle", notice);
       else this.forget(agent.key, key);
       return { ok: true };
     } catch (error) {
@@ -2665,6 +2668,17 @@ export class CodexRuntime {
       if (method === "item/completed" && item.type === "agentMessage")
         reply = item.text ?? "";
     });
+    // A stopped title turn is interrupted, not left running.
+    const interrupt = () => {
+      if (turn.threadId && turn.turnId && !turn.finished)
+        void rpc
+          .request("turn/interrupt", {
+            threadId: turn.threadId,
+            turnId: turn.turnId,
+          })
+          .catch(() => undefined);
+    };
+    signal.addEventListener("abort", interrupt, { once: true });
     try {
       const started = await rpc.request<{ thread: { id: string } }>(
         "thread/start",
@@ -2693,17 +2707,21 @@ export class CodexRuntime {
         },
       );
       turn.threadId = started.thread.id;
-      await rpc.request("turn/start", {
+      signal.throwIfAborted();
+      const titled = await rpc.request<{ turn: { id: string } }>("turn/start", {
         threadId: turn.threadId,
         input: input(titlePrompt(text)),
         model: selected.model,
         ...(low ? { effort: "low" } : {}),
         outputSchema: TITLE_SCHEMA,
       });
+      turn.turnId ??= titled.turn.id;
+      if (signal.aborted) interrupt();
       if ((await followed.completed) !== "completed" || stopped.aborted) return;
       const title = (JSON.parse(reply) as { title?: unknown }).title;
       if (typeof title === "string" && title.trim()) named(title.trim());
     } finally {
+      signal.removeEventListener("abort", interrupt);
       followed.stop();
       if (turn.threadId)
         await rpc
@@ -2851,6 +2869,10 @@ export class CodexRuntime {
         },
       };
     };
+  }
+  /** Why a gateway delivery ran without the Buzz context. */
+  private unattributed() {
+    return this.target ? REMOTE_UNATTRIBUTED : NO_PROVIDER;
   }
   /** Watches `gateway`'s route for `agent` from now: `abort` runs once the
    * route moves past the revision it was dispatched at. */
