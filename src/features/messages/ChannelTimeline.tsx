@@ -1883,6 +1883,8 @@ function Timeline({
     return () => {
       cancelAnimationFrame(frame);
       observer?.disconnect();
+      // A rerun corrects again before presenting; the cap covers one that won't.
+      if (positioning.current) cancelAnimationFrame(positioning.current.frame);
       // A row refresh can arrive before the first deferred measurement or
       // cancel its correction. Keep restoration until newer reader input.
       if (restore && !follow.current && intent.current === scheduledIntent) {

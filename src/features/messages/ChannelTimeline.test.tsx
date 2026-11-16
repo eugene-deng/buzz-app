@@ -577,6 +577,25 @@ it("pins only the focused message by identity across prepend and releases on foc
   h.unmount();
 });
 
+it("paints an opening's history only once it is positioned, and only hides it once", () => {
+  const h = setup();
+  const set = vi.mocked(h.element.setAttribute);
+  const remove = vi.mocked(h.element.removeAttribute);
+  expect(set).toHaveBeenCalledWith("data-positioning", "");
+  expect(remove).toHaveBeenCalledWith("data-positioning");
+  expect(set.mock.invocationCallOrder[0]).toBeLessThan(
+    remove.mock.invocationCallOrder[0] ?? 0,
+  );
+  // Positioned before the bottom correction's frame ran.
+  expect(h.handle.scrollToIndex.mock.invocationCallOrder[0]).toBeLessThan(
+    remove.mock.invocationCallOrder[0] ?? 0,
+  );
+  set.mockClear();
+  h.measureRows();
+  h.gesture();
+  expect(set).not.toHaveBeenCalled();
+  h.unmount();
+});
 it("persists the event target's reading position at real component cleanup, not the previous virtualizer offset", () => {
   const h = setup();
   h.scroll();
