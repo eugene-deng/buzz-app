@@ -13,7 +13,6 @@ import {
 } from "../../features/agents/gateway/contract";
 import {
   routeFor,
-  subscribeRoute,
   upstreamFor,
   type GatewayRoute,
 } from "../../features/agents/gateway/route";
@@ -26,16 +25,15 @@ export type CodexGateway = NonNullable<Delivery["gateway"]>;
 /** A route and upstream with no turn yet. */
 export type CodexRoute = Omit<CodexGateway, "turn">;
 
-/** The shared route functions Codex reads outside a delivery: compaction's
- * route, and the route a running gateway turn must stay on. */
+/** The shared route functions Codex reads outside a delivery, for
+ * compaction's route. A running turn keeps the route it was dispatched with;
+ * a change applies from the next one. */
 export type CodexRoutes = Readonly<{
   routeFor(key: AgentKey): GatewayRoute;
-  subscribeRoute(key: AgentKey, listener: () => void): () => void;
   upstreamFor(harness: string): Readonly<{ base: string }> | undefined;
 }>;
 export const CODEX_ROUTES: CodexRoutes = Object.freeze({
   routeFor,
-  subscribeRoute,
   upstreamFor,
 });
 
@@ -83,19 +81,25 @@ export type GatewayProvider = Readonly<{
   headers: Readonly<Record<string, string>>;
 }>;
 
+/** Whether `id` names the AI Gateway's provider: the setup's
+ * `workforce_ai_gateway` or one of its `workforce_ai_gateway_…` variants,
+ * or the `workforce-ai-gateway` spelling. No other provider gets the Buzz
+ * context. */
+export const isGatewayProvider = (id: string) =>
+  id === "workforce_ai_gateway" ||
+  id === "workforce-ai-gateway" ||
+  /^workforce_ai_gateway_[A-Za-z0-9_-]+$/.test(id);
+
 /** The provider a local agent's gateway turns go through: Codex's active
- * one, which the gateway's setup of the person's `config.toml` points at
- * the gateway. A local Codex on a gateway route is taken to use the gateway,
- * so its endpoint isn't checked: the context goes to the provider configured.
- * Only a provider that configuration defines takes headers; Codex refuses
- * any override of its built-in one (`openai`), so with it Buzz sends nothing
- * and says so. */
+ * one, when it is the AI Gateway's and the person's configuration defines
+ * it. Its endpoint isn't checked: the gateway's setup writes it. With any
+ * other provider, including Codex's built-in one (`openai`), which refuses
+ * header overrides, Buzz sends nothing and says so. */
 export function gatewayProvider(
   config: ProviderConfig,
 ): GatewayProvider | undefined {
   const id = config.model_provider;
-  // A dotted id would address another key of the thread's config.
-  if (!id || !/^[A-Za-z0-9_-]+$/.test(id)) return undefined;
+  if (!id || !isGatewayProvider(id)) return undefined;
   const provider = config.model_providers?.[id];
   if (!provider) return undefined;
   return { id, headers: { ...provider.http_headers } };
@@ -117,18 +121,9 @@ export const threadConfig = (
 });
 
 export const NO_PROVIDER =
-  "Ran without the Buzz context: Codex's configuration has no model provider of its own to send the gateway headers with.";
+  "Ran without the Buzz context: Codex's model provider isn't the AI Gateway's.";
 export const REMOTE_UNATTRIBUTED =
   "Ran without the Buzz context: Codex on another machine doesn't send the gateway headers yet.";
-export const ROUTE_CHANGED =
-  "This agent's gateway access changed, so the turn was stopped. Try again.";
-export const UNCERTAIN =
-  "This conversation's Codex session didn't finish cleanly through the agent gateway, so it can't continue. Start a new session to continue.";
-export const TO_GATEWAY =
-  "This conversation now runs through the agent gateway, so Codex started a new session for it. Earlier messages are still in the conversation history.";
-export const FROM_GATEWAY =
-  "This conversation no longer runs through the agent gateway, so Codex started a new session for it. Earlier messages are still in the conversation history.";
-export const COMPACT_ORDINARY =
-  "This conversation's session ran without the agent gateway, so it can't be compacted through it. Send a message to start its gateway session first.";
-export const COMPACT_GATEWAY =
-  "This conversation's session ran through the agent gateway, which this agent doesn't use now. Send a message to start a new session first.";
+/** Why a turn ran without the Buzz context it was routed with. */
+export const unattributed = (reason: string) =>
+  `Ran without the Buzz context: ${reason}`;

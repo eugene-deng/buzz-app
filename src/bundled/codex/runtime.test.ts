@@ -50,13 +50,8 @@ import type { AddedTool } from "../../buzz-mcp/session-tools";
 import { wake } from "../../features/agent-harness/wakes";
 import type { Wire } from "./rpc";
 import {
-  COMPACT_ORDINARY,
-  FROM_GATEWAY,
   NO_PROVIDER,
   REMOTE_UNATTRIBUTED,
-  ROUTE_CHANGED,
-  TO_GATEWAY,
-  UNCERTAIN,
   type ProviderConfig,
 } from "./gateway";
 import type {

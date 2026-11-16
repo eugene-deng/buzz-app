@@ -18,22 +18,48 @@ const route: EligibleRoute = {
 };
 
 describe("gatewayProvider", () => {
-  it("takes Codex's active configured provider, with its headers", () => {
+  it.each([
+    "workforce_ai_gateway",
+    "workforce_ai_gateway_prod",
+    "workforce_ai_gateway_passthrough_prod",
+    "workforce-ai-gateway",
+  ])("takes the AI Gateway's provider %s, with its headers", (id) => {
     expect(
       gatewayProvider({
-        model_provider: "corp",
+        model_provider: id,
         model_providers: {
-          corp: { http_headers: { "x-team": "t" } },
+          [id]: { http_headers: { "x-team": "t" } },
           other: {},
         },
       }),
-    ).toEqual({ id: "corp", headers: { "x-team": "t" } });
+    ).toEqual({ id, headers: { "x-team": "t" } });
   });
 
   it.each([
-    ["no active provider", { model_providers: { corp: {} } }],
+    ["no active provider", { model_providers: { workforce_ai_gateway: {} } }],
     ["the built-in provider", { model_provider: "openai" }],
-    ["a dotted id", { model_provider: "a.b", model_providers: { "a.b": {} } }],
+    [
+      "an unrelated provider",
+      { model_provider: "corp", model_providers: { corp: {} } },
+    ],
+    [
+      "a lookalike",
+      {
+        model_provider: "workforce_ai_gatewayx",
+        model_providers: { workforce_ai_gatewayx: {} },
+      },
+    ],
+    [
+      "a dotted variant",
+      {
+        model_provider: "workforce_ai_gateway_a.b",
+        model_providers: { "workforce_ai_gateway_a.b": {} },
+      },
+    ],
+    [
+      "an undefined gateway provider",
+      { model_provider: "workforce_ai_gateway", model_providers: {} },
+    ],
   ])("finds none with %s", (_, providers) => {
     expect(gatewayProvider(providers)).toBeUndefined();
   });
