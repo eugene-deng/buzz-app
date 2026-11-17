@@ -136,6 +136,9 @@ export type SearchPeek = {
    * too short to search messages, say), so they may still come back, each
    * with the reason shown while it's chosen. */
   unsearched?: Readonly<Record<string, ReactNode>> | undefined;
+  /** Called once the person moves the highlight for this text: rows on
+   * screen shouldn't move under them after that. */
+  onMove?: (() => void) | undefined;
 };
 
 /** Top results shows this many rows of its first group, and of the rest. */
@@ -413,6 +416,11 @@ export function SearchChoices({
         : {}),
   });
   const selected = highlight.active;
+  const onMove = peek?.onMove;
+  // biome-ignore lint/correctness/useExhaustiveDependencies: Reports each text's first move once.
+  useEffect(() => {
+    if (highlight.moved) onMove?.();
+  }, [highlight.moved, query]);
   const moved = previewing && highlight.moved;
   // biome-ignore lint/correctness/useExhaustiveDependencies: Freezes the order just shown, once per text.
   useLayoutEffect(() => {
