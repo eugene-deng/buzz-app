@@ -303,6 +303,10 @@ test("inline snippets keep rounded ends and tall fenced code wraps with a partia
         await page.goto(`${url}?mode=${mode}&width=${width}&scale=${scale}`);
         await page.evaluate(() => document.fonts.ready);
         for (const screen of ["canvas", "message"]) {
+          const short = page
+            .locator(`[data-screen="${screen}"] pre code`)
+            .filter({ hasText: CODE });
+          await expect(short).toHaveAttribute("tabindex", "-1");
           const snippet = page
             .locator(`[data-screen="${screen}"] p > code`)
             .filter({ hasText: "release_unbroken_token_" });
@@ -409,4 +413,35 @@ test("inline snippets keep rounded ends and tall fenced code wraps with a partia
           }
         }
       }
+  // Resizing must add and remove the Tab stop on the same mounted scrollport.
+  for (const mode of ["light", "dark"]) {
+    await page.setViewportSize({ width: 1132, height: 1100 });
+    await page.goto(`${url}?mode=${mode}&width=1100`);
+    await page.evaluate(() => document.fonts.ready);
+    const responsive = page
+      .locator('[data-screen="message"] pre code')
+      .filter({ hasText: "responsive_" });
+    const copy = responsive
+      .locator("..")
+      .getByRole("button", { name: "Copy code block" });
+    await expect(responsive).toHaveAttribute("tabindex", "-1");
+    await copy.focus();
+    await page.keyboard.press("Shift+Tab");
+    await expect(responsive).not.toBeFocused();
+
+    await page.setViewportSize({ width: 392, height: 1100 });
+    await expect(responsive).toHaveAttribute("tabindex", "0");
+    await copy.focus();
+    await page.keyboard.press("Shift+Tab");
+    await expect(responsive).toBeFocused();
+    await page.keyboard.press("End");
+    await expect
+      .poll(() => responsive.evaluate((code) => code.scrollTop))
+      .toBeGreaterThan(0);
+    await page.setViewportSize({ width: 1132, height: 1100 });
+    await expect(responsive).toHaveAttribute("tabindex", "-1");
+    await expect(responsive).toBeFocused();
+    await page.keyboard.press("Tab");
+    await expect(copy).toBeFocused();
+  }
 });

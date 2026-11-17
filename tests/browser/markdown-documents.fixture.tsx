@@ -45,6 +45,8 @@ const SAMPLE = [
 
 // Indented, unbroken lines and a document too deep to render.
 const LONG_CODE = `\`\`\`\n${Array.from({ length: 60 }, (_, line) => `  ${line} ${"x".repeat(160)}`).join("\n")}\n\`\`\``;
+// Fits at a wide width, but wraps past the height cap in a narrow pane.
+const RESPONSIVE_CODE = `\`\`\`\n${`responsive_${"x".repeat(60)}\n`.repeat(12)}\`\`\``;
 const TOO_DEEP = `${">".repeat(120)} ${"deep ".repeat(200)}`;
 
 /** A saved Canvas holding content, with no relay behind it. */
@@ -169,6 +171,7 @@ createRoot(root).render(
     <main
       style={{
         width: Number(params.get("width") ?? 1100),
+        maxWidth: "100%",
         padding: 16,
         background: "var(--surface-panel)",
         color: "var(--text-standard)",
@@ -180,7 +183,7 @@ createRoot(root).render(
             id: "fixture-message",
             channelId: "fixture-channel",
             authorId: "fixture-author",
-            content: `${SAMPLE}\n\n${LONG_CODE}`,
+            content: `${SAMPLE}\n\n${LONG_CODE}\n\n${RESPONSIVE_CODE}`,
             createdAt: 1,
             mentions: [],
             participants: [],

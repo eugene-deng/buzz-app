@@ -8,7 +8,7 @@ import {
   type PanelWorkspaceItem as HostPanelWorkspaceItem,
 } from "./PanelWorkspace";
 import { usePluginPanelSplit } from "./usePanelSplit";
-import type { ChannelSummary } from "../relay/contracts";
+import type { Attachment, ChannelSummary } from "../relay/contracts";
 import type { RelaySession } from "../relay/session";
 import {
   createContributions,
@@ -32,6 +32,8 @@ export type PanelContext = Readonly<{
   channelId: string;
   /** Thread root of the message the panel was opened from, when there is one. */
   rootId?: string;
+  /** Open an image or video in the host conversation viewer. False when retired. */
+  openMedia?(messageId: string, attachment: Attachment): boolean;
   canOpen(target: string): boolean;
   /**
    * Open a target through the host. A tab replaces itself; a channel drawer or
@@ -75,6 +77,8 @@ export type PanelProps = {
 export type Panel = Readonly<{
   id: string;
   title: string;
+  /** Optional decorative icon for channel tabs. */
+  tabIcon?: ComponentType;
   matches: (url: string) => boolean;
   /** Claim strength when several panels match a target; see `MatchOrder`. */
   order?: MatchOrder | undefined;
@@ -137,8 +141,6 @@ export type Panels = {
     Workspace: ComponentType<PanelWorkspaceProps>;
     /** Stable names should include the plugin ID; scope is the session workspace. */
     useSplit: typeof usePluginPanelSplit;
-    /** Publish the selected document's title while inside a host workspace. */
-    useTabTitle: typeof usePanelTabTitle;
   };
   register(panel: Panel): void;
   resolve(target: string): RegisteredPanel | undefined;
@@ -152,9 +154,10 @@ export type Panels = {
     handler: (request: PanelOpenRequest) => boolean,
   ): () => void;
   /** React hook for a panel component: names its tab, in place of the static
-   * `title`, while mounted. Does nothing outside a panel tab. Absent on hosts
+   * `title`, while mounted, with an optional icon. Also works in a host workspace.
+   * Does nothing outside a tab. Absent on hosts
    * that predate it, so feature-detect before calling. */
-  useTabTitle?(label: string): void;
+  useTabTitle?: typeof usePanelTabTitle;
 };
 declare module "@deepseek-ai/cordis" {
   interface Context {
@@ -165,7 +168,6 @@ export class PanelsService extends Service implements Panels {
   readonly ui: Panels["ui"] = Object.freeze({
     Workspace: PanelWorkspace,
     useSplit: usePluginPanelSplit,
-    useTabTitle: usePanelTabTitle,
   });
   private readonly panels;
   constructor(ctx: Context) {
@@ -175,7 +177,7 @@ export class PanelsService extends Service implements Panels {
   private readonly openHandlers = new Set<
     (request: PanelOpenRequest) => boolean
   >();
-  useTabTitle = (label: string) => usePanelTabTitle(label);
+  useTabTitle = usePanelTabTitle;
   snapshot = () => this.panels.snapshot();
   subscribe = (listener: () => void) => this.panels.subscribe(listener);
   requestOpen = (request: PanelOpenRequest) => {

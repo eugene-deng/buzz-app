@@ -63,6 +63,29 @@ export function observeTableOverflow(table: HTMLTableElement | null) {
   };
 }
 
+/** Only overflowing code needs a Tab stop. Recheck both layout and content:
+ * a capped block can change its scroll height without changing its box. */
+function observeCodeOverflow(code: HTMLElement | null) {
+  if (!code) return;
+  const update = () => {
+    code.tabIndex = code.scrollHeight > code.clientHeight ? 0 : -1;
+  };
+  update();
+  if (typeof ResizeObserver === "undefined") return;
+  const observer = new ResizeObserver(update);
+  observer.observe(code);
+  const contentObserver = new MutationObserver(update);
+  contentObserver.observe(code, {
+    childList: true,
+    characterData: true,
+    subtree: true,
+  });
+  return () => {
+    observer.disconnect();
+    contentObserver.disconnect();
+  };
+}
+
 /** The fence's info-string language, as remark records it on the inner `code`. */
 export function codeLanguage(pre: ExtraProps["node"]) {
   const code = pre?.children[0];
@@ -101,7 +124,7 @@ export function CodeFence({
         focusable &&
         isValidElement<ComponentProps<"code">>(child) &&
         child.type === "code"
-          ? cloneElement(child, { tabIndex: 0 })
+          ? cloneElement(child, { tabIndex: -1, ref: observeCodeOverflow })
           : child,
       )}
       {copy && <CodeActions code={code} className={classes.actions} />}

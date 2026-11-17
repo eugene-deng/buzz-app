@@ -226,7 +226,6 @@ it.each([false, true])(
               ui: {
                 Workspace: () => null,
                 useSplit: vi.fn(),
-                useTabTitle: vi.fn(),
               },
               snapshot: () => empty,
               subscribe: () => () => {},

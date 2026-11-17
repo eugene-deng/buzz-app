@@ -3,7 +3,7 @@ export function documentPlugin(ctx) {
   const React = ctx.react;
   const h = React.createElement;
   function Reader({ name, session }) {
-    ctx.panels.ui.useTabTitle(name);
+    ctx.panels.useTabTitle(name);
     const [content, setContent] = React.useState(
       `## ${name}\n\n**Host Markdown**\n\n![Tracking image](https://tracker.example/p.gif)\n\n[Unsafe](javascript:alert%281%29)\n\n<buzz://channel/alpha>\n\n[the **alpha** room](buzz://channel/alpha)\n\n\`\`\`ts\n${Array.from({ length: 40 }, (_, line) => `const line${line} = ${line};`).join("\n")}\n\`\`\``,
     );

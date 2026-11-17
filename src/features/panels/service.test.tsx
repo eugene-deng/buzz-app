@@ -352,7 +352,6 @@ it("injects the host workspace and hooks into installed plugins", async () => {
       expect(ctx.panels.ui).toBe(panels.ui);
       expect(ctx.panels.ui.Workspace).toBe(PanelWorkspace);
       expect(ctx.panels.ui.useSplit).toBe(usePluginPanelSplit);
-      expect(ctx.panels.ui.useTabTitle).toBe(usePanelTabTitle);
       ctx.panels.register({
         id: "reader",
         title: "Reader",
@@ -363,6 +362,7 @@ it("injects the host workspace and hooks into installed plugins", async () => {
   }));
   const panels = new PanelsService(root);
   try {
+    expect(panels.useTabTitle).toBe(usePanelTabTitle);
     runtime.reconcile([{ ...plugin("example.reader"), source: "external" }]);
     await flush();
     expect(panels.snapshot()).toHaveLength(1);

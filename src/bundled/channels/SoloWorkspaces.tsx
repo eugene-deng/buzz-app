@@ -22,10 +22,13 @@ import { useDroppable } from "@dnd-kit/core";
 import {
   ChannelSidebarDnd,
   DraggableChannel,
+  useSidebarSectionDrag,
 } from "../../features/channel-navigation/ChannelSidebarDnd";
 import { WorkspaceSettings } from "../../features/solo/WorkspaceSettings";
 import {
   memo,
+  cloneElement,
+  isValidElement,
   useCallback,
   useEffect,
   useLayoutEffect,
@@ -50,9 +53,12 @@ import {
   MenuTrigger,
   MenuPopup,
   MenuItem,
+  MenuIcon,
 } from "../../shared/design-system/ui/Menu";
 import {
   CaretDownIcon,
+  ArrowUpIcon,
+  ArrowDownIcon,
   DotsThreeIcon,
   PlusIcon,
 } from "../../shared/design-system/icons";
@@ -95,15 +101,18 @@ export function SoloWorkspaces({
   renderChatMenu,
   onNew,
   onConverted,
-  visit,
-  draft,
+  drafts = [],
   sidebarRows = emptyRows,
   compose,
 }: {
   compose?: ComposeWorkspaces | undefined;
-  draft?: { projectId?: string | undefined; content: ReactNode } | undefined;
+  drafts?: readonly {
+    id: string;
+    projectId?: string | undefined;
+    selected: boolean;
+    content: ReactNode;
+  }[];
   onConverted?: ((id: string) => void) | undefined;
-  visit?: AbortSignal;
   session: RelaySession;
   navigator?: Navigation | undefined;
   scope: string;
@@ -189,8 +198,8 @@ export function SoloWorkspaces({
     id: string;
     visit: AbortSignal | undefined;
   }>();
-  const currentVisit = useRef(visit);
-  currentVisit.current = visit;
+  // Read when an action fires: a thread move aborts the visit without rendering here.
+  const currentVisit = () => navigationController?.snapshot().attempt.signal;
   const [chatSettings, setChatSettings] = useState<{
     item: ChatListItem;
     visit: AbortSignal | undefined;
@@ -211,9 +220,10 @@ export function SoloWorkspaces({
       )?.id ?? "";
     // Resolve against current visibility when focus is restored, including when
     // collapse was requested after the asynchronous save began.
-    const target = collapsed.includes(project)
-      ? `project-${project}`
-      : rowFocus;
+    const target =
+      collapsed.includes(project) && !rowHosts.current.get(project)?.unframed
+        ? `project-${project}`
+        : rowFocus;
     document
       .querySelector<HTMLElement>(
         `[data-solo-menu-id="${target}"]:not([inert] *) button`,
@@ -221,7 +231,7 @@ export function SoloWorkspaces({
       ?.focus({ preventScroll: true });
     setRowFocus(undefined);
   }, [rowFocus, collapsed, snapshot.data]);
-  // Show more and Show less each unmount once spent; focus stays on the row,
+  // Show more and Show fewer each unmount once spent; focus stays on the row,
   // or moves to the workspace's last chat when nothing is left to show or fold.
   const [stepFocus, setStepFocus] = useState<string>();
   useLayoutEffect(() => {
@@ -247,13 +257,30 @@ export function SoloWorkspaces({
     name: string;
   }>();
   const groups = snapshot.data?.sections ?? [];
+  const orderWritable = preferences.sectionOrderWritable;
+  const [orderFocus, setOrderFocus] = useState<string>();
+  useLayoutEffect(() => {
+    if (!orderFocus) return;
+    document
+      .querySelector<HTMLElement>(
+        `[data-solo-menu-id="project-${CSS.escape(orderFocus)}"]:not([inert] *) button`,
+      )
+      ?.focus({ preventScroll: true });
+    setOrderFocus(undefined);
+  }, [orderFocus]);
+  const moveProject = (id: string, to: number) => {
+    const ids = groups.map((group) => group.id).filter((key) => key !== id);
+    ids.splice(to, 0, id);
+    void preferences.reorderSections(id, ids).catch(() => {});
+  };
   const assigned = snapshot.data?.assignments ?? {};
   const assignmentFor = (item: ChatListItem) =>
     dormantAssignments?.has(item.id) ? undefined : assigned[item.id];
   const ids = new Set(groups.map((group) => group.id));
-  const draftProject = draft
-    ? ids.has(draft.projectId ?? "")
-      ? (draft.projectId ?? "")
+  const activeDraft = drafts.find((draft) => draft.selected);
+  const draftProject = activeDraft
+    ? ids.has(activeDraft.projectId ?? "")
+      ? (activeDraft.projectId ?? "")
       : ""
     : undefined;
   useEffect(() => {
@@ -380,7 +407,11 @@ export function SoloWorkspaces({
         compose ||
         project.id ||
         project.rows.length ||
-        draftProject === project.id,
+        drafts.some(
+          (draft) =>
+            (ids.has(draft.projectId ?? "") ? draft.projectId : "") ===
+            project.id,
+        ),
     )
     .map((project) => {
       // A list that shrank back under the cap has nothing to fold.
@@ -412,16 +443,18 @@ export function SoloWorkspaces({
   const soloNeighborsRef = handoff?.soloNeighbors;
   useLayoutEffect(() => {
     if (!soloNeighborsRef) return;
-    const shown = visible.map((project) => ({
-      rows: project.rows,
-      shown: collapsed.includes(project.id)
-        ? []
-        : project.listed.map((item) => item.id),
-    }));
     const neighbors = (id: string) =>
-      soloNeighbors(shown, id).filter(
-        (neighbor) => !pluginHiddenRows.current.has(neighbor),
-      );
+      soloNeighbors(
+        visible.map((project) => ({
+          rows: project.rows,
+          shown:
+            collapsed.includes(project.id) &&
+            !rowHosts.current.get(project.id)?.unframed
+              ? []
+              : project.listed.map((item) => item.id),
+        })),
+        id,
+      ).filter((neighbor) => !pluginHiddenRows.current.has(neighbor));
     soloNeighborsRef.current = neighbors;
     return () => {
       if (soloNeighborsRef.current === neighbors)
@@ -439,15 +472,15 @@ export function SoloWorkspaces({
     share: (id, trigger) =>
       setSharing({
         id,
-        visit: currentVisit.current,
+        visit: currentVisit(),
         ...(trigger ? { trigger } : {}),
       }),
-    convert: (id) => setConverting({ id, visit: currentVisit.current }),
+    convert: (id) => setConverting({ id, visit: currentVisit() }),
     move,
     newWorkspace: (id) => setCreatingFor(chats.find((item) => item.id === id)),
     settings: (id) => {
       const item = chats.find((item) => item.id === id);
-      if (item) setChatSettings({ item, visit: currentVisit.current });
+      if (item) setChatSettings({ item, visit: currentVisit() });
     },
     rename: (id) => {
       const project = projects.find((project) =>
@@ -477,6 +510,8 @@ export function SoloWorkspaces({
       chats.some((item) => item.id === move.channelId),
     ) ?? [];
   const entries = visible.map((project) => {
+    const groupIndex = groups.findIndex((group) => group.id === project.id);
+    const reorderable = !!project.id && orderWritable;
     const open =
       !collapsed.includes(project.id) || renamingProject === project.id;
     const changeOpen = (open: boolean) =>
@@ -487,6 +522,9 @@ export function SoloWorkspaces({
     const frame = (children: ReactNode) => (
       <DropProject
         projectKey={DROP + project.id}
+        groupIndex={groupIndex}
+        reorderable={reorderable}
+        disabled={!preferences.writable}
         key={project.id}
         className={`${styles.project} ${channelStyles.channelSection}`}
         data-project={project.id ? "" : undefined}
@@ -517,6 +555,24 @@ export function SoloWorkspaces({
         content={
           <>
             {actions}
+            <MenuItem
+              disabled={!orderWritable || groupIndex <= 0}
+              onClick={() => moveProject(project.id, groupIndex - 1)}
+            >
+              <MenuIcon>
+                <ArrowUpIcon size={14} />
+              </MenuIcon>
+              Move up
+            </MenuItem>
+            <MenuItem
+              disabled={!orderWritable || groupIndex >= groups.length - 1}
+              onClick={() => moveProject(project.id, groupIndex + 1)}
+            >
+              <MenuIcon>
+                <ArrowDownIcon size={14} />
+              </MenuIcon>
+              Move down
+            </MenuItem>
             <MenuItem onClick={() => setSettingsFor(project)}>
               Workspace settings
             </MenuItem>
@@ -568,7 +624,13 @@ export function SoloWorkspaces({
               </>
             }
           >
-            {primary}
+            <WorkspaceDragHandle
+              sectionKey={DROP + project.id}
+              groupIndex={groupIndex}
+              reorderable={reorderable}
+            >
+              {primary}
+            </WorkspaceDragHandle>
           </NavigationSectionHeading>
         )}
       </ChatActionsMenu>
@@ -580,17 +642,24 @@ export function SoloWorkspaces({
     }
     const rows = (
       <>
-        {draftProject === project.id && draft && (
-          <ChatActionsMenu
-            id="new-chat-draft"
-            title="New chat"
-            className={styles.organizedRow}
-            content={null}
-            enabled={false}
-          >
-            <div>{draft.content}</div>
-          </ChatActionsMenu>
-        )}
+        {drafts
+          .filter(
+            (draft) =>
+              (ids.has(draft.projectId ?? "") ? draft.projectId : "") ===
+              project.id,
+          )
+          .map((draft) => (
+            <ChatActionsMenu
+              key={draft.id}
+              id={`new-chat-draft:${draft.id}`}
+              title="New chat"
+              className={styles.organizedRow}
+              content={null}
+              enabled={false}
+            >
+              <div>{draft.content}</div>
+            </ChatActionsMenu>
+          ))}
         <ChannelSidebarRows open={open}>
           {project.listed.map((item) => {
             const channel = channels.channels.find(
@@ -663,7 +732,7 @@ export function SoloWorkspaces({
               <NavigationItem
                 variant="text"
                 data-solo-show-more-fold=""
-                label="Show less"
+                label="Show fewer"
                 aria-label={`Show fewer chats in ${project.name}`}
                 onClick={() => expand(project.id, 0)}
               />
@@ -737,6 +806,9 @@ export function SoloWorkspaces({
       header,
       panel,
       ordinary,
+      chatList: (
+        <WorkspaceRows key={project.id} host={rowsHost} unframed={project.id} />
+      ),
       rows: compose ? createPortal(rows, rowsHost.element, project.id) : null,
     };
   });
@@ -773,9 +845,23 @@ export function SoloWorkspaces({
       <ChannelSidebarDnd
         writable={preferences.writable}
         onMove={(id, key) => move(id, key.slice(DROP.length) || undefined)}
-        // Solo projects keep their saved order; only chats drag.
-        onReorder={() => {}}
-        overlay={(id) => {
+        onReorder={(key, over) => {
+          const id = key.slice(DROP.length);
+          const to = groups.findIndex((group) => DROP + group.id === over);
+          if (groups.some((group) => group.id === id) && to >= 0)
+            moveProject(id, to);
+        }}
+        overlay={(id, group) => {
+          if (group) {
+            const project = groups.find((project) => DROP + project.id === id);
+            return (
+              project && (
+                <div className={channelStyles.channelDragOverlay}>
+                  {project.name}
+                </div>
+              )
+            );
+          }
           const item = chats.find((item) => item.id === id);
           return (
             item && (
@@ -790,11 +876,53 @@ export function SoloWorkspaces({
         {compose
           ? compose({
               chats: entries.find((entry) => !entry.id)?.ordinary,
+              chatList: entries.map((entry) => entry.chatList),
               workspaces: entries,
               ordinary: entries.map((entry) => entry.ordinary),
             })
           : entries.map((entry) => entry.ordinary)}
       </ChannelSidebarDnd>
+      {snapshot.orderError && (
+        <div role="alert" className={styles.listMessage}>
+          <p>
+            Couldn’t save the move for{" "}
+            {groups.find(({ id }) => id === snapshot.orderError?.sectionId)
+              ?.name ?? "this workspace"}
+            . {snapshot.orderError.error}
+          </p>
+          <p>
+            The previous order is shown. A partial save may already exist on the
+            relay.
+          </p>
+          {!orderWritable && (
+            <p>
+              Refresh saved workspace preferences before retrying this move.
+            </p>
+          )}
+          <Button
+            disabled={!orderWritable}
+            onClick={() => {
+              const failed = preferences.snapshot().orderError;
+              if (failed) {
+                void preferences
+                  .reorderSections(failed.sectionId, failed.sectionIds)
+                  .catch(() => {});
+                setOrderFocus(failed.sectionId);
+              }
+            }}
+          >
+            Retry move
+          </Button>
+          <Button
+            onClick={() => {
+              setOrderFocus(snapshot.orderError?.sectionId);
+              preferences.dismissOrderError();
+            }}
+          >
+            Dismiss
+          </Button>
+        </div>
+      )}
       {converting && (
         <ConvertToChannel
           key={converting.id}
@@ -914,22 +1042,31 @@ export function SoloWorkspaces({
 type WorkspaceRowsHost = {
   element: HTMLDivElement;
   focus?: HTMLElement | undefined;
+  unframed?: boolean | undefined;
 };
-function WorkspaceRows({ host }: { host: WorkspaceRowsHost }) {
+function WorkspaceRows({
+  host,
+  unframed,
+}: {
+  host: WorkspaceRowsHost;
+  unframed?: string;
+}) {
   const slot = useRef<HTMLDivElement>(null);
   useLayoutEffect(() => {
     const parent = slot.current;
+    host.unframed = unframed !== undefined;
     parent?.appendChild(host.element);
     if (host.focus?.isConnected && document.activeElement === document.body)
       host.focus.focus({ preventScroll: true });
     host.focus = undefined;
     return () => {
+      host.unframed = false;
       if (host.element.contains(document.activeElement))
         host.focus = document.activeElement as HTMLElement;
       if (host.element.parentElement === parent) host.element.remove();
     };
-  }, [host]);
-  return <div ref={slot} />;
+  }, [host, unframed]);
+  return <div ref={slot} data-solo-project={unframed} />;
 }
 
 const DROP = "project:";
@@ -1086,18 +1223,58 @@ function ContributedSoloRow({
 /** A drop reports only its destination, so it saves exactly like Move to. */
 function DropProject({
   projectKey,
+  groupIndex,
+  reorderable,
+  disabled,
   ...props
-}: ComponentProps<typeof Collapsible.Root> & { projectKey: string }) {
-  const { setNodeRef, isOver, active } = useDroppable({ id: projectKey });
+}: ComponentProps<typeof Collapsible.Root> & {
+  projectKey: string;
+  groupIndex: number;
+  reorderable: boolean;
+  disabled: boolean;
+}) {
+  const { setNodeRef, isOver, active } = useDroppable({
+    id: projectKey,
+    data: { group: reorderable, groupIndex },
+    disabled,
+    resizeObserverConfig: { updateMeasurementsFor: [] },
+  });
+  const group = !!active?.data.current?.group;
   return (
     <Collapsible.Root
       {...props}
       ref={setNodeRef}
       data-drop-target={
-        (isOver && active?.data.current?.sectionKey !== projectKey) || undefined
+        (!group && isOver && active?.data.current?.sectionKey !== projectKey) ||
+        undefined
       }
+      data-drop-edge={
+        group && isOver && active?.id !== projectKey
+          ? active?.data.current?.groupIndex < groupIndex
+            ? "after"
+            : "before"
+          : undefined
+      }
+      data-section-dragging={(group && active?.id === projectKey) || undefined}
     />
   );
+}
+
+function WorkspaceDragHandle({
+  children,
+  ...options
+}: {
+  children: ReactNode;
+  sectionKey: string;
+  groupIndex: number;
+  reorderable: boolean;
+}) {
+  const drag = useSidebarSectionDrag(options);
+  // Preserve the heading recipe's direct trigger and the composed workspace's
+  // existing label/disclosure layout. Actions stay outside this handle.
+  return drag.handle && isValidElement<ComponentProps<"div">>(children)
+    ? cloneElement(children, { ref: drag.handle.ref, ...drag.handle.listeners })
+    : children;
 }
 
 /** Both entry points use one action list; right-click never selects the row. */

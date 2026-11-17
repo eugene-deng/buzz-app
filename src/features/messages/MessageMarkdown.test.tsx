@@ -220,7 +220,7 @@ second
         "<ol><li><p>x</p></li><li><p>y</p></li></ol>" +
         "<blockquote><p>quote   here</p></blockquote>" +
         "<table><thead><tr><th>a     b</th></tr></thead><tbody><tr><td>c   d</td></tr></tbody></table>" +
-        '<p><code>a    b</code></p><pre><code tabindex="0">one\n  two\n</code>',
+        '<p><code>a    b</code></p><pre><code tabindex="-1">one\n  two\n</code>',
     );
   });
 
@@ -228,7 +228,7 @@ second
     const html = render("`**literal** :party:`\n\n```ts\nconst x = 1\n```");
     expect(html).toContain("<code>**literal** :party:</code>");
     expect(html).toContain(
-      '<code class="language-ts" tabindex="0">const x = 1',
+      '<code class="language-ts" tabindex="-1">const x = 1',
     );
     expect(html).not.toContain("<strong>literal</strong>");
   });
@@ -1643,4 +1643,20 @@ it("opens a plugin page link in message content through the host opener", () => 
   );
   fireEvent.click(screen.getByRole("link", { name: "the entry" }));
   expect(onOpenLink).toHaveBeenCalledWith(href);
+});
+
+it("renders frozen forwarded mention labels without source profiles or notifications", () => {
+  const content = `@A*B* (${other}) and @A*B*`;
+  const html = render(content, {
+    participantProfiles: new Map(),
+    patch: {
+      mentions: [],
+      mentionReferences: [other],
+      mentionLabels: [{ id: other, names: ["A*B*"] }],
+    },
+  });
+  expect(html).toContain("A*B*");
+  expect(html).not.toContain("<em>");
+  expect(html).not.toContain(`(${other})`);
+  expect(html).toContain("data-mention-kind");
 });

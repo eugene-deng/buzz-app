@@ -189,7 +189,6 @@ function fixture() {
             ui: {
               Workspace: () => null,
               useSplit: vi.fn(),
-              useTabTitle: vi.fn(),
             },
             ...contribution,
             register() {},
