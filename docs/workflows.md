@@ -76,14 +76,23 @@ See the [capability contract](../src/features/workflows/types.ts).
 - The page route `{ owner, id }` (version 1) opens the page at one workflow, as
   **View workflow** on a [workflow message](#opening-the-workflow) does. The
   landing selects that workflow once per visit and clears the filters that hide
-  it, including the default My workflows. Back returns to the opener and Forward
-  restores the selection; closing the detail retires that visit and stays on the
-  page, so Back skips it. A route is an address, not access: only a definition
-  the landing itself read can be selected. A workflow that is gone, or in a
-  channel the viewer can no longer read, opens nothing and shows one notice; a
-  read still in flight or failed shows neither. The route applies only in the
-  community it was opened for. Selecting a row stays local to the page and adds
-  no visit.
+  it, including the default My workflows. A reader who selects a workflow or
+  changes a filter before the routed one has been read keeps that choice: the
+  visit is answered and opens nothing later. The page holds that answer above
+  the landing while it stays open, so a reconnect, which rebuilds the landing,
+  does not open the workflow again. Back returns to the opener, and Forward to
+  a page that was closed meanwhile restores the selection; closing the detail
+  retires that visit and stays on the page, so Back skips it. A route is an
+  address, not access: only a definition the landing itself read can be
+  selected. A workflow the landing has not found once every channel it reads
+  has answered opens nothing and shows one notice; a read still in flight or
+  failed shows neither. The notice says the workflow was not found here, not
+  why. It may be gone or in a channel the viewer cannot read, but the landing
+  also reads fewer channels than the [lookup](#opening-the-workflow) that
+  offered the link: it skips huddle channels, channels whose metadata is
+  pending and channels missing from a partial channel list. The route applies
+  only in the community it was opened for. Selecting a row stays local to the
+  page and adds no visit.
 - Form editing for message/reaction/diff/schedule/webhook triggers and Send
   Message/Delay/Call Webhook actions. Basic conditions cover text, author,
   reaction and message-ID comparisons; unrepresentable expressions stay Advanced.
@@ -227,8 +236,8 @@ the receipt, masked secret delivery, and automatic landing-row refresh in
 Chromium and WebKit. Component tests
 cover sequential secrets, interruption, and purge after the dialog takes a value.
 Opening a workflow from its message is covered offline only: the ID tag parser,
-the lookup, the card and the routed page, with no relay that sends
-`buzz:workflow-id`.
+the lookup, its access wiring in the session, the card and the routed page,
+with no relay that sends `buzz:workflow-id`.
 This is not live acceptance:
 create → edit → run → inspect against an unchanged backend and packaged-native
 acceptance remain unverified. Live credentials, native launch and real workflow
@@ -257,13 +266,18 @@ label, owner and card as they were, as do messages sent before the relay added
 the tag.
 
 The action appears only once this session holds a current definition for that
-coordinate in a channel the viewer can access, by the Workflows page's own
-access rule. Unknown, loading, failed, deleted and inaccessible all show the
-card unchanged: no link, disabled control, placeholder or workflow name. The
-relay scopes the read to the viewer's channels and the session drops events
-from channels it cannot see, so an inaccessible workflow reads as absent. The
-header label stays plain text, and the destination's own checks are a second
-guard, not the gate.
+coordinate in a channel the viewer can access, by the participation rule every
+workflow read in the session uses. The Workflows page is narrower: it also
+skips huddle channels and channels whose metadata is pending. Unknown, loading,
+failed, deleted and inaccessible all show the card unchanged: no link, disabled
+control, placeholder or workflow name. The relay scopes the read to the
+viewer's channels. The session then drops events from a channel it has found
+closed to the viewer and refuses a definition in one, so an inaccessible
+workflow reads as absent. Until channel discovery has placed a channel, both
+session checks pass it and the relay's scoping alone is the gate. When
+discovery then finds that channel closed, the access change drops the retained
+answer and removes an open action. The header label stays plain text, and the
+destination's own checks are a second guard, not the gate.
 
 Rendering a workflow message reads nothing. Opening the card is the request,
 whether by pointer rest, click or keyboard. A fresh retained answer, from the

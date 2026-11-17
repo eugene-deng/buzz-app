@@ -130,8 +130,10 @@ the detail retires the visits that opened that workflow in that community and
 leaves the plain Workflows page in place: Back then goes to the opener, and
 Forward returns to the page with the detail closed. A filter change or a
 deletion that closes the detail does the same. Choosing workflows on the page
-itself stays page-local and creates no visit. Retiring those visits after a
-reload is not claimed.
+itself stays page-local and creates no visit. The visit opens its workflow
+once while the page stays open: a workflow the reader selects, or a filter
+they change, before the linked workflow has been read stands, and a reconnect
+does not open it again. Retiring those visits after a reload is not claimed.
 
 ## History and lifetime boundaries
 
