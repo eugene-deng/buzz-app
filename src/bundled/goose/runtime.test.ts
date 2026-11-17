@@ -3326,6 +3326,14 @@ describe("goose turns through the agent gateway", () => {
       await expect(f.runtime.session(agent, place, "compact")).rejects.toThrow(
         "Couldn't compact through the agent gateway: Buzz couldn't reach the gateway.",
       );
+      for (const reason of ["auth", "readiness_pending"] as const) {
+        route = { ...blocked, reason, message: `Gateway ${reason}` };
+        await expect(
+          f.runtime.session(agent, place, "compact"),
+        ).rejects.toThrow(route.message);
+        expect(f.fake.geese).toHaveLength(2);
+        expect(g.opens).toHaveLength(2);
+      }
       route = { kind: "external", revision: 4 };
       await expect(f.runtime.session(agent, place, "compact")).rejects.toThrow(
         "which this agent's turns don't use now",
