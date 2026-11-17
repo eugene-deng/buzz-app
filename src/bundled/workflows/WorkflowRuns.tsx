@@ -2,6 +2,7 @@ import { useCallback, useState } from "react";
 import type {
   WorkflowCapability,
   WorkflowDefinition,
+  WorkflowRun,
   WorkflowRunCursor,
   WorkflowReference,
 } from "../../features/workflows/types";
@@ -91,12 +92,12 @@ function RunPage({
         </p>
       )}
       {snapshot.status === "ready" && !snapshot.data.runs.length && (
-        <p>No runs returned on this page.</p>
+        <p>{cursor ? "No runs returned on this page." : "No runs yet."}</p>
       )}
       {snapshot.data.runs.map((run) => (
         <article key={run.id} className="workflow-step">
           <p className="text-body">
-            <strong>{run.status.replaceAll("_", " ")}</strong> ·{" "}
+            <strong>{RUN_STATUS_LABELS[run.status]}</strong> ·{" "}
             <time
               dateTime={new Date(run.createdAt * 1000).toISOString()}
               title={formatFullTimestamp(run.createdAt)}
@@ -104,9 +105,15 @@ function RunPage({
               {formatItemTimestamp(run.createdAt, { withTime: true })}
             </time>
           </p>
-          <p className="text-body-sm text-secondary">
-            Current step: {run.currentStep}
-          </p>
+          {run.status === "running" || run.status === "waiting_approval" ? (
+            <p className="text-body-sm text-secondary">
+              Current step: {run.currentStep}
+            </p>
+          ) : run.status === "failed" ? (
+            <p className="text-body-sm text-secondary">
+              Failed at step {run.currentStep}
+            </p>
+          ) : null}
           {(run.errorCode || run.errorMessage) && (
             <p className="text-danger">
               {run.errorCode}: {run.errorMessage}
@@ -138,3 +145,12 @@ function RunPage({
     </section>
   );
 }
+
+const RUN_STATUS_LABELS: Record<WorkflowRun["status"], string> = {
+  pending: "Pending",
+  running: "Running",
+  waiting_approval: "Waiting for approval",
+  completed: "Completed",
+  failed: "Failed",
+  cancelled: "Cancelled",
+};

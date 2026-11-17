@@ -476,7 +476,8 @@ test("history stays lazy and paged; an unknown run never repeats or locks", asyn
   await editor.open("Message helper");
   expect(await page.evaluate(() => window.workflowFixture.calls.runs)).toBe(0);
   await editor.tab("Runs").click();
-  await expect(page.getByText("Current step: 1")).toBeVisible();
+  await expect(page.getByText("Completed", { exact: true })).toBeVisible();
+  await expect(page.getByText(/^Current step:/)).toHaveCount(0);
   await button("Older runs").click();
   await expect(page.getByText("No runs returned on this page.")).toBeVisible();
   expect(await page.evaluate(() => window.workflowFixture.runCursor())).toEqual(
