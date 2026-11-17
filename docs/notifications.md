@@ -122,6 +122,9 @@ checks, not that an OS banner was displayed or read.
   asked. An alert this policy would not show never asks. An unanswered automatic
   request is not reported, retried or repeated. **Allow notifications** does not
   depend on it and stays available while the system still reports not asked.
+  macOS reports an unanswered request as denied (observed on macOS 27), so the
+  system itself separates never asked from asked and ignored, and the in-app
+  request is then unavailable.
 - Running-session dedup is bounded to 2,048 source identities/two minutes; pending
   candidates are capped at 128. Browser presentation retains at most 128 active
   alerts, closing the oldest before retiring its callback. Desktop retains at most
@@ -284,4 +287,11 @@ and exit under an isolated packaged identity. First permission, explicit
 missing-badge setup, deny/disable and legacy-banner interaction also need native
 acceptance. So does the automatic first-alert request on a fresh identity:
 allowed, declined and left unanswered, each followed by a relaunch and another
-alert. Distribution signing and packaged account support remain separate work.
+alert. The unanswered run is done on a signed bundle (macOS 27, isolated
+identity, Buzz in the background): the request showed the system banner, which
+left the screen when Buzz quit; the status read denied while the banner was
+unanswered, after the native 60-second wait timed out and after a relaunch; and
+a second request after the relaunch returned denied at once with no banner.
+Still to run: allowed, declined, a real message alert end to end, and whether
+macOS System Settings lists Buzz after an unanswered prompt. Distribution
+signing and packaged account support remain separate work.
