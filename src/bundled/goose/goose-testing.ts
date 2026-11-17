@@ -290,9 +290,26 @@ export function fakeSpawn(
           });
         case "session/new": {
           fake.opened.push(params);
+          const meta = params._meta as Record<string, unknown> | undefined;
+          // As goose does, a session that names no provider opens on its
+          // config's default provider and model, and fails without them.
+          if (
+            defaults &&
+            !meta?.provider &&
+            !(defaults.providerId && defaults.modelId)
+          )
+            return send({
+              jsonrpc: "2.0",
+              ...(id !== undefined && { id }),
+              error: {
+                code: -32603,
+                message: `Internal error: Failed to resolve provider and model: Configuration value not found: ${defaults.providerId ? "GOOSE_MODEL" : "GOOSE_PROVIDER"}`,
+              },
+            });
           const sessionId = `session-${++sessions}`;
-          const extensions = ((params._meta as Record<string, unknown>)
-            ?.enabledExtensions ?? []) as { server?: { url?: string } }[];
+          const extensions = (meta?.enabledExtensions ?? []) as {
+            server?: { url?: string };
+          }[];
           const url = extensions.find((item) => item.server?.url)?.server?.url;
           if (url) declared.set(sessionId, url);
           return reply(id, {

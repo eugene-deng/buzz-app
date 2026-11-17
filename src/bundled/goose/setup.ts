@@ -499,12 +499,28 @@ export class GooseSetup {
       .sort((a, b) => Number(Boolean(a)) - Number(Boolean(b)));
     if (wanted.length) {
       const read = this.with(async (goose, cwd) => {
+        // goose opens a session naming no provider only on its config's
+        // default provider and model. Without that model, the session names
+        // the default provider and opens on the provider's own default
+        // model, which is not the one goose would run "" on.
+        const defaults = provider
+          ? {}
+          : ((await goose.request(
+              "_goose/unstable/defaults/read",
+              {},
+              REQUEST_TIMEOUT_MS,
+            )) as { providerId?: string | null; modelId?: string | null });
+        const fallback = !provider && !defaults.modelId && defaults.providerId;
+        const named = fallback || provider;
         const opened = (await goose.request(
           "session/new",
           {
             cwd,
             mcpServers: [],
-            _meta: { enabledExtensions: [], ...(provider ? { provider } : {}) },
+            _meta: {
+              enabledExtensions: [],
+              ...(named ? { provider: named } : {}),
+            },
           },
           REQUEST_TIMEOUT_MS,
         )) as ConfigOptions & { sessionId: string };
@@ -512,6 +528,8 @@ export class GooseSetup {
           const found = new Map<string, Efforts | Error>();
           for (const model of wanted) {
             try {
+              if (!model && fallback)
+                throw new Error("goose's config names no default model");
               const { configOptions = [] } = model
                 ? ((await goose.request(
                     "session/set_config_option",
