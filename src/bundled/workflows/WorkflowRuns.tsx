@@ -107,11 +107,11 @@ function RunPage({
           </p>
           {run.status === "running" || run.status === "waiting_approval" ? (
             <p className="text-body-sm text-secondary">
-              Current step: {run.currentStep}
+              Current step: {run.currentStep + 1}
             </p>
           ) : run.status === "failed" ? (
             <p className="text-body-sm text-secondary">
-              Failed at step {run.currentStep}
+              Failed at step {run.currentStep + 1}
             </p>
           ) : null}
           {(run.errorCode || run.errorMessage) && (

@@ -13,9 +13,10 @@ import {
 afterEach(cleanup);
 it("labels each status and shows a step only while a run is live or failed", async () => {
   const fixture = createWorkflowFixture();
+  let nextId = 0;
   const run = (status: (typeof fixtureRun)["status"], currentStep: number) => ({
     ...fixtureRun,
-    id: `${fixtureRun.id.slice(0, -1)}${currentStep}`,
+    id: `${fixtureRun.id.slice(0, -1)}${nextId++}`,
     status,
     currentStep,
   });
@@ -24,7 +25,7 @@ it("labels each status and shows a step only while a run is live or failed", asy
       run("pending", 0),
       run("running", 2),
       run("waiting_approval", 3),
-      run("failed", 4),
+      run("failed", 0),
       run("cancelled", 5),
       run("completed", 6),
     ],
@@ -48,9 +49,10 @@ it("labels each status and shows a step only while a run is live or failed", asy
     expect(await screen.findByText(label)).toBeVisible();
   expect(
     screen.getAllByText(/^Current step:/).map((line) => line.textContent),
-  ).toEqual(["Current step: 2", "Current step: 3"]);
-  expect(screen.getByText("Failed at step 4")).toBeVisible();
-  expect(screen.queryByText(/step [056]$/)).toBeNull();
+  ).toEqual(["Current step: 3", "Current step: 4"]);
+  // The relay stores the 0-based index of the step a run failed on.
+  expect(screen.getByText("Failed at step 1")).toBeVisible();
+  expect(screen.queryByText(/step [67]$/)).toBeNull();
 });
 
 it("says a workflow has no runs yet on the first page", async () => {
