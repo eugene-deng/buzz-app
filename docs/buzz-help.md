@@ -1873,6 +1873,12 @@ workflow was deleted, when it belongs to a channel you aren’t in, when Buzz
 couldn’t check, or when the message is older than this feature. Seeing a
 workflow’s message does not give you access to the workflow.
 
+If you can view the workflow, **View workflow** appears even when the
+**Workflows** plugin is turned off, as it is on a fresh install. It then opens
+a page that says **Workflows is turned off**, and **Back** returns you to the
+message. To see the workflow from that page, choose **Manage plugins**, choose
+**Enable** for Workflows and close Settings: Buzz opens the linked workflow.
+
 ## Deleting an agent’s workflow
 
 In **Workflows → Owner → All channel workflows**, open the workflow’s actions

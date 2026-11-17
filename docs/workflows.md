@@ -99,7 +99,10 @@ See the [capability contract](../src/features/workflows/types.ts).
   also reads fewer channels than the [lookup](#opening-the-workflow) that
   offered the link: it skips huddle channels and channels missing from a
   partial channel list. The route applies only in the community it was opened
-  for. Selecting a row stays local to the page and adds no visit.
+  for. Selecting a row stays local to the page and adds no visit. While the
+  plugin is turned off there is no page for the route to open, and the link
+  lands on the [turned-off page](#opening-the-workflow) until Workflows is
+  enabled.
 - Form editing for message/reaction/diff/schedule/webhook triggers and Send
   Message/Delay/Call Webhook actions. Basic conditions cover text, author,
   reaction and message-ID comparisons; unrepresentable expressions stay Advanced.
@@ -243,8 +246,10 @@ the receipt, masked secret delivery, and automatic landing-row refresh in
 Chromium and WebKit. Component tests
 cover sequential secrets, interruption, and purge after the dialog takes a value.
 Opening a workflow from its message is covered offline only: the ID tag parser,
-the lookup, its access wiring in the session, the card and the routed page,
-with no relay that sends `buzz:workflow-id`.
+the lookup, its access wiring in the session, the card, the routed page, and
+one journey through the app with the plugin turned off (the message, the
+turned-off page, Back, enabling Workflows and the linked workflow), with no
+relay that sends `buzz:workflow-id`.
 This is not live acceptance:
 create → edit → run → inspect against an unchanged backend and packaged-native
 acceptance remain unverified. Live credentials, native launch and real workflow
@@ -284,7 +289,9 @@ workflow reads as absent. Until channel discovery has placed a channel, both
 session checks pass it and the relay's scoping alone is the gate. When
 discovery then finds that channel closed, the access change drops the retained
 answer and removes an open action. The header label stays plain text, and the
-destination's own checks are a second guard, not the gate.
+destination's own checks are a second guard, not the gate. Whether the
+Workflows plugin is turned on is not part of the gate either: the action is
+offered while the plugin is off, and lands as described below.
 
 Rendering a workflow message reads nothing. Opening the card is the request,
 whether by pointer rest, click or keyboard. A fresh retained answer, from the
@@ -306,6 +313,18 @@ card. Every surface with the full byline shares the card: channel timelines,
 threads, direct messages, huddle discussion, media comments and watched
 activity. The action opens the saved configuration as it is now, not the
 revision that sent the message.
+
+The Workflows plugin can be turned off, and is by default on a fresh install
+([plugin defaults](plugin-defaults.md)). The action is offered all the same:
+the card and its lookup belong to the session, not the plugin, and hiding the
+action would leave those viewers no path from the message to the workflow. The
+link then lands on the shell's **Workflows is turned off** page, as a link to
+any turned-off plugin's page does. That page names nothing of the workflow and
+reads nothing. Back returns to the message and Forward to the same page. Its
+**Manage plugins** opens Workflows in Settings; enabling the plugin there and
+closing Settings resolves the same visit to the page route, and the page opens
+the linked workflow's detail as it does for any routed visit. Back still
+returns to the message.
 
 Attribution requires a verified kind-9 event from the selected community's
 explicit NIP-11 `self`, exactly one canonical `buzz:workflow=true` marker and one

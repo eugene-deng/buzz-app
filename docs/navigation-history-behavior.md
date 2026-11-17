@@ -137,7 +137,11 @@ a channel awaits its metadata, and reports the workflow missing only once
 that list has settled. A workflow the reader selects, or a filter they
 change, before the linked workflow has been read stands until a reconnect
 resets the page, which then opens the linked workflow. Retiring those visits
-after a reload is not claimed.
+after a reload is not claimed. While the Workflows plugin is turned off the
+action is still offered, and its visit shows the turned-off page: Back returns
+to the message and Forward to that page. Enabling Workflows from that page's
+Manage plugins and closing Settings opens the linked workflow in the same
+visit, and Back from it still returns to the message.
 
 ## History and lifetime boundaries
 
