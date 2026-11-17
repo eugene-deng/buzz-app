@@ -54,6 +54,7 @@ it("registers only where the desktop app can run codex and base64", () => {
     title: "Codex",
     Create: expect.any(Function),
     icon: CodexLogoIcon,
+    gateway: { harness: "codex" },
   });
   expect(type?.provider).toBeDefined();
   expect(type?.tabs?.map(({ title, role }) => [title, role])).toEqual([
