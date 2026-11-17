@@ -1856,6 +1856,16 @@ so other people can’t use yours.”
 
 A schedule with only message and delay steps shows no warning.
 
+## Opening a workflow from its message
+
+A message sent by a workflow shows **Workflow · owned by …**. Choose the
+information icon beside it to open **Workflow message**. If you can view that
+workflow, the card includes **View workflow**, which opens it in **Workflows**;
+**Back** returns you to the message. The card has no such action when the
+workflow was deleted, when it belongs to a channel you aren’t in, when Buzz
+couldn’t check, or when the message is older than this feature. Seeing a
+workflow’s message does not give you access to the workflow.
+
 ## Deleting an agent’s workflow
 
 In **Workflows → Owner → All channel workflows**, open the workflow’s actions

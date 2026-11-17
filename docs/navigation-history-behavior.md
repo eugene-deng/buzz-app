@@ -123,6 +123,16 @@ there is no view beneath it; and while a failed link waits for Retry, the
 picker's **Join a community** opens in place, because a new visit would replace
 the failure and its Retry.
 
+**View workflow** on a workflow message opens a visit to the Workflows page at
+that workflow (page route `{ owner, id }`; see [Workflows](workflows.md#opening-the-workflow)).
+Back returns to the message and Forward restores the workflow's detail. Closing
+the detail retires the visits that opened that workflow in that community and
+leaves the plain Workflows page in place: Back then goes to the opener, and
+Forward returns to the page with the detail closed. A filter change or a
+deletion that closes the detail does the same. Choosing workflows on the page
+itself stays page-local and creates no visit. Retiring those visits after a
+reload is not claimed.
+
 ## History and lifetime boundaries
 
 App arrows, supported history shortcuts, mouse Back/Forward buttons and, in

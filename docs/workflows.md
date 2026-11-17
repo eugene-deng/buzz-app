@@ -73,6 +73,17 @@ See the [capability contract](../src/features/workflows/types.ts).
   selected, the inspector shows the workflow's name, description, channel and
   enabled state; draft errors stay visible while their field is hidden. Form,
   YAML and Runs tabs switch views; save recovery stays visible.
+- The page route `{ owner, id }` (version 1) opens the page at one workflow, as
+  **View workflow** on a [workflow message](#opening-the-workflow) does. The
+  landing selects that workflow once per visit and clears the filters that hide
+  it, including the default My workflows. Back returns to the opener and Forward
+  restores the selection; closing the detail retires that visit and stays on the
+  page, so Back skips it. A route is an address, not access: only a definition
+  the landing itself read can be selected. A workflow that is gone, or in a
+  channel the viewer can no longer read, opens nothing and shows one notice; a
+  read still in flight or failed shows neither. The route applies only in the
+  community it was opened for. Selecting a row stays local to the page and adds
+  no visit.
 - Form editing for message/reaction/diff/schedule/webhook triggers and Send
   Message/Delay/Call Webhook actions. Basic conditions cover text, author,
   reaction and message-ID comparisons; unrepresentable expressions stay Advanced.
@@ -215,6 +226,9 @@ journeys cover navigating to the landing, exact readback both before and after
 the receipt, masked secret delivery, and automatic landing-row refresh in
 Chromium and WebKit. Component tests
 cover sequential secrets, interruption, and purge after the dialog takes a value.
+Opening a workflow from its message is covered offline only: the ID tag parser,
+the lookup, the card and the routed page, with no relay that sends
+`buzz:workflow-id`.
 This is not live acceptance:
 create → edit → run → inspect against an unchanged backend and packaged-native
 acceptance remain unverified. Live credentials, native launch and real workflow
@@ -229,6 +243,48 @@ explaining that the owner set up the workflow but did not send the message
 personally; it shows no keys. Compact Search, Inbox/activity, link previews and
 notification titles retain the automation label; opening the message shows the
 full byline. Notifications use cached names only and do not add profile reads.
+
+### Opening the workflow
+
+The card adds **View workflow** when the message names its workflow and this
+viewer can read it. The relay names the workflow with one `buzz:workflow-id`
+tag whose value is the kind-30620 definition's `d`, a lowercase hyphenated UUID;
+with the verified owner it forms the coordinate `30620:<owner>:<id>`. The tag
+carries no channel and no name. The ID counts only on a message that already
+passes the attribution checks below, and only as exactly one tag with exactly
+two fields. A missing, repeated or malformed ID names nothing and leaves the
+label, owner and card as they were, as do messages sent before the relay added
+the tag.
+
+The action appears only once this session holds a current definition for that
+coordinate in a channel the viewer can access, by the Workflows page's own
+access rule. Unknown, loading, failed, deleted and inaccessible all show the
+card unchanged: no link, disabled control, placeholder or workflow name. The
+relay scopes the read to the viewer's channels and the session drops events
+from channels it cannot see, so an inaccessible workflow reads as absent. The
+header label stays plain text, and the destination's own checks are a second
+guard, not the gate.
+
+Rendering a workflow message reads nothing. Opening the card is the request,
+whether by pointer rest, click or keyboard. A fresh retained answer, from the
+landing's batches or an earlier lookup and including "not readable", answers for
+ten seconds without a read. Otherwise the client sends one kind-30620 read with
+one filter (`authors`, `#d`, `limit: 1`) under a ten-second deadline. Equal
+concurrent lookups share that read, closing the card cancels it, and nothing
+retries or polls. Relay reads per client are therefore none per rendered
+message and at most one single-event read per card opening. A failed read
+retains nothing. Reconnection, access loss and workflow commands drop retained
+answers and remove an open action; they do not reread.
+
+View workflow opens
+`buzz://plugin?id=buzz.workflows&page=workflows&route.owner=<owner>&route.id=<id>`
+through the surface's own link opener, bound to the message's community like
+any [plugin page link](deep-links.md). It lands on that workflow's detail and
+Back returns to the message. A surface that cannot open links says so in the
+card. Every surface with the full byline shares the card: channel timelines,
+threads, direct messages, huddle discussion, media comments and watched
+activity. The action opens the saved configuration as it is now, not the
+revision that sent the message.
 
 Attribution requires a verified kind-9 event from the selected community's
 explicit NIP-11 `self`, exactly one canonical `buzz:workflow=true` marker and one
@@ -281,5 +337,8 @@ must retain their admission-owned event objects. Without explicit authority,
 cached-only startup keeps the signer fallback described above.
 Participant summaries have no per-message owner evidence
 and continue to identify signing participants, not workflow owners. Workflow rows
-are not grouped together because the message metadata lacks a workflow/run ID.
-Exact workflow/run navigation and historical execution configuration are not claimed.
+are not grouped together: the workflow ID opens the workflow and nothing else,
+and the message metadata has no run ID. Navigation to the workflow is claimed
+only as [described above](#opening-the-workflow), for viewers who can read it.
+Navigation to the run that sent a message, and its historical execution
+configuration, are not claimed.

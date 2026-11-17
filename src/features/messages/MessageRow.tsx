@@ -1243,6 +1243,14 @@ function MessageRowContent({
                   <WorkflowByline
                     ownerId={row.workflowOwnerId}
                     ownerName={workflowOwnerName}
+                    workflow={
+                      references?.workflows && row.workflowId
+                        ? {
+                            capability: references.workflows,
+                            id: row.workflowId,
+                          }
+                        : undefined
+                    }
                     canOpenLink={canOpenLink}
                     onOpenLink={openLink}
                   />
