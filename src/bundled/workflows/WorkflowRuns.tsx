@@ -105,7 +105,7 @@ function RunPage({
               {formatItemTimestamp(run.createdAt, { withTime: true })}
             </time>
           </p>
-          {run.status === "running" || run.status === "waiting_approval" ? (
+          {run.status === "waiting_approval" ? (
             <p className="text-body-sm text-secondary">
               Current step: {run.currentStep + 1}
             </p>
