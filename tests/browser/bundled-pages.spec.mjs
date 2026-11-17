@@ -24,6 +24,17 @@ test("edits and preserves drafts using host UI, then adopts an agent revision wi
   await expect(
     page.getByRole("link", { name: "Agent outline", exact: true }),
   ).toBeVisible();
+  await page.evaluate(() => {
+    const f = window.workingNotesFixture;
+    return f.agentEdit(f.agentPage, "Fresh unopened collection body");
+  });
+  await page
+    .getByRole("searchbox", { name: "Search docs" })
+    .fill("Fresh unopened collection body");
+  await expect(
+    page.getByRole("link", { name: "Agent outline", exact: true }),
+  ).toBeVisible();
+  await page.getByRole("button", { name: "Clear search docs" }).click();
   const shared = page.getByRole("link", {
     name: "Shared research",
     exact: true,

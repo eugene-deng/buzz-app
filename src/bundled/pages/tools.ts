@@ -166,7 +166,10 @@ export function noteTools(
         );
         return JSON.stringify({
           pages: page.notes
-            .filter((note) => note.title.toLowerCase().includes(query))
+            .filter(
+              (note) =>
+                !note.deleted && note.title.toLowerCase().includes(query),
+            )
             .map((note) => ({
               id: note.id,
               channel: note.channel,

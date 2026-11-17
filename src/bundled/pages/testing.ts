@@ -447,7 +447,10 @@ export async function notesFixture(options: { live?: boolean } = {}) {
     queries,
     liveChannels: () => liveChannels,
     deliver(event: RelayEvent) {
-      const channel = noteTag(event, "h");
+      const channel = noteTag(
+        event,
+        event.kind === 39000 || event.kind === 39002 ? "d" : "h",
+      );
       if (options.live && channel && liveChannels.includes(channel))
         live?.receive([event], { phase: "live", sourceChannels: [channel] });
     },

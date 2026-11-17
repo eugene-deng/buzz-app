@@ -133,6 +133,7 @@ const tool = (name: string) => {
 Object.assign(window, {
   workingNotesFixture: {
     plan,
+    agentPage,
     head(id: string) {
       const event = f.heads.get(id);
       return event ? parseNote(event) : undefined;

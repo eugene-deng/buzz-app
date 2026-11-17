@@ -241,6 +241,14 @@ describe("connected page revisions", () => {
     ).toBe(false);
     const listed = await f.workspace.list();
     expect(listed.notes).toMatchObject([{ id: original.id, deleted: true }]);
+    const get = f.tool("page_get");
+    for (const args of [{}, { q: "Deleted" }])
+      expect(
+        JSON.parse((await get.call(f.client(), {}, args)) as string).pages,
+      ).toEqual([]);
+    expect(
+      JSON.parse((await get.call(f.client(), {}, original)) as string).deleted,
+    ).toBe(true);
     const restored = await f.workspace.save(
       deleted,
       { title: "Plan", markdown: original.markdown },

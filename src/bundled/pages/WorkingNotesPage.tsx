@@ -20,7 +20,8 @@ import {
   type Note,
   type NoteAddress,
 } from "./model";
-import type { NotesPage as CollectionPage, NotesWorkspace } from "./workspace";
+import type { NotesWorkspace } from "./workspace";
+import { useNotesCollection } from "./collection";
 import type { PageProps } from "../../features/pages/service";
 import { usePagesUi } from "./ui";
 import type { PanelProps } from "../../features/panels/service";
@@ -63,9 +64,6 @@ function openBuzzLink(
   void navigator.open(target);
   return true;
 }
-const errorText = (error: unknown) =>
-  error instanceof Error ? error.message : "Docs could not be read.";
-
 export function WorkingNotesPage({
   relay,
   getWorkspace,
@@ -164,13 +162,8 @@ export function WorkingNotesCommunity({
     [destination],
   );
   const searchRef = useRef<HTMLElement>(null);
-  const [collection, setCollection] = useState<CollectionPage>({
-    notes: [],
-    creators: {},
-    more: false,
-  });
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const { collection, setCollection, loading, error, load, changed, remove } =
+    useNotesCollection(workspace);
   const [query, setQuery] = useState(destination?.query ?? "");
   const [trash, setTrash] = useState(destination?.trash ?? false);
   const [folder, setFolder] = useState(destination?.folder);
@@ -226,47 +219,6 @@ export function WorkingNotesCommunity({
   );
   const selectedRef = useRef(selected);
   selectedRef.current = selected;
-  const loadId = useRef(0);
-  const cursor = useRef(collection.cursor);
-  cursor.current = collection.cursor;
-  const load = useCallback(
-    async (more = false) => {
-      const id = ++loadId.current;
-      setLoading(true);
-      setError("");
-      try {
-        const page = await workspace.list(more ? cursor.current : undefined);
-        if (loadId.current !== id) return;
-        setCollection((old) => ({
-          ...page,
-          creators: more
-            ? { ...old.creators, ...page.creators }
-            : page.creators,
-          notes: more
-            ? [
-                ...new Map(
-                  [...old.notes, ...page.notes].map((note) => [
-                    noteKey(note),
-                    note,
-                  ]),
-                ).values(),
-              ]
-            : page.notes,
-        }));
-      } catch (error) {
-        if (loadId.current === id) setError(errorText(error));
-      } finally {
-        if (loadId.current === id) setLoading(false);
-      }
-    },
-    [workspace],
-  );
-  useEffect(() => {
-    void load();
-    return () => {
-      loadId.current++;
-    };
-  }, [load]);
   const reveal = useCallback((address: NoteAddress) => {
     setOpened((old) =>
       old.some((item) => noteKey(item) === noteKey(address))
@@ -355,22 +307,6 @@ export function WorkingNotesCommunity({
       }
     }
   }, [initial, destination, reveal, visit]);
-  const changed = useCallback((note: Note) => {
-    setCollection((old) =>
-      old.notes.some(
-        (item) =>
-          noteKey(item) === noteKey(note) && item.revision === note.revision,
-      )
-        ? old
-        : {
-            ...old,
-            notes: [
-              note,
-              ...old.notes.filter((item) => noteKey(item) !== noteKey(note)),
-            ],
-          },
-    );
-  }, []);
   const visible = collection.notes.filter((note) => trash || !note.deleted);
   const isMain = (note: Note) =>
     mainCreators.has(collection.creators[note.channel] ?? "");
@@ -474,14 +410,7 @@ export function WorkingNotesCommunity({
                   onOpenLink={(url) =>
                     openBuzzLink(navigator, workspace.session, url)
                   }
-                  onUnavailable={(missing) =>
-                    setCollection((old) => ({
-                      ...old,
-                      notes: old.notes.filter(
-                        (note) => noteKey(note) !== noteKey(missing),
-                      ),
-                    }))
-                  }
+                  onUnavailable={(missing) => remove([missing.channel])}
                   onChange={changed}
                 />
               ),
@@ -568,44 +497,16 @@ function NotePanelContents({
   navigator: Navigation;
   context: PanelProps["context"];
 }) {
-  const [catalogue, setCatalogue] = useState<CollectionPage>({
-    notes: [],
-    creators: {},
-    more: false,
-  });
-  const [error, setError] = useState("");
+  const {
+    collection: catalogue,
+    error,
+    changed,
+    remove,
+  } = useNotesCollection(workspace);
   const title =
     catalogue.notes.find((note) => noteKey(note) === noteKey(initial))?.title ??
     "Doc";
   usePagesUi().panels.useTabTitle?.(title);
-  useEffect(() => {
-    const controller = new AbortController();
-    void workspace
-      .list(undefined, controller.signal)
-      .then(setCatalogue)
-      .catch((error: unknown) => {
-        if (!controller.signal.aborted) setError(errorText(error));
-      });
-    return () => controller.abort();
-  }, [workspace]);
-  const changed = useCallback(
-    (note: Note) =>
-      setCatalogue((old) =>
-        old.notes.some(
-          (item) =>
-            noteKey(item) === noteKey(note) && item.revision === note.revision,
-        )
-          ? old
-          : {
-              ...old,
-              notes: [
-                note,
-                ...old.notes.filter((item) => noteKey(item) !== noteKey(note)),
-              ],
-            },
-      ),
-    [],
-  );
   const open = (address: NoteAddress) => {
     const communityOrigin = workspace.session.scope.replace(
       /:[0-9a-f]{64}$/,
@@ -636,14 +537,7 @@ function NotePanelContents({
             catalogue={catalogue.notes}
             partial={catalogue.more}
             onChange={changed}
-            onUnavailable={(missing) =>
-              setCatalogue((old) => ({
-                ...old,
-                notes: old.notes.filter(
-                  (note) => noteKey(note) !== noteKey(missing),
-                ),
-              }))
-            }
+            onUnavailable={(missing) => remove([missing.channel])}
             onOpen={open}
             onOpenLink={(url) =>
               openBuzzLink(navigator, workspace.session, url)
