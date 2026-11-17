@@ -109,9 +109,19 @@ checks, not that an OS banner was displayed or read.
   does not replay cancelled alerts. Existing shown OS banners are not withdrawn.
   Hosts without preference decoding retain existing notification behavior; this
   slice adds no native preference adapter or automatic cross-device synchronization.
-- Permission is requested explicitly from Settings where a browser needs a user
-  gesture. A fresh pending candidate is reconsidered after Allow; a newer off
-  choice still wins. Observable API errors are reported, never auto-retried.
+- Permission can always be requested explicitly from Settings, the only place a
+  browser asks because it needs a user gesture. A fresh pending candidate is
+  reconsidered after Allow; a newer off choice still wins. Observable API errors
+  are reported, never auto-retried.
+- On macOS, the first alert that would be shown while the system reports that it
+  has not been asked yet sends the system permission request in place of that
+  alert. The alert is dropped and nothing waits for the answer; other candidates
+  pending at that moment are held as before. This automatic request is sent at
+  most once per device install, for every account, and never when the system
+  reports any other status or when Buzz cannot record on the device that it
+  asked. An alert this policy would not show never asks. An unanswered automatic
+  request is not reported, retried or repeated. **Allow notifications** does not
+  depend on it and stays available while the system still reports not asked.
 - Running-session dedup is bounded to 2,048 source identities/two minutes; pending
   candidates are capped at 128. Browser presentation retains at most 128 active
   alerts, closing the oldest before retiring its callback. Desktop retains at most
@@ -177,9 +187,10 @@ focus policy still applies. Dismissal never navigates. Observable send/focus
 failures reach Settings without retry; a focus error does not discard navigation.
 
 On macOS the native authorization state is read from the same
-`UNUserNotificationCenter` settings as Dock permission. Explicit Allow requests
-Alert, Sound and Badge on a fresh identity only; prior denials and disabled
-interactions remain system-controlled. Windows and Linux continue to report
+`UNUserNotificationCenter` settings as Dock permission. Explicit Allow and the
+one automatic first-alert request ask for Alert, Sound and Badge on a fresh
+identity only; prior denials and disabled interactions remain
+system-controlled. Windows and Linux continue to report
 unknown banner permission. Settings on those platforms omits ineffective
 permission controls. The bridge accepts submission before waiting for
 interaction: acceptance is **not** proof that a visible banner appeared. No
@@ -271,4 +282,6 @@ These checks do not prove a visible Dock badge. Native macOS acceptance must
 exercise startup/arrival/read clearing, account/community/access changes, reload
 and exit under an isolated packaged identity. First permission, explicit
 missing-badge setup, deny/disable and legacy-banner interaction also need native
-acceptance. Distribution signing and packaged account support remain separate work.
+acceptance. So does the automatic first-alert request on a fresh identity:
+allowed, declined and left unanswered, each followed by a relaunch and another
+alert. Distribution signing and packaged account support remain separate work.
