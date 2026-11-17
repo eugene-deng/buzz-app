@@ -211,6 +211,7 @@ export function SoloDraft({
   title = "New chat",
   icon,
   headerActions,
+  embedded,
 }: {
   draft?: SoloDraftStart["draft"];
   /** The Solo region whose source opened this draft; its chat gets that label. */
@@ -240,6 +241,7 @@ export function SoloDraft({
   title?: string | undefined;
   icon?: ReactNode;
   headerActions?: ReactNode;
+  embedded?: boolean | undefined;
 }) {
   const draftKey = region
     ? regionDraftKey(region, projectId, regionDraft?.key)
@@ -937,6 +939,7 @@ export function SoloDraft({
   );
   return (
     <SoloDraftView
+      embedded={embedded}
       title={title}
       icon={icon}
       actions={
