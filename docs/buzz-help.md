@@ -1426,6 +1426,16 @@ available rather than silently discarding it.
   settings files, including a gateway app's. Claude agents running on a
   remote execution target are not attributed either; Buzz leaves their
   Claude settings alone.
+- Once local Codex agents run through the agent gateway, Codex sends each
+  turn's Buzz context to the gateway when Codex's model provider on that
+  device is the AI Gateway's, so the gateway can attribute the turn. A new
+  message in the same Buzz thread joins a running turn and is attributed to
+  the message that started it. A message from another thread, or after the
+  agent's gateway access changed, waits and runs as its own turn. A running
+  turn is never stopped for attribution. When Codex uses another provider,
+  runs on another machine, or uses an active voice session's retained setup,
+  its turns run without that context, and Activity shows "Ran without the
+  Buzz context" with the reason.
 - **Agents → Your teams → Previous versions**, in a team's editor, lists the
   saved versions of a team that syncs to a community, the same way. Reverting
   restores its instructions and keeps its current name; members are not

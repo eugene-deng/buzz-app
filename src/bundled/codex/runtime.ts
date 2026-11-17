@@ -410,6 +410,9 @@ export class CodexRuntime {
     private readonly handle: (pubkey: string) => AgentHandle | undefined = () =>
       undefined,
     private readonly resolveDirectory?: Host["resolveDirectory"],
+    /** The gateway's routes while Codex's gateway mode is on; without
+     * them no turn or compaction consults the gateway. */
+    private readonly routes?: CodexRoutes,
   ) {}
   /** The folder a plugin gave the conversation, if any. Only the local
    * runtime keeps them; an execution target's conversations refuse one. */
@@ -746,8 +749,12 @@ export class CodexRuntime {
       // Where a turn would fall back from the gateway, compaction runs as
       // configured too, without the context, and says so.
       const control = controlRoute(this.routes, agent.key);
-      let notice =
-        control?.kind === "blocked" ? fallbackNotice(control.route) : undefined;
+      let notice: string | undefined;
+      if (control?.kind === "blocked") {
+        if (control.route.reason === "auth")
+          throw new Error(control.route.message);
+        notice = fallbackNotice(control.route.reason);
+      }
       const server = this.open(this.handle(agent.key));
       const rpc = await server.opening;
       const settings = this.resolveConfig(agent.config);
@@ -766,7 +773,7 @@ export class CodexRuntime {
         throw new Error(
           "The workspace changed. Send a message to start its session first.",
         );
-      const { params, bridge } = await this.prepare(
+      const prepared = await this.prepare(
         rpc,
         agent,
         settings,
@@ -775,6 +782,14 @@ export class CodexRuntime {
         undefined,
         home,
       );
+      const { bridge } = prepared;
+      let { params } = prepared;
+      // Through the gateway where the agent's turns go, under the control's
+      // own context and the thread's Buzz session.
+      const gateway =
+        control?.kind === "eligible" ? control.gateway : undefined;
+      const headed = this.gatewayParams(prepared, gateway);
+      if (gateway && !headed) notice = this.unheaded();
       try {
         if (gateway && headed) {
           const bound = continueSession(gateway.route, thread.gateway);
@@ -1705,6 +1720,7 @@ export class CodexRuntime {
           workspace: loaded.workspace,
           at: Date.now(),
           ...(loaded.tools ? { tools: loaded.tools } : {}),
+          ...(loaded.binding ? { gateway: loaded.binding } : {}),
           ...(agent.protection
             ? { protection: agent.protection.stateKey }
             : {}),
@@ -2733,7 +2749,7 @@ export class CodexRuntime {
     home?: string,
   ) {
     const normalized = await rpc.request<{
-      config: {
+      config: ProviderConfig & {
         mcp_servers?: Record<string, Record<string, unknown>>;
         model_reasoning_summary?: string | null;
         features?: { hooks?: boolean; codex_hooks?: boolean };
@@ -2835,23 +2851,6 @@ export class CodexRuntime {
   private unheaded() {
     return this.target ? REMOTE_UNATTRIBUTED : NO_PROVIDER;
   }
-  /** Watches `gateway`'s route for `agent` from now: `abort` runs once the
-   * route moves past the revision it was dispatched at. */
-  private stayOnRoute(
-    agent: AgentKey,
-    gateway: CodexRoute | undefined,
-    abort: (error: Error) => void,
-  ) {
-    const { routes } = this;
-    if (!gateway || !routes) return undefined;
-    const check = () => {
-      if (routes.routeFor(agent).revision !== gateway.route.revision)
-        abort(new Error(ROUTE_CHANGED));
-    };
-    const off = routes.subscribeRoute(agent, check);
-    check();
-    return off;
-  }
   /** Shared thread setup; a voice seat retains it between delegated turns. */
   async loadThread(
     request: Request,
@@ -2874,7 +2873,7 @@ export class CodexRuntime {
     signal.throwIfAborted();
     const saved = entry.saved[key];
     const existing = resumable(saved, agent.protection);
-    const { params, model, effort, summary, bridge } = await this.prepare(
+    const prepared = await this.prepare(
       rpc,
       agent,
       settings,
@@ -2883,6 +2882,8 @@ export class CodexRuntime {
       request.synced,
       home,
     );
+    const { model, effort, summary, bridge } = prepared;
+    let { params } = prepared;
     if (voiceInstructions) {
       Object.assign(params.config, {
         "realtime.type": "conversational",
@@ -2890,6 +2891,11 @@ export class CodexRuntime {
       });
       params.developerInstructions += `\n${voiceInstructions}`;
     }
+    // A voice seat retains its subscription; its turns use that setup.
+    const { gateway } = request;
+    const headed = this.gatewayParams(prepared, gateway);
+    let notice = request.gatewayFallback?.notice;
+    if (gateway && !headed) notice = this.unheaded();
     let threadId: string | undefined;
     try {
       // Resume restores the thread's tools, so one started with other added
@@ -2991,6 +2997,8 @@ export class CodexRuntime {
         existing,
         resuming,
         fresh,
+        binding,
+        notice,
       };
     } catch (error) {
       if (threadId)
@@ -3060,6 +3068,7 @@ export class CodexRuntime {
     });
     let hookBridge: Awaited<ReturnType<typeof openHookBridge>> | undefined;
     let explain: (() => string | undefined) | undefined;
+    let notice = request.gatewayFallback?.notice;
     try {
       const rpc = await server.opening;
       signal.throwIfAborted();
@@ -3082,7 +3091,15 @@ export class CodexRuntime {
         saved,
         resuming,
         fresh,
+        binding,
       } = loaded;
+      active.gateway = gatewayMark(request.gateway);
+      notice =
+        seat && request.gateway
+          ? unattributed(
+              "The active voice session keeps its existing Codex configuration.",
+            )
+          : loaded.notice;
       active.threadId = threadId;
       // A refusal outside this turn does not explain how it ends.
       explain = server.explainer?.(threadId);
@@ -3187,6 +3204,7 @@ export class CodexRuntime {
           ...(agent.protection
             ? { protection: agent.protection.stateKey }
             : {}),
+          ...(binding ? { gateway: binding } : {}),
         });
         ready();
         this.status(agent.key, key, "Working");

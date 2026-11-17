@@ -73,6 +73,7 @@ export const apply: PluginModule["apply"] = (ctx) => {
     ctx.host,
     (pubkey) => ctx.agents.handle(pubkey),
     ctx.host.resolveDirectory?.bind(ctx.host),
+    CODEX_ROUTES,
   );
   // Failed turns' notices link to where Codex signs in.
   runtime.explain = (notice) =>
