@@ -887,6 +887,7 @@ function MessageRowContent({
         !readOnly &&
         row.threadRootId &&
         row.authorId === session.viewer &&
+        !row.forum &&
         !row.agentEnvelope &&
         !row.diff &&
         (!row.delivery || ["accepted", "seen"].includes(row.delivery)) &&

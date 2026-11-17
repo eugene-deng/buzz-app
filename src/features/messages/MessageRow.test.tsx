@@ -2559,9 +2559,39 @@ it("opens the exact source thread from a shared message", () => {
   }
 });
 
-it.each(["own", "other", "root", "pending", "archived", "read-only"])(
+it.each([
+  "own",
+  "other",
+  "root",
+  "pending",
+  "archived",
+  "read-only",
+  "forum-post",
+  "forum-reply",
+])(
   "offers Send to channel only for a writable authored reply: %s",
   async (scenario) => {
+    const author = keypair();
+    const original = signed(author, {
+      kind:
+        scenario === "forum-post"
+          ? 45001
+          : scenario === "forum-reply"
+            ? 45003
+            : 9,
+      content: "Authored message",
+      created_at: 10,
+      tags: [
+        ["h", row.channelId],
+        ...(scenario === "root" || scenario === "forum-post"
+          ? []
+          : [["e", "a".repeat(64), "", "reply"]]),
+      ],
+    });
+    const [folded] = foldMessages(row.channelId, "relay", [original], {
+      includeReplies: true,
+    });
+    if (!folded) throw new Error("Expected an authored message row");
     const snapshot = {
       channels: [
         {
@@ -2575,7 +2605,7 @@ it.each(["own", "other", "root", "pending", "archived", "read-only"])(
     const send = vi.fn();
     const getThreadRoot = vi.fn(() => row);
     const session = {
-      viewer: row.authorId,
+      viewer: author.pubkey,
       channels: { list: () => snapshot, subscribeList: () => () => {} },
       messages: { sendToChannel: send },
       outbox: { supports: () => true },
@@ -2587,9 +2617,8 @@ it.each(["own", "other", "root", "pending", "archived", "read-only"])(
       },
     } as unknown as RelaySession;
     const reply: ChannelMessage = {
-      ...row,
-      threadRootId: scenario === "root" ? undefined : "a".repeat(64),
-      authorId: scenario === "other" ? "other" : row.authorId,
+      ...folded,
+      authorId: scenario === "other" ? "other" : author.pubkey,
       ...(scenario === "pending" ? { delivery: "sending" as const } : {}),
     };
     try {
@@ -2609,7 +2638,11 @@ it.each(["own", "other", "root", "pending", "archived", "read-only"])(
       fireEvent.click(
         screen.getByRole("button", { name: "More message actions" }),
       );
-      await screen.findByRole("menu");
+      await waitFor(() =>
+        expect(
+          screen.getByRole("menuitem", { name: "Copy message" }),
+        ).toBeVisible(),
+      );
       const item = screen.queryByRole("menuitem", { name: "Send to channel" });
       expect(!!item).toBe(scenario === "own");
       expect(getThreadRoot).not.toHaveBeenCalled();
@@ -2617,7 +2650,7 @@ it.each(["own", "other", "root", "pending", "archived", "read-only"])(
         fireEvent.click(item);
         expect(getThreadRoot).toHaveBeenCalledOnce();
         expect(send).toHaveBeenCalledWith(reply, row);
-      }
+      } else expect(send).not.toHaveBeenCalled();
     } finally {
       cleanup();
     }
