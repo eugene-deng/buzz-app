@@ -49,6 +49,7 @@ import { threadReference } from "../../features/relay/thread-reference";
 import type { ChannelLabel } from "../../features/channels/channel-icon";
 import { appClient, readFile } from "../../buzz-mcp/app-client";
 import { readProject } from "../../features/agent-harness/project";
+import { conversationEnv } from "../../features/agent-harness/conversation-env";
 import {
   referencedFolders,
   referencedSkills,
@@ -723,15 +724,16 @@ export class CodexRuntime {
       const server = this.open(this.handle(agent.key));
       const rpc = await server.opening;
       const settings = this.resolveConfig(agent.config);
+      const conversation = {
+        channelId: place.channelId,
+        ...(settings.scope === "channel" || !place.root
+          ? {}
+          : { root: place.root }),
+      };
       const { cwd: workspace, home } = await this.conversationPlace(
         reads.scope,
         agent.key,
-        {
-          channelId: place.channelId,
-          ...(settings.scope === "channel" || !place.root
-            ? {}
-            : { root: place.root }),
-        },
+        conversation,
         settings,
       );
       if (workspace !== thread.workspace)
@@ -746,6 +748,7 @@ export class CodexRuntime {
         {},
         undefined,
         home,
+        { ...conversation, name: reads.channelLabel(place.channelId)?.name },
       );
       try {
         signal.throwIfAborted();
@@ -2689,7 +2692,7 @@ export class CodexRuntime {
   private async prepare(
     rpc: AppServer,
     // Protected when it has a policy, bound or not yet.
-    agent: Pick<AgentHandle, "key" | "name" | "pubkey" | "relay"> & {
+    agent: Pick<AgentHandle, "key" | "name" | "pubkey" | "relay" | "owner"> & {
       protection?: unknown;
     },
     settings: Config,
@@ -2698,6 +2701,12 @@ export class CodexRuntime {
     synced?: Delivery["synced"],
     /** The agent's workspace, when `workspace` is the conversation's folder. */
     home?: string,
+    /** The conversation the thread serves; a one-off turn serves none. */
+    conversation?: Readonly<{
+      channelId: string;
+      name?: string | undefined;
+      root?: string;
+    }>,
   ) {
     const normalized = await rpc.request<{
       config: {
@@ -2736,6 +2745,15 @@ export class CodexRuntime {
       : undefined;
     // Codex sets it on this thread's commands only; app-server has none.
     const credential = await rpc.toolCredential(agent);
+    // Per thread too, as app-server serves every conversation.
+    const context = conversation
+      ? conversationEnv({
+          channelId: conversation.channelId,
+          channelName: conversation.name,
+          root: conversation.root,
+          owner: agent.owner,
+        })
+      : {};
     const params = {
       model,
       cwd: workspace,
@@ -2754,6 +2772,12 @@ export class CodexRuntime {
         ...(credential && {
           [`shell_environment_policy.set.${CREDENTIAL_ENV}`]: credential,
         }),
+        ...Object.fromEntries(
+          Object.entries(context).map(([name, value]) => [
+            `shell_environment_policy.set.${name}`,
+            value,
+          ]),
+        ),
       },
     };
     // Ask for reasoning summaries unless the user chose a summary mode.
@@ -2792,6 +2816,7 @@ export class CodexRuntime {
       request,
       request.synced,
       home,
+      request.conversation,
     );
     if (voiceInstructions) {
       Object.assign(params.config, {

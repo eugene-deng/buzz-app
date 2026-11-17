@@ -64,6 +64,7 @@ import {
 } from "../../features/agent-harness/core-memory";
 import { readAuthorNames } from "../../features/agent-harness/author-names";
 import { readProject } from "../../features/agent-harness/project";
+import { conversationEnv } from "../../features/agent-harness/conversation-env";
 import {
   referencedFolders,
   referencedSkills,
@@ -1712,6 +1713,9 @@ export class ClaudeRuntime {
           ...(handle
             ? { agent: { pubkey: handle.pubkey, relay: handle.relay } }
             : {}),
+          ...(key && handle
+            ? { context: this.conversationContext(agent, handle.owner, key) }
+            : {}),
           hook: (session, event, input) =>
             this.hook(agent, session, event, input),
           tools: tools(cwd),
@@ -1733,6 +1737,17 @@ export class ClaudeRuntime {
     });
     this.agents.set(agent, entry);
     return entry;
+  }
+
+  /** The variables for conversation `key`: a channel, or `channel/root`. */
+  private conversationContext(agent: AgentKey, owner: string, key: string) {
+    const [channelId = key, root] = key.split("/");
+    return conversationEnv({
+      channelId,
+      channelName: this.reads(agent)?.channelLabel(channelId)?.name,
+      root,
+      owner,
+    });
   }
 
   /** The agent's memory, or only entry `slug`, as its community's reads give
