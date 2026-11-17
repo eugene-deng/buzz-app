@@ -4,21 +4,18 @@ import { afterEach, expect, it, vi } from "vitest";
 import type { RelaySession } from "../relay/session";
 import type { ThreadSnapshot, ThreadView } from "../relay/threads";
 import type { ChannelMessage } from "../relay/contracts";
-import {
-  CARD_READERS,
-  MESSAGE_CARDS,
-  MessageLinkCards,
-} from "./MessageLinkCards";
+import { CARD_READERS, MessageLinkCards } from "./MessageLinkCards";
+import { FOLD_AFTER } from "./LinkPreviews";
 
 afterEach(cleanup);
 
 const id = (n: number) => n.toString(16).padStart(64, "a");
 const link = (n: number) => `buzz://message?channel=general&id=${id(n)}`;
-const message = (messageId: string): ChannelMessage => ({
+const message = (messageId: string, content?: string): ChannelMessage => ({
   id: messageId,
   channelId: "general",
   authorId: "b".repeat(64),
-  content: `linked body ${messageId.slice(-2)}`,
+  content: content ?? `linked body ${messageId.slice(-2)}`,
   createdAt: 1,
   mentions: [],
   participants: [],
@@ -28,14 +25,14 @@ const message = (messageId: string): ChannelMessage => ({
 });
 
 /** A session whose exact reads find each linked message at once. */
-function fakeSession() {
+function fakeSession(contents: Readonly<Record<string, string>> = {}) {
   const open = new Set<string>();
   const thread = vi.fn(
     (_channelId: string, messageId: string, _options?: unknown) => {
       open.add(messageId);
       const snapshot: ThreadSnapshot = {
         status: "ready",
-        root: message(messageId),
+        root: message(messageId, contents[messageId]),
         replies: [],
         error: undefined,
         canLoadMore: false,
@@ -93,7 +90,7 @@ it("shows each linked message as a card that opens its link", () => {
   expect(onOpenLink).toHaveBeenCalledWith(link(1));
 });
 
-it(`shows at most ${MESSAGE_CARDS} cards for one message`, () => {
+it(`folds cards past ${FOLD_AFTER} behind one button`, () => {
   const { session } = fakeSession();
   render(
     <MessageLinkCards
@@ -103,7 +100,32 @@ it(`shows at most ${MESSAGE_CARDS} cards for one message`, () => {
       onOpenLink={() => true}
     />,
   );
-  expect(screen.getAllByRole("link")).toHaveLength(MESSAGE_CARDS);
+  expect(screen.getAllByRole("link")).toHaveLength(FOLD_AFTER);
+  fireEvent.click(
+    screen.getByRole("button", { name: "Show 1 more linked message" }),
+  );
+  expect(screen.getAllByRole("link")).toHaveLength(4);
+  fireEvent.click(
+    screen.getByRole("button", { name: "Show fewer linked messages" }),
+  );
+  expect(screen.getAllByRole("link")).toHaveLength(FOLD_AFTER);
+});
+
+it("keeps a linked message's spoilers hidden", () => {
+  const { session } = fakeSession({
+    [id(1)]: "The answer is ||forty-two|| and ||more||.",
+  });
+  render(
+    <MessageLinkCards
+      urls={[link(1)]}
+      session={session}
+      scope="community"
+      onOpenLink={() => true}
+    />,
+  );
+  const card = screen.getByRole("link");
+  expect(card.textContent).toContain("The answer is [Spoiler] and [Spoiler].");
+  expect(card.textContent).not.toContain("forty-two");
 });
 
 it(`holds at most ${CARD_READERS} readers, and a waiting card reads once one frees`, () => {
@@ -119,12 +141,16 @@ it(`holds at most ${CARD_READERS} readers, and a waiting card reads once one fre
   ));
   const { rerender } = render(<>{rows}</>);
   expect(open.size).toBe(CARD_READERS);
-  expect(screen.getAllByRole("link")).toHaveLength(CARD_READERS);
   expect(open.has(id(CARD_READERS + 1))).toBe(false);
+  // The waiting card keeps its place and says it's loading.
+  const waiting = screen.getAllByRole("link").at(-1);
+  expect(waiting?.textContent).toBe("Loading message…");
   rerender(<>{rows.slice(1)}</>);
   expect(open.has(id(1))).toBe(false);
   expect(open.has(id(CARD_READERS + 1))).toBe(true);
-  expect(screen.getAllByRole("link")).toHaveLength(CARD_READERS);
+  expect(screen.getAllByRole("link").at(-1)?.textContent).toContain(
+    "linked body",
+  );
 });
 
 it("shows one card for links naming the same message, and says when a card can't open", () => {

@@ -16,7 +16,7 @@ import { channelIcon } from "../channels/channel-icon";
 import { Avatar } from "../../shared/design-system/ui/Avatar";
 import { relativeTimestamp } from "../../shared/relative-timestamp";
 import styles from "./LinkPreview.module.css";
-import { messagePreviewText } from "./message-preview-text";
+import { hideSpoilers, messagePreviewText } from "./message-preview-text";
 import { linkedMessage } from "./linked-message";
 import { avatarMedia } from "../../shared/avatar-source";
 import { sortParticipantNames } from "../identity-names/participant-order";
@@ -41,13 +41,14 @@ export function BuzzLinkPreview({
   session,
   channelId,
   messageId,
-  priority,
+  inline = false,
 }: {
   session: RelaySession;
   channelId: string;
   messageId: string;
-  /** A card shown without being asked for reads behind opened conversations. */
-  priority?: "background" | undefined;
+  /** Shown without being asked for, as a card below a message: it reads
+   * behind opened conversations and keeps spoilers hidden. */
+  inline?: boolean;
 }) {
   const reference = useChannelReference(session.channels, channelId);
   const listLoading = useSyncExternalStore(
@@ -68,7 +69,7 @@ export function BuzzLinkPreview({
     try {
       const owned = session.thread(channelId, messageId, {
         exact: true,
-        ...(priority && { priority }),
+        ...(inline && { priority: "background" as const }),
       });
       setRead({ view: owned, readable });
       void owned.refresh();
@@ -76,7 +77,7 @@ export function BuzzLinkPreview({
     } catch {
       setRead({ view: undefined, readable });
     }
-  }, [session, channelId, messageId, readable, withheld, priority]);
+  }, [session, channelId, messageId, readable, withheld, inline]);
   const destination = namedChannel(reference);
   if (withheld) return <PreviewFailure reason="withheld" />;
   if (read?.readable !== readable) return loading;
@@ -88,6 +89,7 @@ export function BuzzLinkPreview({
       session={session}
       messageId={messageId}
       destination={destination}
+      inline={inline}
       // A lookup is on the way while one is queued or in flight, or while
       // discovery is still loading the list, which then either looks the
       // channel up or errors. Otherwise (the list errored, a failed lookup is
@@ -107,6 +109,7 @@ function PreviewContent({
   messageId,
   destination,
   looking,
+  inline,
 }: {
   view: ThreadView;
   session: RelaySession;
@@ -114,6 +117,7 @@ function PreviewContent({
   destination: FoundChannel | undefined;
   /** A channel lookup is on the way, so a refused read may yet succeed. */
   looking: boolean;
+  inline: boolean;
 }) {
   const snapshot = useSyncExternalStore(
     view.subscribe,
@@ -214,8 +218,9 @@ function PreviewContent({
         </span>
       </span>
       <span className={styles.message}>
-        {messagePreviewText(message.content) ||
-          (message.attachments.length ? "Attachment" : "Empty message")}
+        {messagePreviewText(
+          inline ? hideSpoilers(message.content) : message.content,
+        ) || (message.attachments.length ? "Attachment" : "Empty message")}
       </span>
     </>
   );

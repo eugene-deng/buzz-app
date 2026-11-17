@@ -1,12 +1,11 @@
 import { useLayoutEffect, useState } from "react";
+import { Button } from "../../shared/design-system/ui/Button";
 import { BuzzLinkPreview } from "../conversation/BuzzLinkPreview";
 import { parseBuzzLink } from "../navigation/buzz-links";
 import type { RelaySession } from "../relay/session";
 import styles from "./LinkPreviews.module.css";
 import { messageViewKey } from "./view-key";
-
-/** A message shows cards for this many of its Buzz message links. */
-export const MESSAGE_CARDS = 3;
+import { FOLD_AFTER } from "./LinkPreviews";
 /** Live readers all inline cards may hold at once, out of the session's 64,
  * so a channel full of message links never stops a thread from opening. */
 export const CARD_READERS = 16;
@@ -48,7 +47,8 @@ function readers(session: RelaySession) {
 }
 
 /** Cards below a message for the Buzz messages it links to, as the link's
- * hover card shows them. A card opens its link as clicking the link does. */
+ * hover card shows them. A card opens its link as clicking the link does.
+ * Past `FOLD_AFTER`, the rest fold behind one button, as web previews do. */
 export function MessageLinkCards({
   urls,
   session,
@@ -60,6 +60,7 @@ export function MessageLinkCards({
   scope: string | undefined;
   onOpenLink(url: string): boolean;
 }) {
+  const [open, setOpen] = useState(false);
   // Links spelled differently can name one message; it gets one card.
   const seen = new Set<string>();
   const cards = urls.flatMap((url) => {
@@ -71,9 +72,11 @@ export function MessageLinkCards({
     return [{ url, channelId: link.channelId, messageId: link.messageId }];
   });
   if (!cards.length) return null;
+  const shown = open ? cards : cards.slice(0, FOLD_AFTER);
+  const hidden = cards.length - shown.length;
   return (
     <div className={styles.previews} data-message-link-cards>
-      {cards.slice(0, MESSAGE_CARDS).map((card) => (
+      {shown.map((card) => (
         <MessageLinkCard
           key={messageViewKey(session, scope, card.url)}
           session={session}
@@ -81,6 +84,18 @@ export function MessageLinkCards({
           {...card}
         />
       ))}
+      {cards.length > FOLD_AFTER && (
+        <Button
+          variant="ghost"
+          size="sm"
+          type="button"
+          onClick={() => setOpen((value) => !value)}
+        >
+          {open
+            ? "Show fewer linked messages"
+            : `Show ${hidden} more linked ${hidden === 1 ? "message" : "messages"}`}
+        </Button>
+      )}
     </div>
   );
 }
@@ -108,7 +123,6 @@ function MessageLinkCard({
       setReading(false);
     };
   }, [session]);
-  if (!reading) return null;
   const openCard = () => setUnavailable(!onOpenLink(url));
   return (
     <>
@@ -125,12 +139,17 @@ function MessageLinkCard({
           openCard();
         }}
       >
-        <BuzzLinkPreview
-          session={session}
-          channelId={channelId}
-          messageId={messageId}
-          priority="background"
-        />
+        {reading ? (
+          <BuzzLinkPreview
+            session={session}
+            channelId={channelId}
+            messageId={messageId}
+            inline
+          />
+        ) : (
+          // Waiting for a free reader, as a hover card waits for its read.
+          <span role="status">Loading message…</span>
+        )}
       </a>
       {unavailable && (
         <span role="status">This Buzz link couldn’t be opened here.</span>
