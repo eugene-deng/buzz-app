@@ -3,7 +3,7 @@ import type { Context } from "../../plugins/author";
 
 type PagesUi = {
   conversation: Context["conversation"]["ui"];
-  panels: Context["panels"]["ui"];
+  panels: Pick<Context["panels"], "useTabTitle">;
 };
 
 const Ui = createContext<PagesUi | undefined>(undefined);

@@ -74,9 +74,7 @@ export function render(node: ReactNode, options?: RenderOptions) {
   return renderReact(node, {
     ...options,
     wrapper: ({ children }) => (
-      <PagesUiProvider
-        value={{ conversation: conversation.ui, panels: panels.ui }}
-      >
+      <PagesUiProvider value={{ conversation: conversation.ui, panels }}>
         {children}
       </PagesUiProvider>
     ),

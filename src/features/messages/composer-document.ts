@@ -6,7 +6,7 @@ import {
 } from "prosemirror-model";
 import { bulletList, orderedList, listItem } from "prosemirror-schema-list";
 import { composerLinkUrl } from "./composer-link";
-import { scanMarkdown } from "../relay/message-content";
+import { MAX_MARKDOWN_LENGTH, scanMarkdown } from "../relay/message-content";
 import type {
   MentionDraft,
   DraftRecipient,
@@ -260,9 +260,10 @@ export function markdownRanges(text: string) {
 export function readComposerDocument(
   draft: MentionDraft,
   tokens: readonly SourceToken[],
+  mode: "chat" | "document" = "chat",
 ) {
   const nodes: EditorNode[] = [];
-  const restored = readComposerSnapshot(draft.document);
+  const restored = readComposerSnapshot(draft.document, mode);
   if (restored) {
     // Mention provenance is explicit metadata, never inferred from matching text.
     const source = projectComposerDocument(restored);
@@ -607,15 +608,25 @@ export function composerMarkdownContext(
 }
 
 /** Local persistence envelope. The schema, not parallel mark ranges, owns shape. */
-export function readComposerSnapshot(value: unknown): EditorNode | undefined {
+export function readComposerSnapshot(
+  value: unknown,
+  mode: "chat" | "document" = "chat",
+): EditorNode | undefined {
   // Snapshots are never mutated, and validation plus parsing is O(draft).
-  if (typeof value !== "object" || !value) return read(value);
-  if (!snapshots.has(value)) snapshots.set(value, read(value));
-  return snapshots.get(value);
+  const cache = snapshots[mode];
+  if (typeof value !== "object" || !value) return;
+  if (!cache.has(value)) cache.set(value, read(value, mode));
+  return cache.get(value);
 }
-const snapshots = new WeakMap<object, EditorNode | undefined>();
+const snapshots = {
+  chat: new WeakMap<object, EditorNode | undefined>(),
+  document: new WeakMap<object, EditorNode | undefined>(),
+};
 
-function read(value: unknown): EditorNode | undefined {
+function read(
+  value: unknown,
+  mode: "chat" | "document",
+): EditorNode | undefined {
   if (
     !value ||
     typeof value !== "object" ||
@@ -625,13 +636,14 @@ function read(value: unknown): EditorNode | undefined {
   )
     return;
   const pending = [{ node: value.content, depth: 0 }];
+  const limit = mode === "document" ? MAX_MARKDOWN_LENGTH : 16000;
   let count = 0,
     length = 0;
   while (pending.length) {
     const item = pending.pop();
     if (!item) break;
     if (
-      ++count > 32001 ||
+      ++count > limit * 2 + 1 ||
       item.depth > 100 ||
       !item.node ||
       typeof item.node !== "object"
@@ -665,7 +677,7 @@ function read(value: unknown): EditorNode | undefined {
           return;
       }
     }
-    if (length > 16000) return;
+    if (length > limit) return;
     if (node.content !== undefined) {
       if (!Array.isArray(node.content)) return;
       for (const child of node.content)

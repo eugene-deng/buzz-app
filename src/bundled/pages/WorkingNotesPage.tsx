@@ -577,7 +577,7 @@ function NotePanelContents({
   const title =
     catalogue.notes.find((note) => noteKey(note) === noteKey(initial))?.title ??
     "Doc";
-  usePagesUi().panels.useTabTitle(title);
+  usePagesUi().panels.useTabTitle?.(title);
   useEffect(() => {
     const controller = new AbortController();
     void workspace

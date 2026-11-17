@@ -1,5 +1,6 @@
 import { test, expect } from "./source-fixture.mjs";
 import { watchPageErrors } from "./page-errors.mjs";
+import { readFile } from "node:fs/promises";
 
 async function pageAction(page, article, name) {
   await article.getByRole("button", { name: "Doc actions" }).click();
@@ -67,6 +68,18 @@ test("edits and preserves drafts using host UI, then adopts an agent revision wi
     .getByRole("link", { name: "Connected pages plan", exact: true })
     .click();
   await expect(body).toHaveText("A draft retained while browsing.");
+  await pageAction(page, article, "Markdown source");
+  const draftMarkdown = await article
+    .getByRole("textbox", { name: "Markdown", exact: true })
+    .inputValue();
+  await pageAction(page, article, "Formatted text");
+  const downloading = page.waitForEvent("download");
+  await pageAction(page, article, "Export Markdown");
+  const download = await downloading;
+  expect(download.suggestedFilename()).toBe("Connected pages plan.md");
+  const exported = await readFile(await download.path(), "utf8");
+  expect(exported).toContain("Status: Unsaved draft");
+  expect(exported.endsWith(`\n\n${draftMarkdown}`)).toBe(true);
   await article.getByRole("button", { name: "Save", exact: true }).click();
   await expect(article.getByRole("status")).toHaveText(/^Saved /);
   await article

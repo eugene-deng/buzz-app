@@ -21,6 +21,7 @@ import {
   documentEditorDraft,
   documentEditorMarkdown,
 } from "./document-editor-markdown";
+import { MAX_MARKDOWN_LENGTH } from "../relay/message-content";
 import styles from "./DocumentEditor.module.css";
 import markdownStyles from "../markdown/Markdown.module.css";
 
@@ -167,6 +168,7 @@ export function DocumentEditor({
     <fieldset className={styles.editorToolbar} aria-label="Document formatting">
       <ComposerFormattingTools
         persistent
+        markdownMode="document"
         disabled={disabled || !editing}
         activeFormats={formats}
         toggleFormat={(format) => input.current?.toggleFormat(format)}
@@ -198,6 +200,7 @@ export function DocumentEditor({
               variant="code"
               disabled={disabled || !editing}
               onKeyDown={(event) => {
+                if (disabled || !editing) return;
                 if ((event.metaKey || event.ctrlKey) && event.key === "Enter") {
                   event.preventDefault();
                   onSave();
@@ -216,7 +219,7 @@ export function DocumentEditor({
                 disabled={disabled || !editing}
                 placeholder={placeholder}
                 aria-label={label}
-                maxLength={maxLength}
+                maxLength={Math.min(maxLength, MAX_MARKDOWN_LENGTH)}
                 markdownMode="document"
                 decorationsFor={noDecorations}
                 onDraftChange={(next) => {
@@ -231,6 +234,7 @@ export function DocumentEditor({
                 onFormatsChange={setFormats}
                 onEditLink={editLink}
                 onKeyDown={(event) => {
+                  if (disabled || !editing) return;
                   if (
                     !event.defaultPrevented &&
                     (event.metaKey || event.ctrlKey) &&

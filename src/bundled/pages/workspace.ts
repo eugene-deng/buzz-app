@@ -297,7 +297,7 @@ export function createNotesWorkspace(session: RelaySession) {
     }
     const confirmed = await authority(address.channel, caller);
     if (
-      !memberChangeConfirmed(confirmed, {
+      !memberChangeConfirmed(confirmed, session.viewer ?? "", {
         pubkey: key,
         expectedRole: previous ?? "absent",
         role: access === "remove" ? "remove" : role,

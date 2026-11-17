@@ -31,6 +31,15 @@ export function documentEditorDraft(markdown: string) {
     );
   const text = (value: string, marks: readonly Mark[] = []) =>
     value ? [schema.text(value, marks)] : [];
+  // Link labels serialize as escaped text. Keep the whole source link when a
+  // label needs syntax that the link mark cannot represent (code or images).
+  const linkLabel = (node: RootContent): boolean =>
+    node.type === "text" ||
+    node.type === "break" ||
+    ((node.type === "strong" ||
+      node.type === "emphasis" ||
+      node.type === "delete") &&
+      node.children.every(linkLabel));
   const inline = (
     node: RootContent,
     marks: readonly Mark[] = [],
@@ -60,12 +69,38 @@ export function documentEditorDraft(markdown: string) {
       return node.children.flatMap((child) =>
         inline(child, [...marks, mark.create()]),
       );
-    if (node.type === "link" && composerLinkUrl(node.url))
+    if (
+      node.type === "link" &&
+      composerLinkUrl(node.url) &&
+      node.title == null &&
+      node.children.length > 0 &&
+      node.children.every(linkLabel)
+    )
       return node.children.flatMap((child) =>
         inline(child, [...marks, schema.marks.link.create({ href: node.url })]),
       );
     return text(raw(node), marks);
   };
+  // A descendant's source slice still includes continuation-line quote/list
+  // prefixes. Fall back at the root container so serialization cannot add them
+  // a second time. Fully supported containers keep their rich structure.
+  const supportedBlock = (node: RootContent): boolean =>
+    ((node.type === "paragraph" || node.type === "heading") &&
+      node.children
+        .flatMap((child) => inline(child))
+        .every(
+          (child) => !child.isText || !child.textContent.includes("\n"),
+        )) ||
+    (node.type === "code" && node.meta == null) ||
+    (node.type === "blockquote" && node.children.every(supportedBlock)) ||
+    (node.type === "list" &&
+      node.children.every(
+        (item) =>
+          item.checked == null &&
+          item.children[0]?.type === "paragraph" &&
+          item.children.every(supportedBlock),
+      ) &&
+      !/^\s*[-*+]\s+\[[ xX]\]/m.test(raw(node)));
   const block = (node: RootContent): EditorNode => {
     if (node.type === "heading")
       return schema.nodes.heading.create(
@@ -89,14 +124,7 @@ export function documentEditorDraft(markdown: string) {
           ? node.children.map(block)
           : schema.nodes.paragraph.create(),
       );
-    if (
-      node.type === "list" &&
-      !node.children.some(
-        (item) =>
-          item.checked != null || item.children[0]?.type !== "paragraph",
-      ) &&
-      !/^\s*[-*+]\s+\[[ xX]\]/m.test(raw(node))
-    )
+    if (node.type === "list")
       return schema.nodes[node.ordered ? "ordered_list" : "bullet_list"].create(
         {
           ...(node.ordered ? { order: node.start ?? 1 } : {}),
@@ -111,7 +139,11 @@ export function documentEditorDraft(markdown: string) {
       );
     return schema.nodes.paragraph.create(null, text(raw(node)));
   };
-  const blocks = tree.children.map(block);
+  const blocks = tree.children.map((node) =>
+    supportedBlock(node)
+      ? block(node)
+      : schema.nodes.paragraph.create(null, text(raw(node))),
+  );
   const doc = schema.nodes.doc.create(
     null,
     blocks.length ? blocks : schema.nodes.paragraph.create(),

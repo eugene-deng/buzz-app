@@ -368,7 +368,7 @@ export function noteTools(
         });
         const after = await state();
         if (
-          !memberChangeConfirmed(after.authority, {
+          !memberChangeConfirmed(after.authority, client.pubkey, {
             pubkey,
             expectedRole: before.authority.roles[pubkey] ?? "absent",
             role: access === "remove" ? "remove" : role,

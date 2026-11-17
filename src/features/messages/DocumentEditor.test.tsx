@@ -165,6 +165,91 @@ it("shows CommonMark soft breaks as spaces in rich mode", () => {
   ).toBe("First Second");
 });
 
+it("omits Spoiler from the document formatting controls", () => {
+  mount();
+  expect(screen.queryByRole("button", { name: "Spoiler" })).toBeNull();
+});
+
+it("ignores document spoiler commands while retaining literal pipe source", () => {
+  const value = "Keep ||literal|| source";
+  const h = mount({}, { initialValue: value });
+  const input = screen.getByRole("textbox", {
+    name: "Document body",
+  }) as ComposerInputElement;
+  act(() => {
+    input.focus();
+    input.setSelectionRange(0, 4);
+  });
+  for (const modifier of ["ctrlKey", "metaKey"])
+    expect(
+      fireEvent.keyDown(input, {
+        key: "P",
+        code: "KeyP",
+        shiftKey: true,
+        [modifier]: true,
+      }),
+    ).toBe(true);
+  act(() => input.toggleFormat("spoiler"));
+  expect(h.change).not.toHaveBeenCalled();
+  expect(input.querySelector("[data-spoiler]")).toBeNull();
+  act(() => {
+    h.ref.current?.focusEnd();
+    input.insertText("!");
+  });
+  expect(h.change).toHaveBeenLastCalledWith(`${value}!`);
+});
+
+it.each([15999, 16001])(
+  "retains rich structure when loading or crossing the chat limit from %i characters",
+  (length) => {
+    const body = "x".repeat(length);
+    const h = mount({}, { initialValue: `**${body}**` });
+    const input = screen.getByRole("textbox", {
+      name: "Document body",
+    }) as ComposerInputElement;
+    expect(input.querySelector("strong")).toHaveTextContent(body);
+    act(() => {
+      h.ref.current?.focusEnd();
+      input.insertText("xy");
+    });
+    expect(h.change).toHaveBeenLastCalledWith(`**${body}xy**`);
+    h.rerender({ source: true });
+    expect(screen.getByRole("textbox", { name: "Markdown" })).toHaveValue(
+      `**${body}xy**`,
+    );
+    h.rerender({ source: false });
+    expect(
+      screen
+        .getByRole("textbox", { name: "Document body" })
+        .querySelector("strong"),
+    ).toHaveTextContent(`${body}xy`);
+  },
+);
+
+it("caps rich edits at the decoder ceiling while preserving the source budget", () => {
+  const body = "x".repeat(99_990);
+  const h = mount({ maxLength: 120_000 }, { initialValue: `**${body}**` });
+  const input = screen.getByRole("textbox", {
+    name: "Document body",
+  }) as ComposerInputElement;
+  act(() => {
+    h.ref.current?.focusEnd();
+    input.insertText("y".repeat(20));
+  });
+  expect(h.change).not.toHaveBeenCalled();
+  expect(input.querySelector("strong")).toHaveTextContent(body);
+  act(() => input.insertText("123456"));
+  const accepted = `**${body}123456**`;
+  expect(h.change).toHaveBeenLastCalledWith(accepted);
+  act(() => input.insertText("!"));
+  expect(h.change).toHaveBeenCalledTimes(1);
+  h.rerender({ maxLength: 120_000, source: true });
+  const source = screen.getByRole("textbox", { name: "Markdown" });
+  expect(source).toHaveValue(accepted);
+  fireEvent.change(source, { target: { value: `${accepted}\n\nRaw source` } });
+  expect(h.change).toHaveBeenLastCalledWith(`${accepted}\n\nRaw source`);
+});
+
 it("keeps quoted paragraphs when editing outside their quote", () => {
   const h = mount(
     {},
@@ -309,6 +394,30 @@ it("keeps save shortcuts and selection restoration at the controlled editor boun
   });
   expect(h.save).toHaveBeenCalledTimes(2);
 });
+
+it.each([false, true])(
+  "guards save shortcuts after disabling the focused field (source=%s)",
+  (source) => {
+    const h = mount({ source });
+    const input = screen.getByRole("textbox", {
+      name: source ? "Markdown" : "Document body",
+    });
+    act(() => input.focus());
+    fireEvent.keyDown(input, { key: "Enter", ctrlKey: true });
+    expect(h.save).toHaveBeenCalledTimes(1);
+    h.rerender({ source, disabled: true });
+    if (!source) expect(input).toHaveFocus();
+    fireEvent.keyDown(input, { key: "Enter", ctrlKey: true, repeat: true });
+    fireEvent.keyDown(input, { key: "Enter", metaKey: true });
+    expect(h.save).toHaveBeenCalledTimes(1);
+    h.rerender({ source, editing: false });
+    fireEvent.keyDown(input, { key: "Enter", ctrlKey: true });
+    expect(h.save).toHaveBeenCalledTimes(1);
+    h.rerender({ source, disabled: false, editing: true });
+    fireEvent.keyDown(input, { key: "Enter", ctrlKey: true });
+    expect(h.save).toHaveBeenCalledTimes(2);
+  },
+);
 
 it("uses the existing link validator and retains the selected document text", async () => {
   const h = mount();

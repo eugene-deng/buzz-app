@@ -24,6 +24,17 @@ const serialize = (...children: ReturnType<typeof schema.text>[]) =>
   composerMarkdown(projectComposerDocument(doc(paragraph(...children))).draft);
 
 describe("composer document boundary", () => {
+  it("keeps document snapshot bounds and cached decoding separate from chat", () => {
+    const original = doc(paragraph(bold("x".repeat(16001))));
+    const snapshot = projectComposerDocument(original).draft.document;
+    expect(readComposerSnapshot(snapshot)).toBeUndefined();
+    expect(readComposerSnapshot(snapshot, "document")?.eq(original)).toBe(true);
+    expect(readComposerSnapshot(snapshot)).toBeUndefined();
+    const oversized = projectComposerDocument(
+      doc(paragraph(bold("x".repeat(100001)))),
+    ).draft.document;
+    expect(readComposerSnapshot(oversized, "document")).toBeUndefined();
+  });
   it("preserves distinct block and hard-break structures through persisted drafts", () => {
     const blocks = doc(paragraph(bold("a")), paragraph(schema.text("b")));
     const inline = doc(

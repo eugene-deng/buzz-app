@@ -106,22 +106,22 @@ export function NoteSharing({
   };
   const roles =
     administration.status === "ready" ? administration.authority : undefined;
-  const change = (change: MemberChange, signal: AbortSignal) =>
-    run(
+  const change = async (change: MemberChange, signal: AbortSignal) => {
+    const role = change.role;
+    if (role === "owner")
+      throw new Error("Doc ownership cannot be transferred.");
+    await run(
       (active) =>
         workspace.setMember(
           note,
           change.pubkey,
-          change.role === "guest"
-            ? "read"
-            : change.role === "member"
-              ? "edit"
-              : change.role,
+          role === "guest" ? "read" : role === "member" ? "edit" : role,
           active,
           { expectedRole: change.expectedRole },
         ),
       signal,
     );
+  };
   return (
     <ChannelMembersDialog
       session={session}

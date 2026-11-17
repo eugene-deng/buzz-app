@@ -17,7 +17,7 @@ export const inject = [
 ];
 export const apply: PluginModule["apply"] = (ctx) => {
   const relay = ctx.relay;
-  const ui = { conversation: ctx.conversation.ui, panels: ctx.panels.ui };
+  const ui = { conversation: ctx.conversation.ui, panels: ctx.panels };
   ctx.agents.addInstructions({
     id: "pages",
     text: "For document deliverables, prefer a live Doc to a .md attachment unless the person requests a file. Call page_help for the create/verify/link/update workflow. Update the same Doc on follow-ups; never broaden sharing automatically. Docs, Canvas and published notes use separate tools.",

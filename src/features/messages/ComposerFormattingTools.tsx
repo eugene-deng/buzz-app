@@ -33,6 +33,7 @@ import {
   linkBindings,
   type ComposerFormat,
 } from "./composer-dom";
+import type { ComposerMarkdownMode } from "./composer-markdown";
 import styles from "./ComposerFormattingTools.module.css";
 
 // A short ease-out gives immediate feedback without an entrance delay.
@@ -75,10 +76,12 @@ export function ComposerFormattingTools({
   editLink,
   trailing,
   persistent = false,
+  markdownMode = "chat",
 }: {
   children: ReactNode;
   /** Document surfaces expose the formatting list without a toggle. */
   persistent?: boolean;
+  markdownMode?: ComposerMarkdownMode;
   /** Conversation controls that follow the tools on the same row. */
   trailing?: ReactNode;
   disabled: boolean;
@@ -87,6 +90,10 @@ export function ComposerFormattingTools({
   toggleFormat(format: ComposerFormat): void;
   editLink(): void;
 }) {
+  const supportedOptions =
+    markdownMode === "document"
+      ? options.filter(([label]) => label !== "Spoiler")
+      : options;
   const [toggled, setOpen] = useState(false);
   const open = persistent || toggled;
   const reduceMotion = useReducedMotion();
@@ -173,7 +180,7 @@ export function ComposerFormattingTools({
                 className={styles.options}
                 aria-label="Formatting options"
               >
-                {options.map(([label, Icon]) => {
+                {supportedOptions.map(([label, Icon]) => {
                   const format = composerFormats.find(
                     (item) => item.label === label,
                   );

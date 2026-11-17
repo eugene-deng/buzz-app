@@ -67,7 +67,7 @@ test("the app runtime exposes ready bundled pages and removes them on disable", 
     assert.equal(documents.placement, "dock");
     assert.match(
       renderToStaticMarkup(createElement(documents.component)),
-      /Connect to your community to open pages/,
+      /Connect to your community to open docs/,
     );
     assert.ok(
       services.panels

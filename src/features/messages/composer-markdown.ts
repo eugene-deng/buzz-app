@@ -63,7 +63,7 @@ export function composerMarkdown(
       : node.isLeaf
         ? node
         : node.copy(Fragment.fromArray(node.content.content.map(project)));
-  const doc = project(readComposerDocument(draft, []));
+  const doc = project(readComposerDocument(draft, [], mode));
   const wire = (body: EditorNode) =>
     [
       ...(draft.chatCards ?? []),
