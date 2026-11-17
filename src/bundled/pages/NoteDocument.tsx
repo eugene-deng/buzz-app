@@ -33,9 +33,8 @@ import {
 } from "../../shared/design-system/icons";
 import { Button } from "../../shared/design-system/ui/Button";
 import { Dialog } from "../../shared/design-system/ui/Dialog";
-import { Field } from "../../shared/design-system/ui/Field";
 import { IconButton } from "../../shared/design-system/ui/IconButton";
-import { Input } from "../../shared/design-system/ui/Input";
+import { LoadingRegion } from "../../shared/design-system/ui/LoadingRegion";
 import {
   MenuItem,
   MenuNote,
@@ -50,7 +49,8 @@ import { Select } from "../../shared/design-system/ui/Select";
 import { NoteHistory, NoteHistoryMenu, NoteSharing } from "./NoteDialogs";
 import { NoteEditor, type NoteEditorHandle } from "./NoteEditor";
 import { NoteSaveAction } from "./NoteSaveAction";
-import { NoteByline } from "./NoteMetadata";
+import { NoteByline, NoteBylinePlaceholder } from "./NoteMetadata";
+import { NoteTitle } from "./NoteTitle";
 import readerStyles from "./NotesPage.module.css";
 import { NoteMarkdown } from "./NoteMarkdown";
 import styles from "./WorkingNotes.module.css";
@@ -73,6 +73,7 @@ export function NoteDocument({
   catalogue = [],
   partial = false,
   onOpen,
+  onOpenInDocs,
   onOpenLink,
   onChange = nothing,
   onDirty = nothing,
@@ -88,6 +89,7 @@ export function NoteDocument({
   catalogue?: readonly Note[];
   partial?: boolean;
   onOpen(address: NoteAddress): void;
+  onOpenInDocs?: () => void;
   onOpenLink?: ((url: string) => boolean) | undefined;
   onChange?(note: Note): void;
   onDirty?(dirty: boolean): void;
@@ -104,14 +106,14 @@ export function NoteDocument({
   const [markdown, setMarkdown] = useState(cachedDraft?.markdown ?? "");
   const [localEditing, setLocalEditing] = useState(true);
   const [source, setSource] = useState(initialFocus?.source ?? false);
-  const titleInput = useRef<HTMLInputElement>(null);
+  const titleInput = useRef<HTMLTextAreaElement>(null);
   const pendingFocus = useRef(initialFocus);
   const needsFocus = useRef(true);
   useLayoutEffect(() => {
     if (active) needsFocus.current = true;
   }, [active]);
   const [canEdit, setCanEdit] = useState(false);
-  const [busy, setBusy] = useState(false);
+  const [busy, setBusy] = useState(true);
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState("");
   const [composing, setComposing] = useState(false);
@@ -610,13 +612,35 @@ export function NoteDocument({
       setStatus("Doc link copied");
     });
   };
+  const loading = busy && (!note || unavailable);
+  const shareButton = (
+    <IconButton
+      ref={shareTrigger}
+      aria-label="Share doc"
+      title="Share doc"
+      icon={<ShareIcon size={16} />}
+      disabled={loading}
+      onClick={() => setDialog("share")}
+    />
+  );
+  const actionsButton = (
+    <IconButton
+      ref={actionsTrigger}
+      aria-label="Doc actions"
+      title="Doc actions"
+      icon={<DotsThreeIcon size={16} />}
+      disabled={loading}
+    />
+  );
   return (
     <article
       className={styles.documentPane}
       aria-label={
         !unavailable && note
           ? (deletedPreview?.title ?? note.title)
-          : "Working doc"
+          : loading
+            ? "Loading doc"
+            : "Doc"
       }
     >
       {/* biome-ignore lint/a11y/useKeyWithClickEvents: blank-space clicks extend the existing textbox hit area; keyboard users reach that textbox with Tab. */}
@@ -649,23 +673,35 @@ export function NoteDocument({
           editor.current?.focusEnd();
         }}
       >
-        {note && canEdit && !unavailable && !note.deleted ? (
-          <Field label="Title" labelVisibility="hidden">
-            <Input
-              ref={titleInput}
-              appearance="heading"
-              value={title}
-              onValueChange={setTitle}
-              disabled={busy}
-              readOnly={!editing}
-              tabIndex={editing ? undefined : -1}
-            />
-          </Field>
+        {loading ? (
+          <LoadingRegion
+            pending
+            label="Loading doc…"
+            statusVisibility="screen-reader"
+          >
+            <div className={readerStyles.loadingHeader}>
+              <div
+                className={`${readerStyles.loadingTitle} text-heading`}
+                aria-hidden="true"
+              >
+                <span className="h-3 w-1/2 rounded-full bg-affordance-disabled" />
+              </div>
+              <NoteBylinePlaceholder />
+            </div>
+          </LoadingRegion>
+        ) : note && canEdit && !unavailable && !note.deleted ? (
+          <NoteTitle
+            ref={titleInput}
+            value={title}
+            onValueChange={setTitle}
+            disabled={busy}
+            readOnly={!editing}
+          />
         ) : (
           <h2 className="text-heading">
             {!unavailable && note
               ? (deletedPreview?.title ?? note.title)
-              : "Working doc"}
+              : "Doc"}
           </h2>
         )}
         {note && !unavailable && (
@@ -690,13 +726,14 @@ export function NoteDocument({
           />
         )}
         <div className={styles.actions}>
-          {note && canEdit && !note.deleted && (
+          {(loading || (note && canEdit && !note.deleted)) && (
             <Select
               label="Doc mode"
               variant="compact"
               size="sm"
-              value={editing ? "editing" : "viewing"}
-              disabled={busy || saving}
+              value={loading ? "" : editing ? "editing" : "viewing"}
+              placeholder="Doc mode"
+              disabled={loading || busy || saving}
               groups={[
                 {
                   label: "Doc mode",
@@ -742,36 +779,32 @@ export function NoteDocument({
               <ArrowsClockwiseIcon
                 size={16}
                 aria-hidden="true"
-                className={busy ? "motion-safe:animate-spin" : undefined}
+                className={
+                  busy && !loading ? "motion-safe:animate-spin" : undefined
+                }
               />
             }
-            aria-busy={busy}
-            disabled={busy || saving}
+            aria-busy={busy && !loading}
+            disabled={loading || busy || saving}
             onClick={() => {
               void refresh();
             }}
           />
+          {loading && (
+            <>
+              {shareButton}
+              {actionsButton}
+            </>
+          )}
           {note && !unavailable && (
             <>
-              <IconButton
-                ref={shareTrigger}
-                aria-label="Share doc"
-                title="Share doc"
-                icon={<ShareIcon size={16} />}
-                onClick={() => setDialog("share")}
-              />
+              {shareButton}
               <MenuRoot>
-                <MenuTrigger
-                  render={
-                    <IconButton
-                      ref={actionsTrigger}
-                      aria-label="Doc actions"
-                      title="Doc actions"
-                      icon={<DotsThreeIcon size={16} />}
-                    />
-                  }
-                />
+                <MenuTrigger render={actionsButton} />
                 <MenuPopup>
+                  {onOpenInDocs && (
+                    <MenuItem onClick={onOpenInDocs}>Open in Docs</MenuItem>
+                  )}
                   <MenuItem onClick={copyLink}>Copy doc link</MenuItem>
                   {canEdit && !note.deleted && (
                     <MenuItem

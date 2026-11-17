@@ -21,6 +21,49 @@ import { NoteDocument } from "./NoteDocument";
 import { NoteMarkdown } from "./NoteMarkdown";
 
 composerDOMFixture();
+
+it.each([false, true])(
+  "keeps controls in place while loading a doc (cached draft: %s)",
+  async (cachedDraft) => {
+    const f = await workspaceFixture();
+    const note = f.seed("Plan", "Body");
+    if (cachedDraft) {
+      writeView(f.session.scope, `note-auto-save:${noteKey(note)}`, false);
+      f.workspace.drafts.set(noteKey(note), {
+        base: note,
+        title: note.title,
+        markdown: "Unsaved draft",
+      });
+    }
+    const read = gate();
+    const open = f.workspace.open;
+    vi.spyOn(f.workspace, "open").mockImplementation(async (...args) => {
+      await read.promise;
+      return open(...args);
+    });
+    render(
+      <NoteDocument address={note} workspace={f.workspace} onOpen={vi.fn()} />,
+    );
+    try {
+      const article = screen.getByRole("article", { name: "Loading doc" });
+      expect(within(article).queryByRole("heading")).not.toBeInTheDocument();
+      expect(screen.getByRole("combobox", { name: "Doc mode" })).toBeDisabled();
+      for (const name of ["Refresh doc", "Share doc", "Doc actions"]) {
+        expect(screen.getByRole("button", { name })).toBeDisabled();
+      }
+    } finally {
+      read.release();
+    }
+    await waitFor(() =>
+      expect(screen.getByRole("button", { name: "Doc actions" })).toBeEnabled(),
+    );
+    expect(screen.getByRole("textbox", { name: "Title" })).toHaveValue("Plan");
+    expect(screen.getByRole("status")).toHaveTextContent(
+      cachedDraft ? "Unsaved changes" : /^Saved /,
+    );
+  },
+);
+
 async function fixture(automatic = true) {
   const followers = new Set<
     Parameters<RelaySession["artifacts"]["follow"]>[1]
@@ -328,7 +371,9 @@ it("persists Disable auto-save per page and account, cancels the timer, and keep
   f.view.unmount();
   vi.useRealTimers();
   f.mount();
-  await screen.findByRole("button", { name: "Doc actions" });
+  await waitFor(() =>
+    expect(screen.getByRole("button", { name: "Doc actions" })).toBeEnabled(),
+  );
   fireEvent.click(screen.getByRole("button", { name: "Doc actions" }));
   fireEvent.click(
     await screen.findByRole("menuitem", { name: "Revision history" }),
@@ -562,7 +607,7 @@ it("keeps formatted Buzz conversation links and Page navigation through the shar
   const message = `buzz://message?channel=${note.channel}&id=${"a".repeat(64)}`;
   const view = render(
     <NoteMarkdown
-      text={`[the **thread**](${message}) and [target page](<${noteUrl(note, f.origin)}>) and [unsafe](javascript:alert(1))`}
+      text={`[the **thread**](${message}) and [target page](<${noteUrl(note, f.origin)}>) and [unsafe](javascript:alert(1))\n\n| Item | Status |\n| --- | --- |\n| Plan | Ready |`}
       community={f.origin}
       session={f.session}
       onOpen={openPage}
@@ -570,6 +615,9 @@ it("keeps formatted Buzz conversation links and Page navigation through the shar
     />,
   );
   try {
+    expect(
+      within(screen.getByRole("table")).getByRole("cell", { name: "Ready" }),
+    ).toBeVisible();
     fireEvent.click(screen.getByRole("link", { name: "the thread" }));
     expect(openLink).toHaveBeenCalledWith(message);
     fireEvent.click(screen.getByRole("link", { name: "target page" }));

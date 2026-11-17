@@ -73,6 +73,15 @@ test("edits and preserves drafts using host UI, then adopts an agent revision wi
   });
   await manual(page, article);
   const body = article.getByRole("textbox", { name: "Doc body", exact: true });
+  const [h1, h2] = await article
+    .getByRole("heading", { name: /Connected notes|Supporting research/ })
+    .evaluateAll((headings) =>
+      headings.map((heading) =>
+        Number.parseFloat(getComputedStyle(heading).fontSize),
+      ),
+    );
+  expect(h1 / h2).toBeGreaterThan(1);
+  expect(h1 / h2).toBeLessThan(1.3);
   await body.fill("A draft retained while browsing.");
   await page.getByRole("button", { name: "Back to docs", exact: true }).click();
   await page
@@ -179,6 +188,23 @@ test("edits and preserves drafts using host UI, then adopts an agent revision wi
       await expect(
         body.getByRole("heading", { level: 1, name: "Agent update" }),
       ).toBeVisible();
+      const title = article.getByRole("textbox", { name: "Title" });
+      const savedTitle = await title.inputValue();
+      const shortHeight = (await title.boundingBox()).height;
+      await title.fill(
+        "A long title about sharing documents in a conversation ".repeat(4) +
+          "Revision".repeat(18),
+      );
+      expect((await title.boundingBox()).height).toBeGreaterThan(shortHeight);
+      expect(
+        await title.evaluate(
+          (field) =>
+            field.scrollHeight <= field.clientHeight + 1 &&
+            field.scrollWidth <= field.clientWidth + 1,
+        ),
+      ).toBe(true);
+      await title.fill(savedTitle);
+      expect((await title.boundingBox()).height).toBe(shortHeight);
       await pageAction(page, article, "Revision history");
       await expect(currentRevision).toBeInViewport({ ratio: 1 });
       const bounds = await page
@@ -247,5 +273,19 @@ test("opens a Page beside the conversation and preserves host history and live e
   await expect(article).toBeHidden();
   await reference.click();
   await expect(article).toBeVisible();
+  await tab.click({ button: "right" });
+  await page
+    .getByRole("menuitem", { name: "Open in Docs", exact: true })
+    .click();
+  const docs = page.getByRole("region", { name: "Doc details" });
+  await expect(
+    docs.getByRole("article", { name: "Connected pages plan" }),
+  ).toBeVisible();
+  await page.goBack();
+  await expect(tab).toBeVisible();
+  await pageAction(page, article, "Open in Docs");
+  await expect(
+    docs.getByRole("article", { name: "Connected pages plan" }),
+  ).toBeVisible();
   expect(errors.unexplained()).toEqual([]);
 });

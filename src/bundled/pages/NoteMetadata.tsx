@@ -4,6 +4,22 @@ import { Avatar } from "../../shared/design-system/ui/Avatar";
 import { relativeTimestamp } from "../../shared/relative-timestamp";
 import styles from "./NotesPage.module.css";
 
+export function NoteBylinePlaceholder() {
+  return (
+    <div className={styles.byline} aria-hidden="true">
+      <Avatar
+        alt=""
+        fallback=""
+        fallbackContent=""
+        size="compact"
+        shape="squircle"
+      />
+      <span className="h-2 w-12 rounded-full bg-affordance-disabled" />
+      <span className="h-2 w-24 rounded-full bg-affordance-disabled" />
+    </div>
+  );
+}
+
 export function NoteByline({
   note,
   author,

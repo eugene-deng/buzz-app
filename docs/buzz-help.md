@@ -1109,8 +1109,10 @@ Markdown exports include the source link and saved revision’s editor, public k
 revision ID and date. Unsaved drafts are labelled separately from their saved base.
 
 Doc references open beside the conversation, with normal Back/Forward and tab
-close behavior. Agents can call `page_help`, create and verify a Doc, post its
-returned reference, then update the same document on follow-ups. The execution
+close behavior. Choose **Open in Docs** from the tab’s context menu or Doc
+actions to see the same doc in the main Docs view. Use **Viewing** to read
+rendered Markdown tables. Agents can call `page_help`, create and verify a Doc,
+post its returned reference, then update the same document on follow-ups. The execution
 host must have Docs enabled. Saving requires relay support for NIP-AR doc
 records. Docs does not migrate Canvas or the separate Shared notes format.
 

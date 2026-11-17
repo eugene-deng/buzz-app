@@ -120,8 +120,8 @@ it("retains edits and selection while creating and waits for IME before handing 
     fireEvent.compositionStart(f.title);
     fireEvent.change(f.title, { target: { value: "Newer title" } });
     f.title.focus();
-    if (!(f.title instanceof HTMLInputElement))
-      throw new Error("Missing title input");
+    if (!(f.title instanceof HTMLTextAreaElement))
+      throw new Error("Missing title field");
     f.title.setSelectionRange(2, 5);
     expect(f.title).toBeEnabled();
     pending.release();

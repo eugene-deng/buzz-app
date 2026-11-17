@@ -1,3 +1,5 @@
+@reference "../../shared/styles/globals.css";
+
 .page {
   display: flex;
   flex-direction: column;
@@ -46,6 +48,37 @@
   flex-wrap: wrap;
   gap: var(--space-1);
 }
+.loadingHeader {
+  display: grid;
+  gap: var(--space-4);
+}
+.loadingTitle {
+  display: flex;
+  align-items: center;
+  min-height: calc(1em * var(--text-heading--line-height) + 2px);
+}
+.titleField {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+}
+.titleField > textarea,
+.titleField::after {
+  grid-area: 1 / 1;
+  overflow-wrap: anywhere;
+}
+/* The mirror sizes the field on WebKit versions without field-sizing. */
+.titleField::after {
+  @apply text-heading;
+  content: attr(data-title) "\200b";
+  visibility: hidden;
+  white-space: pre-wrap;
+  border: 1px solid transparent;
+}
+.titleField > textarea {
+  height: 100%;
+  overflow: hidden;
+  resize: none;
+}
 .collection,
 .fullView,
 .noteView {
@@ -80,4 +113,14 @@
 .document > * {
   width: min(100%, 52rem);
   margin-inline: auto;
+}
+.document :is([role="textbox"], .markdown) h1 {
+  @apply text-heading;
+}
+.document :is([role="textbox"], .markdown) h2 {
+  @apply text-body-lg;
+  font-weight: var(--type-weight-medium);
+}
+.document :is([role="textbox"], .markdown) h3 {
+  @apply text-label;
 }

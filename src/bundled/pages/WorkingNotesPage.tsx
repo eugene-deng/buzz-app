@@ -506,21 +506,35 @@ function NotePanelContents({
   const title =
     catalogue.notes.find((note) => noteKey(note) === noteKey(initial))?.title ??
     "Doc";
-  usePagesUi().panels.useTabTitle?.(title);
+  const communityOrigin = workspace.session.scope.replace(/:[0-9a-f]{64}$/, "");
+  const viewer = workspace.session.viewer ?? "";
+  const openInDocs = useCallback(
+    (address: NoteAddress) => {
+      void navigator.open({
+        version: 1,
+        kind: "page",
+        pluginId: "com.squareup.pages",
+        pageId: "pages",
+        scope: { viewer, communityOrigin },
+        route: {
+          version: 1,
+          params: { view: "page", ...noteAddress(address) },
+        },
+      });
+    },
+    [navigator, viewer, communityOrigin],
+  );
+  const showInDocs = useCallback(
+    () => openInDocs(initial),
+    [openInDocs, initial],
+  );
+  const tabActions = useMemo(
+    () => [{ label: "Open in Docs", run: showInDocs }],
+    [showInDocs],
+  );
+  usePagesUi().panels.useTabTitle?.(title, undefined, tabActions);
   const open = (address: NoteAddress) => {
-    const communityOrigin = workspace.session.scope.replace(
-      /:[0-9a-f]{64}$/,
-      "",
-    );
-    if (context?.open(noteUrl(address, communityOrigin))) return;
-    void navigator.open({
-      version: 1,
-      kind: "page",
-      pluginId: "com.squareup.pages",
-      pageId: "pages",
-      scope: { viewer: workspace.session.viewer ?? "", communityOrigin },
-      route: { version: 1, params: { view: "page", ...noteAddress(address) } },
-    });
+    if (!context?.open(noteUrl(address, communityOrigin))) openInDocs(address);
   };
   return (
     <div className={styles.page}>
@@ -539,6 +553,7 @@ function NotePanelContents({
             onChange={changed}
             onUnavailable={(missing) => remove([missing.channel])}
             onOpen={open}
+            onOpenInDocs={showInDocs}
             onOpenLink={(url) =>
               openBuzzLink(navigator, workspace.session, url)
             }

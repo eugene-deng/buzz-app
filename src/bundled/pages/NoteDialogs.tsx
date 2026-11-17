@@ -303,7 +303,12 @@ export function NoteHistoryMenu({
               <NoteAuthor {...author(revision)} avatarOnly size="small" />
             </span>
             <span className={styles.revision}>
-              <span>{revision.deleted ? "Deleted" : revision.title}</span>
+              <span
+                className="truncate"
+                title={revision.deleted ? undefined : revision.title}
+              >
+                {revision.deleted ? "Deleted" : revision.title}
+              </span>
               <span
                 className={`${readerStyles.byline} text-caption text-subtle`}
               >

@@ -3,9 +3,7 @@ import { noteKey, type Note } from "./model";
 import type { NotesWorkspace } from "./workspace";
 import { writeView } from "../../shared/view-state";
 import { DotsThreeIcon, ShareIcon } from "../../shared/design-system/icons";
-import { Field } from "../../shared/design-system/ui/Field";
 import { IconButton } from "../../shared/design-system/ui/IconButton";
-import { Input } from "../../shared/design-system/ui/Input";
 import {
   MenuRoot,
   MenuTrigger,
@@ -20,6 +18,7 @@ import { Select } from "../../shared/design-system/ui/Select";
 import { NoteEditor, type NoteEditorHandle } from "./NoteEditor";
 import type { NoteFocus } from "./NoteDocument";
 import { NoteSaveAction } from "./NoteSaveAction";
+import { NoteTitle } from "./NoteTitle";
 import readerStyles from "./NotesPage.module.css";
 import styles from "./WorkingNotes.module.css";
 
@@ -66,7 +65,7 @@ export function NewNoteDocument({
   const request = useRef<AbortController | null>(null);
   useEffect(() => () => request.current?.abort(), []);
   const handedOff = useRef(false);
-  const titleInput = useRef<HTMLInputElement>(null);
+  const titleInput = useRef<HTMLTextAreaElement>(null);
   const [error, setError] = useState("");
   const [toolbarTarget, setToolbarTarget] = useState<HTMLDivElement | null>(
     null,
@@ -228,15 +227,12 @@ export function NewNoteDocument({
             editor.current?.focusEnd();
         }}
       >
-        <Field label="Title" labelVisibility="hidden">
-          <Input
-            ref={titleInput}
-            appearance="heading"
-            placeholder="Untitled doc"
-            value={title}
-            onValueChange={setTitle}
-          />
-        </Field>
+        <NoteTitle
+          ref={titleInput}
+          placeholder="Untitled doc"
+          value={title}
+          onValueChange={setTitle}
+        />
         {(busy || dirty) && (
           <p className={`${readerStyles.byline} text-caption text-secondary`}>
             <span role="status">
