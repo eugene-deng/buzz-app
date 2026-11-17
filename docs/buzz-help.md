@@ -1865,7 +1865,10 @@ workflow, the card includes **View workflow**, which opens it in **Workflows**;
 a filter in **Workflows** before the linked one has loaded, your choice stays,
 unless Buzz reconnects first: that resets the page, which then opens the
 linked workflow. While **Workflows** is still loading its channels, it waits
-and opens the workflow once its channel appears. If **Workflows** can’t find
+and opens the workflow once its channel appears. Right after Buzz starts or
+reconnects, **Workflows** shows **Reading channels…** until it has confirmed
+your channels with the community, and lists your workflows, or opens the
+linked one, after that. If **Workflows** can’t find
 it after that, nothing opens and a notice reads **“Couldn’t find that workflow
 here. It may have been deleted, or its channel may not be listed on this
 page.”** The card has no such action when the

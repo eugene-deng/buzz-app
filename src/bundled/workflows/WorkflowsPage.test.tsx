@@ -2262,6 +2262,13 @@ it.each<[string, ChannelList]>([
       channels: [emptyChannel, { ...workflowChannel, metadataPending: true }],
     },
   ],
+  [
+    "has the workflow's channel from the saved list, not yet confirmed by the roster",
+    {
+      status: "ready",
+      channels: [emptyChannel, { ...workflowChannel, cached: true }],
+    },
+  ],
 ])(
   "keeps a linked workflow waiting while the channel list %s, and opens it once its channel is listed",
   async (_state, growing) => {

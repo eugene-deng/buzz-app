@@ -132,9 +132,10 @@ Forward returns to the page with the detail closed. A filter change or a
 deletion that closes the detail does the same. Choosing workflows on the page
 itself stays page-local and creates no visit. The visit opens its workflow
 once while the page stays open, and a reconnect neither opens it nor reports
-it missing again. It waits while the page's channel list is still loading or
-a channel awaits its metadata, and reports the workflow missing only once
-that list has settled. A workflow the reader selects, or a filter they
+it missing again. It waits while the page's channel list is still loading, or
+a channel awaits its metadata or, after a start from the saved channel list,
+the roster's confirmation, and reports the workflow missing only once that
+list has settled. A workflow the reader selects, or a filter they
 change, before the linked workflow has been read stands until a reconnect
 resets the page, which then opens the linked workflow. Retiring those visits
 after a reload is not claimed. While the Workflows plugin is turned off the

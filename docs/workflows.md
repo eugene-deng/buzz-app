@@ -90,11 +90,13 @@ See the [capability contract](../src/features/workflows/types.ts).
   landing itself read can be selected. A workflow the landing has not found
   opens nothing and shows one notice, but only once every channel it reads has
   answered and the page's channel list has settled: the list is read, and no
-  channel outside a huddle is waiting for the metadata that classifies it.
-  Until then the visit waits and shows neither, as it does for a definition
-  read that is in flight or failed, and it opens the workflow once its channel
-  is listed. A list that is read but partial counts as settled, because it may
-  never be completed. The notice says the workflow was not found here, not
+  channel outside a huddle is waiting for the metadata that classifies it or,
+  after a [start from the saved channel list](#recovery-and-limits), for the
+  roster to confirm it. Until then the visit waits and shows neither, as it
+  does for a definition read that is in flight or failed, and it opens the
+  workflow once its channel is listed and confirmed. A list that is read but
+  partial counts as settled once none of its channels is waiting, because it
+  may never be completed. The notice says the workflow was not found here, not
   why. It may be gone or in a channel the viewer cannot read, but the landing
   also reads fewer channels than the [lookup](#opening-the-workflow) that
   offered the link: it skips huddle channels and channels missing from a
@@ -209,6 +211,25 @@ receipts, disconnects, access loss, cache clear and session disposal bypass or
 purge that reuse. Retention is memory-only and bounded; a finished scan is not
 proof of an exhaustive runtime inventory.
 
+A session that starts from the channel list an earlier run saved, on a
+relaunch or reload within a day and on a reconnect that builds a new session,
+publishes that list as read at once, with each channel marked cached until
+this connection's roster read confirms it. The session refuses workflow reads
+for a cached channel, and one refused batch clears the landing with nothing to
+read it again. The page therefore leaves cached channels out, as it does
+huddles and channels awaiting metadata, and lists each for discovery and for
+New workflow once the roster confirms it. While it has no channel to show and
+the list can still grow it says **Reading channels…**, and it says no channels
+are available only once the list has settled. Confirmed channels join
+discovery like new memberships: the batches are the ones a start without a
+saved list reads, after the roster read, and a channel joined since the list
+was saved is read once its metadata arrives. A roster read that fails before
+confirming any channel shows its error and **Retry channels** with no landing
+beneath it. A saved channel that a roster read neither confirms nor drops, as
+when the relay answers with an older roster than the saved one, stays out
+until a later read decides it, and a routed visit whose workflow has not been
+found waits meanwhile.
+
 Metadata renames/reordering do not restart discovery; new memberships add only
 their missing reads. One stable status replaces
 per-channel loading placeholders, and loaded rows remain visible during refresh.
@@ -249,7 +270,14 @@ Opening a workflow from its message is covered offline only: the ID tag parser,
 the lookup, its access wiring in the session, the card, the routed page, and
 one journey through the app with the plugin turned off (the message, the
 turned-off page, Back, enabling Workflows and the linked workflow), with no
-relay that sends `buzz:workflow-id`.
+relay that sends `buzz:workflow-id`. The routed page's channel-list states
+(loading, awaiting metadata, partial, a reconnect) are driven through a test
+double of the session's channel list, not through the channel store. Only the
+start from a saved channel list runs the page over the real session and store,
+in jsdom against a relay double: a saved list equal to the roster, a roster
+that answers late or fails once, a workflow that is gone, a saved channel the
+viewer has since left, and a plain visit. A reconnect that builds a new
+session, a roster longer than one page and a browser are not among them.
 This is not live acceptance:
 create → edit → run → inspect against an unchanged backend and packaged-native
 acceptance remain unverified. Live credentials, native launch and real workflow
