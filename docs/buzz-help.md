@@ -1436,6 +1436,9 @@ available rather than silently discarding it.
   runs on another machine, or uses an active voice session's retained setup,
   its turns run without that context, and Activity shows "Ran without the
   Buzz context" with the reason.
+  When gateway access is configured for local Codex, **Compact session** is
+  refused while access is still being checked or sign-in is denied. Retry
+  after the check finishes, or sign in again if prompted.
 - **Agents → Your teams → Previous versions**, in a team's editor, lists the
   saved versions of a team that syncs to a community, the same way. Reverting
   restores its instructions and keeps its current name; members are not

@@ -40,8 +40,8 @@ export const CODEX_ROUTES: CodexRoutes = Object.freeze({
 /** The route a session control (compaction) goes by, read now, as the
  * runner reads a turn's: undefined with gateway mode off (no routes) or
  * where it wouldn't send the agent's turns to the gateway; else the
- * eligible route that enables Codex with its upstream, or the blocked one
- * its turns would fall back from. */
+ * eligible route that enables Codex with its upstream, or the blocked route
+ * compaction must handle. */
 export function controlRoute(
   routes: CodexRoutes | undefined,
   agent: AgentKey,

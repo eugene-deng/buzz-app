@@ -7960,26 +7960,32 @@ describe("gateway turns", () => {
     await finish(f);
   });
 
-  it("refuses compaction before contacting Codex when gateway sign-in is denied", async () => {
-    const { f, gatewayed, agent, move } = routed();
-    await f.runtime.run(gatewayed("@Codex first"));
-    await vi.waitFor(() => expect(f.starts()).toHaveLength(1));
-    await finish(f);
-    move({
-      kind: "blocked",
-      revision: 2,
-      gatewayOrigin: "https://gateway.test",
-      reason: "auth",
-      message: "Sign in again",
-    });
-    const sent = f.sent.length;
-    const spawned = f.spawn.mock.calls.length;
-    await expect(
-      f.runtime.session(agent, { channelId: "channel", root }, "compact"),
-    ).rejects.toThrow("Sign in again");
-    expect(f.sent).toHaveLength(sent);
-    expect(f.spawn).toHaveBeenCalledTimes(spawned);
-  });
+  it.each([
+    ["gateway sign-in is denied", "auth", "Sign in again"],
+    ["gateway access is still being checked", "readiness_pending", "Try again"],
+  ] as const)(
+    "refuses compaction before contacting Codex when %s",
+    async (_name, reason, message) => {
+      const { f, gatewayed, agent, move } = routed();
+      await f.runtime.run(gatewayed("@Codex first"));
+      await vi.waitFor(() => expect(f.starts()).toHaveLength(1));
+      await finish(f);
+      move({
+        kind: "blocked",
+        revision: 2,
+        gatewayOrigin: "https://gateway.test",
+        reason,
+        message,
+      });
+      const sent = f.sent.length;
+      const spawned = f.spawn.mock.calls.length;
+      await expect(
+        f.runtime.session(agent, { channelId: "channel", root }, "compact"),
+      ).rejects.toThrow(message);
+      expect(f.sent).toHaveLength(sent);
+      expect(f.spawn).toHaveBeenCalledTimes(spawned);
+    },
+  );
 
   it.each([
     ["Codex's built-in provider, which takes no headers", {}],
@@ -8398,10 +8404,10 @@ describe("gateway turns", () => {
   });
 
   it.each([
-    ["blocked", "network", "Buzz couldn't reach the gateway"],
-    ["pending", "readiness_pending", undefined],
+    ["unreachable", "network", "Buzz couldn't reach the gateway"],
+    ["failing", "gateway_error", "the gateway couldn't confirm model access"],
   ] as const)(
-    "compacts as configured, without the context, while the route is %s",
+    "compacts as configured, without the context, while the gateway is %s",
     async (_name, reason, detail) => {
       const { f, gatewayed, agent, move } = routed();
       const place = { channelId: "channel", root };
@@ -8441,7 +8447,7 @@ describe("gateway turns", () => {
       const view = f.runtime.sessions(pubkey).at(-1);
       expect(view?.status).toBe("Idle");
       expect(view?.detail).toBe(fallbackNotice(reason));
-      if (detail) expect(view?.detail).toContain(detail);
+      expect(view?.detail).toContain(detail);
       // Its Buzz session is kept for the next gateway turn.
       expect([...f.storage.values()].join()).toContain("client_session_id");
     },

@@ -746,12 +746,15 @@ export class CodexRuntime {
         throw new Error("The protected agent has no live policy binding");
       const thread = resumable(saved, this.handle(agent.key)?.protection);
       if (!thread) throw new Error("There is no session here to compact yet.");
-      // Where a turn would fall back from the gateway, compaction runs as
-      // configured too, without the context, and says so.
+      // Pending access and auth refusals stop compaction before contacting
+      // Codex. Other blocked routes run as configured, without the context.
       const control = controlRoute(this.routes, agent.key);
       let notice: string | undefined;
       if (control?.kind === "blocked") {
-        if (control.route.reason === "auth")
+        if (
+          control.route.reason === "auth" ||
+          control.route.reason === "readiness_pending"
+        )
           throw new Error(control.route.message);
         notice = fallbackNotice(control.route.reason);
       }
