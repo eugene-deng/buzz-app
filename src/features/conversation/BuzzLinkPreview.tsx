@@ -41,10 +41,13 @@ export function BuzzLinkPreview({
   session,
   channelId,
   messageId,
+  priority,
 }: {
   session: RelaySession;
   channelId: string;
   messageId: string;
+  /** A card shown without being asked for reads behind opened conversations. */
+  priority?: "background" | undefined;
 }) {
   const reference = useChannelReference(session.channels, channelId);
   const listLoading = useSyncExternalStore(
@@ -63,14 +66,17 @@ export function BuzzLinkPreview({
   useEffect(() => {
     if (withheld) return;
     try {
-      const owned = session.thread(channelId, messageId, { exact: true });
+      const owned = session.thread(channelId, messageId, {
+        exact: true,
+        ...(priority && { priority }),
+      });
       setRead({ view: owned, readable });
       void owned.refresh();
       return () => owned.dispose();
     } catch {
       setRead({ view: undefined, readable });
     }
-  }, [session, channelId, messageId, readable, withheld]);
+  }, [session, channelId, messageId, readable, withheld, priority]);
   const destination = namedChannel(reference);
   if (withheld) return <PreviewFailure reason="withheld" />;
   if (read?.readable !== readable) return loading;

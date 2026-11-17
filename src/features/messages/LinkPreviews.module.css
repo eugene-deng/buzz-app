@@ -10,3 +10,35 @@
 .previews > * {
   max-width: 100%;
 }
+/* A linked message, laid out as its link's hover card is. */
+.messageCard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  box-sizing: border-box;
+  width: 28rem;
+  padding: var(--space-3);
+  border: 1px solid var(--border-standard);
+  border-radius: var(--radius-icon-button);
+  background: var(--surface-inset);
+  color: var(--text-standard);
+  text-decoration: none;
+  font-size: var(--text-body);
+  line-height: var(--text-body--line-height);
+  letter-spacing: var(--text-body--letter-spacing);
+  font-weight: var(--text-body--font-weight);
+  cursor: pointer;
+}
+.messageCard:hover {
+  color: var(--text-standard);
+  text-decoration: none;
+}
+@media (hover: hover) and (pointer: fine) {
+  .messageCard:hover {
+    background: var(--surface-hover);
+  }
+}
+html[data-keyboard-navigation] .messageCard:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
