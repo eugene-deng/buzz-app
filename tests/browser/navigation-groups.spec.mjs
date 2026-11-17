@@ -1001,7 +1001,15 @@ const scrollTest = test.extend({
 scrollTest(
   "Workflows → Messages keeps saved groups, selected channel, and a visible entry's scroll on every frame without re-decoding",
   async ({ page, app }) => {
+    // Both communities must finish their cold read before counting warm reads.
+    // Secondary startup can otherwise arrive after the page-return trap is set.
+    const secondaryPreferences = page.waitForResponse(
+      (response) =>
+        response.url().endsWith("/api/relay/secondary/sidebar-preferences") &&
+        response.ok(),
+    );
     await open(page, app);
+    await (await secondaryPreferences).finished();
     const sidebar = page.getByRole("navigation", {
       name: "Subscribed channels",
     });
