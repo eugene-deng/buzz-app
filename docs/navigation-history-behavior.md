@@ -131,9 +131,13 @@ leaves the plain Workflows page in place: Back then goes to the opener, and
 Forward returns to the page with the detail closed. A filter change or a
 deletion that closes the detail does the same. Choosing workflows on the page
 itself stays page-local and creates no visit. The visit opens its workflow
-once while the page stays open: a workflow the reader selects, or a filter
-they change, before the linked workflow has been read stands, and a reconnect
-does not open it again. Retiring those visits after a reload is not claimed.
+once while the page stays open, and a reconnect neither opens it nor reports
+it missing again. It waits while the page's channel list is still loading or
+a channel awaits its metadata, and reports the workflow missing only once
+that list has settled. A workflow the reader selects, or a filter they
+change, before the linked workflow has been read stands until a reconnect
+resets the page, which then opens the linked workflow. Retiring those visits
+after a reload is not claimed.
 
 ## History and lifetime boundaries
 

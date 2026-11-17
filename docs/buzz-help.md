@@ -1862,10 +1862,13 @@ A message sent by a workflow shows **Workflow · owned by …**. Choose the
 information icon beside it to open **Workflow message**. If you can view that
 workflow, the card includes **View workflow**, which opens it in **Workflows**;
 **Back** returns you to the message. If you select another workflow or change
-a filter in **Workflows** before the linked one has loaded, your choice stays.
-If **Workflows** can’t find it, nothing opens and a notice reads **“Couldn’t
-find that workflow here. It may have been deleted, or its channel may not be
-listed on this page.”** The card has no such action when the
+a filter in **Workflows** before the linked one has loaded, your choice stays,
+unless Buzz reconnects first: that resets the page, which then opens the
+linked workflow. While **Workflows** is still loading its channels, it waits
+and opens the workflow once its channel appears. If **Workflows** can’t find
+it after that, nothing opens and a notice reads **“Couldn’t find that workflow
+here. It may have been deleted, or its channel may not be listed on this
+page.”** The card has no such action when the
 workflow was deleted, when it belongs to a channel you aren’t in, when Buzz
 couldn’t check, or when the message is older than this feature. Seeing a
 workflow’s message does not give you access to the workflow.

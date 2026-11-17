@@ -76,23 +76,30 @@ See the [capability contract](../src/features/workflows/types.ts).
 - The page route `{ owner, id }` (version 1) opens the page at one workflow, as
   **View workflow** on a [workflow message](#opening-the-workflow) does. The
   landing selects that workflow once per visit and clears the filters that hide
-  it, including the default My workflows. A reader who selects a workflow or
-  changes a filter before the routed one has been read keeps that choice: the
-  visit is answered and opens nothing later. The page holds that answer above
-  the landing while it stays open, so a reconnect, which rebuilds the landing,
-  does not open the workflow again. Back returns to the opener, and Forward to
-  a page that was closed meanwhile restores the selection; closing the detail
-  retires that visit and stays on the page, so Back skips it. A route is an
-  address, not access: only a definition the landing itself read can be
-  selected. A workflow the landing has not found once every channel it reads
-  has answered opens nothing and shows one notice; a read still in flight or
-  failed shows neither. The notice says the workflow was not found here, not
+  it, including the default My workflows. Once the workflow has opened or was
+  not found, the visit is answered. The page holds that answer above the
+  landing while it stays open, so a reconnect, which rebuilds the landing,
+  neither opens the workflow nor shows the notice again. A reader who selects
+  a workflow or changes a filter before the routed one has been read keeps
+  that choice, and the visit opens nothing while it stands. The landing holds
+  that answer beside the filters it protects: a reconnect returns them to
+  their defaults, and the visit then opens its workflow. Back returns to the
+  opener, and Forward to a page that was closed meanwhile restores the
+  selection; closing the detail retires that visit and stays on the page, so
+  Back skips it. A route is an address, not access: only a definition the
+  landing itself read can be selected. A workflow the landing has not found
+  opens nothing and shows one notice, but only once every channel it reads has
+  answered and the page's channel list has settled: the list is read, and no
+  channel outside a huddle is waiting for the metadata that classifies it.
+  Until then the visit waits and shows neither, as it does for a definition
+  read that is in flight or failed, and it opens the workflow once its channel
+  is listed. A list that is read but partial counts as settled, because it may
+  never be completed. The notice says the workflow was not found here, not
   why. It may be gone or in a channel the viewer cannot read, but the landing
   also reads fewer channels than the [lookup](#opening-the-workflow) that
-  offered the link: it skips huddle channels, channels whose metadata is
-  pending and channels missing from a partial channel list. The route applies
-  only in the community it was opened for. Selecting a row stays local to the
-  page and adds no visit.
+  offered the link: it skips huddle channels and channels missing from a
+  partial channel list. The route applies only in the community it was opened
+  for. Selecting a row stays local to the page and adds no visit.
 - Form editing for message/reaction/diff/schedule/webhook triggers and Send
   Message/Delay/Call Webhook actions. Basic conditions cover text, author,
   reaction and message-ID comparisons; unrepresentable expressions stay Advanced.
