@@ -884,9 +884,10 @@ export class GooseRuntime {
     if (route?.kind === "blocked")
       return {
         ok: false,
-        // A refused sign-in fails as a turn does, not as a fallback.
+        // A refused sign-in, or access still being checked, fails as a turn
+        // does, not as a fallback.
         error:
-          route.reason === "auth"
+          route.reason === "auth" || route.reason === "readiness_pending"
             ? route.message
             : compactRefusal(fallbackNotice(route.reason)),
       };

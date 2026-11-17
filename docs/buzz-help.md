@@ -1443,6 +1443,8 @@ available rather than silently discarding it.
   "Ran without the agent gateway" beside its prompt only while the app keeps
   running; goose compacting the conversation can remove the prompt and its
   note. A wake run outside a conversation shows no note.
+  While goose uses the gateway, compaction requires gateway access. If access
+  is still being checked, try again once the check finishes.
   A turn's **Thread** or **Channel** label
   opens that conversation. Choosing an agent in the activity under a message,
   or a Working now agent whose conversation is known, opens that
