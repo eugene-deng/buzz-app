@@ -89,47 +89,43 @@ async function saved(save: MockInstance<NotesWorkspace["save"]>) {
   });
 }
 
-it.each([false, true])(
-  "exports source and saved signer metadata without attributing draft edits to that signer (draft=%s)",
-  async (draft) => {
-    const f = await workspaceFixture();
-    const initial = f.seed("Plan", "First revision");
-    await f.edit(f.carl, initial, {
-      title: "Saved plan",
-      markdown: "---\ntitle: preserved\n---\n# Body\n\n",
-    });
-    const note = await f.workspace.open(initial);
-    await f.session.profiles.ensure([f.carl.pubkey]);
-    writeView(f.session.scope, `note-auto-save:${noteKey(note)}`, false);
-    const create = vi.fn((_blob: Blob) => "blob:export");
-    const revoke = vi.fn();
-    vi.stubGlobal(
-      "URL",
-      class extends URL {
-        static createObjectURL = create;
-        static revokeObjectURL = revoke;
-      },
+it("exports saved and draft copies with source attribution without saving edits", async () => {
+  const f = await workspaceFixture();
+  const initial = f.seed("Plan", "First revision");
+  await f.edit(f.carl, initial, {
+    title: "Saved plan",
+    markdown: "---\ntitle: preserved\n---\n# Body\n\n",
+  });
+  const note = await f.workspace.open(initial);
+  await f.session.profiles.ensure([f.carl.pubkey]);
+  writeView(f.session.scope, `note-auto-save:${noteKey(note)}`, false);
+  let exported = 0;
+  const create = vi.fn((_blob: Blob) => `blob:export-${++exported}`);
+  const revoke = vi.fn();
+  vi.stubGlobal(
+    "URL",
+    class extends URL {
+      static createObjectURL = create;
+      static revokeObjectURL = revoke;
+    },
+  );
+  const click = vi
+    .spyOn(HTMLAnchorElement.prototype, "click")
+    .mockImplementation(() => {});
+  try {
+    const view = render(
+      <NoteDocument address={note} workspace={f.workspace} onOpen={vi.fn()} />,
     );
-    const click = vi
-      .spyOn(HTMLAnchorElement.prototype, "click")
-      .mockImplementation(() => {});
-    try {
-      const view = render(
-        <NoteDocument
-          address={note}
-          workspace={f.workspace}
-          onOpen={vi.fn()}
-        />,
-      );
-      const title = await screen.findByRole("textbox", { name: "Title" });
-      await waitFor(() => expect(title).toHaveValue(note.title));
+    const title = await screen.findByRole("textbox", { name: "Title" });
+    await waitFor(() => expect(title).toHaveValue(note.title));
+    for (const draft of [false, true]) {
       if (draft)
         fireEvent.change(title, { target: { value: "Unsaved title" } });
       fireEvent.click(screen.getByRole("button", { name: "Doc actions" }));
       fireEvent.click(
         await screen.findByRole("menuitem", { name: "Export Markdown" }),
       );
-      const blob = create.mock.calls[0]?.[0] as Blob;
+      const blob = create.mock.calls.at(-1)?.[0] as Blob;
       const text = await new Promise<string>((resolve, reject) => {
         const reader = new FileReader();
         reader.onload = () => resolve(String(reader.result));
@@ -150,18 +146,21 @@ it.each([false, true])(
           : "Status: Saved revision.",
       );
       expect(text.endsWith(`\n\n${note.markdown}`)).toBe(true);
-      expect(click.mock.instances[0]).toHaveAttribute(
+      expect(click.mock.instances.at(-1)).toHaveAttribute(
         "download",
         `${draft ? "Unsaved title" : note.title}.md`,
       );
       expect((await f.workspace.open(note)).revision).toBe(note.revision);
-      view.unmount();
-      expect(revoke).toHaveBeenCalledWith("blob:export");
-    } finally {
-      vi.unstubAllGlobals();
     }
-  },
-);
+    view.unmount();
+    expect(revoke.mock.calls.flat()).toEqual([
+      "blob:export-1",
+      "blob:export-2",
+    ]);
+  } finally {
+    vi.unstubAllGlobals();
+  }
+});
 
 it("saves changed content after idle, stays in Editing and skips unchanged content", async () => {
   const f = await fixture();
