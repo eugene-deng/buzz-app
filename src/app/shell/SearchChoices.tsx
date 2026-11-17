@@ -402,7 +402,11 @@ export function SearchChoices({
   const highlight = useSearchHighlight({
     query,
     keys,
-    onChoose: (key) => destinations.find((row) => row.key === key)?.run(),
+    onChoose: (key) => {
+      // Choosing acts on the order shown: a later rerank must not move it.
+      peek?.onMove?.();
+      destinations.find((row) => row.key === key)?.run();
+    },
     open,
     pending,
     isAction,
