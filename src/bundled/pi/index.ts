@@ -49,7 +49,8 @@ export const apply: PluginModule["apply"] = (ctx) => {
     },
     (key, listener) => agents.relay(key)?.subscribe(listener) ?? (() => {}),
     agents.storage,
-    (agent, signal) => readyOwnerReads(agents.relay(agent.key), agent, signal),
+    (agent, signal, channelId) =>
+      readyOwnerReads(agents.relay(agent.key), agent, signal, channelId),
   );
   ctx.agentProtection.registerModels({
     label: "Pi",
