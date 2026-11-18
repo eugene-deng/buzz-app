@@ -37,7 +37,7 @@ import { type AgentKey, pubkeyOf } from "../../features/agents/membership";
 import { sessionPrompts } from "../../features/agents/session-prompts";
 import { standaloneSessions } from "../../features/agents/standalone-sessions";
 import { localStore, type AgentStore } from "../../features/agents/store";
-import type { AgentReads } from "../../features/agents/reads";
+import { type AgentReads, workflowMarked } from "../../features/agents/reads";
 import type {
   Agent,
   AgentHandle,
@@ -240,6 +240,12 @@ export class PiRuntime {
     ) => () => void = () => () => {},
     /** Agent storage, where what each session started with is kept. */
     private readonly storage: AgentStore = localStore(),
+    /** The agent's reads once its community is ready, for a workflow's
+     * mention that arrived while it reconnects; rejects when `signal` aborts. */
+    private readonly readyReads?: (
+      agent: AgentHandle,
+      signal: AbortSignal,
+    ) => Promise<AgentReads | undefined>,
   ) {
     this.pi = new Pi(
       () => this.spawn,
@@ -563,10 +569,19 @@ export class PiRuntime {
     const attention = wake?.type === "attention";
     // Pi runs commands as you; mentions need owner or delegated authority.
     if (trigger.type === "mention") {
+      // A workflow's mention waits out a reconnect; the check below decides.
+      const ready = workflowMarked(trigger.event, agent.owner)
+        ? this.readyReads
+        : undefined;
+      const reads = ready ? await ready(agent, signal) : this.reads(agent.key);
+      if (ready) {
+        signal.throwIfAborted();
+        if (current && !current()) return ignored?.();
+      }
       const authority = await mentionAuthority(
         trigger.event,
         agent.owner,
-        workflowOf(this.reads(agent.key), agent.pubkey),
+        workflowOf(reads, agent.pubkey),
       );
       if (authority !== "owner") return ignored?.(authority);
     }

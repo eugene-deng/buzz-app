@@ -5,7 +5,7 @@ import { piHookOutput } from "../hook-output";
 // conversation. Pi answers with the in-process Buzz tools.
 import { isTauri } from "@tauri-apps/api/core";
 import { pubkeyOf } from "../../features/agents/membership";
-import { ownerReads } from "../../features/agents/reads";
+import { ownerReads, readyOwnerReads } from "../../features/agents/reads";
 import { repositoriesContext } from "../../features/communities/repositories";
 import type { PluginModule } from "../../plugins/api";
 import { PiLogoIcon } from "../../shared/design-system/icons";
@@ -49,6 +49,7 @@ export const apply: PluginModule["apply"] = (ctx) => {
     },
     (key, listener) => agents.relay(key)?.subscribe(listener) ?? (() => {}),
     agents.storage,
+    (agent, signal) => readyOwnerReads(agents.relay(agent.key), agent, signal),
   );
   ctx.agentProtection.registerModels({
     label: "Pi",
