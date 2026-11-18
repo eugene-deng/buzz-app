@@ -5,7 +5,7 @@ const OPTIONS = [
   { value: "", label: "Default" },
   ...COMPACT_AT.map((value) => ({
     value,
-    label: `At ${Number(value) / 1000}K tokens`,
+    label: `${Number(value) / 1000}K tokens`,
   })),
 ];
 
@@ -24,7 +24,7 @@ export function CompactionSelect({
 }) {
   return (
     <Select
-      label="Compaction"
+      label="Auto-compact at"
       variant="preference"
       description={description}
       value={compactAt(value) ? (value ?? "") : ""}
