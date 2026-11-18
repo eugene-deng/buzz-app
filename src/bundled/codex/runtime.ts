@@ -56,7 +56,10 @@ import { CREDENTIAL_ENV } from "../../features/host/service";
 import { threadReference } from "../../features/relay/thread-reference";
 import type { ChannelLabel } from "../../features/channels/channel-icon";
 import { appClient, readFile } from "../../buzz-mcp/app-client";
-import { readProject } from "../../features/agent-harness/project";
+import {
+  readProject,
+  worksElsewhere,
+} from "../../features/agent-harness/project";
 import {
   referencedFolders,
   referencedSkills,
@@ -743,15 +746,16 @@ export class CodexRuntime {
       const server = this.open(this.handle(agent.key));
       const rpc = await server.opening;
       const settings = this.resolveConfig(agent.config);
+      const conversation = {
+        channelId: place.channelId,
+        ...(settings.scope === "channel" || !place.root
+          ? {}
+          : { root: place.root }),
+      };
       const { cwd: workspace, home } = await this.conversationPlace(
         reads.scope,
         agent.key,
-        {
-          channelId: place.channelId,
-          ...(settings.scope === "channel" || !place.root
-            ? {}
-            : { root: place.root }),
-        },
+        conversation,
         settings,
       );
       if (workspace !== thread.workspace)
@@ -766,6 +770,7 @@ export class CodexRuntime {
         {},
         undefined,
         home,
+        conversation,
       );
       try {
         signal.throwIfAborted();
@@ -1750,7 +1755,10 @@ export class CodexRuntime {
         ? readProject(
             canvas && (() => canvas(channelId, agent.owner)),
             // A Solo chat is one conversation, with no thread root.
-            Boolean(this.folder(reads.scope, agent.key, channelId)),
+            worksElsewhere(
+              this.folder(reads.scope, agent.key, channelId),
+              agent.promptSections?.(channelId),
+            ),
           )
         : undefined,
       referencedFolders(event, agent.owner, reads.scope),
@@ -2725,6 +2733,8 @@ export class CodexRuntime {
     synced?: Delivery["synced"],
     /** The agent's workspace, when `workspace` is the conversation's folder. */
     home?: string,
+    /** The conversation the thread is for; none for a one-off turn. */
+    conversation?: Readonly<{ channelId: string; root?: string }>,
   ) {
     const normalized = await rpc.request<{
       config: {
@@ -2765,7 +2775,7 @@ export class CodexRuntime {
     const credential = await rpc.toolCredential(agent);
     const base = composeBase(
       baseFacts(settings, home),
-      agent.promptSections?.(),
+      agent.promptSections?.(conversation?.channelId, conversation?.root),
     );
     const params = {
       model,
@@ -2823,6 +2833,7 @@ export class CodexRuntime {
       request,
       request.synced,
       home,
+      request.conversation,
     );
     if (voiceInstructions) {
       Object.assign(params.config, {
@@ -2928,7 +2939,14 @@ export class CodexRuntime {
         sections,
         updates: fresh
           ? ""
-          : sectionUpdates(existing?.sections, facts, agent.promptSections?.()),
+          : sectionUpdates(
+              existing?.sections,
+              facts,
+              agent.promptSections?.(
+                request.conversation.channelId,
+                request.conversation.root,
+              ),
+            ),
       };
     } catch (error) {
       if (threadId)
@@ -3026,7 +3044,12 @@ export class CodexRuntime {
       } = loaded;
       // A seat keeps its loaded thread between turns, and the owner can
       // change a section meanwhile: its turns get the sections as they are.
-      const choices = seat && agent.promptSections?.();
+      const choices =
+        seat &&
+        agent.promptSections?.(
+          request.conversation.channelId,
+          request.conversation.root,
+        );
       const base = seat ? composeBase(loaded.facts, choices) : loaded.base;
       const updates = seat
         ? sectionUpdates(sections, loaded.facts, choices)
