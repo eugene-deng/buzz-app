@@ -1,29 +1,21 @@
 // Prompts in the shared record format, so a Claude agent here reads the same
 // sections and follows the same base prompt as a harness agent.
-import {
-  BUZZ_PROMPT,
-  TOP_LEVEL_PROMPT,
-  CHANNEL_LEVEL_PROMPT,
-} from "../../buzz-mcp/prompt";
+import { TOP_LEVEL_PROMPT, CHANNEL_LEVEL_PROMPT } from "../../buzz-mcp/prompt";
 import type { EventData } from "../../features/relay/events";
 import { messageAuthor } from "../../features/relay/fold";
-import {
-  basePromptFor,
-  mentionSection,
-} from "../../features/agent-harness/base-prompt";
+import { mentionSection } from "../../features/agent-harness/base-prompt";
 import { coreMemorySection } from "../../features/agent-harness/core-memory";
 import {
   type ConversationWake,
   wakeSection,
 } from "../../features/agent-harness/plugin-wake";
+import { composeBase } from "../../features/agent-harness/sections/compose";
 import {
   type AuthorNames,
   eventBody,
   quoted,
   withNames,
 } from "../../features/agent-harness/turn-records";
-import channelModel from "./session_model_channel.md?raw";
-import threadModel from "./session_model_thread.md?raw";
 import channelHandoff from "./session_handoff_channel.md?raw";
 import threadHandoff from "./session_handoff_thread.md?raw";
 
@@ -56,8 +48,10 @@ export function systemPrompt(
     notes?: string;
   }>,
 ) {
-  const model = input.scope === "thread" ? threadModel : channelModel;
-  const base = [basePromptFor(input.workspace), BUZZ_PROMPT, model];
+  const base = composeBase({
+    scope: input.scope,
+    ownFolder: input.workspace,
+  });
   return [
     input.agent
       ? section(
@@ -65,7 +59,7 @@ export function systemPrompt(
           `You are ${input.agent.name} (pubkey ${input.agent.pubkey}).`,
         )
       : "",
-    section("base", base.map((part) => part.trim()).join("\n\n")),
+    section("base", base.text),
     section("workspace", `Current working directory: ${input.cwd}`),
     input.repositories ?? "",
     input.instructions?.trim()

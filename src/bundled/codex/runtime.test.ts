@@ -42,7 +42,7 @@ import type {
   McpHandler,
   HostProcessOptions,
 } from "../../features/host/service";
-import { BUZZ_PROMPT, TOP_LEVEL_PROMPT } from "../../buzz-mcp/prompt";
+import { TOP_LEVEL_PROMPT } from "../../buzz-mcp/prompt";
 import { CodexRuntime, codexStep, programs } from "./runtime";
 import { codexRun } from "./run";
 import { config } from "./config";
@@ -731,7 +731,8 @@ it("hands over promptly and runs conversations independently on one server", asy
   expect(started.developerInstructions).toContain(
     "Never publish a bare acknowledgement.",
   );
-  expect(started.developerInstructions).toContain(BUZZ_PROMPT);
+  expect(started.developerInstructions).toContain("## Posting Conventions");
+  expect(started.developerInstructions).toContain("## Product help");
   expect(f.starts()[0]?.params).toMatchObject({
     additionalContext: {
       "buzz.instructions": {
