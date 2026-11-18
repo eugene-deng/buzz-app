@@ -1111,6 +1111,13 @@ function WorkflowCards({
     : partialChannels.filter((item) => channelIds.has(item.id));
   if (!currentEntries.length && !currentPartialChannels.length) return null;
   const Icon = channel && channelIcon(channel);
+  const openChannel =
+    channel &&
+    onOpenConversation &&
+    (() =>
+      void onOpenConversation(channel.id).then((opened) => {
+        if (!opened) onError("This channel could not be opened.");
+      }));
   return (
     <section
       className="workflow-channel-group"
@@ -1122,7 +1129,15 @@ function WorkflowCards({
           id={headingId}
           level={2}
           icon={<Icon size={24} />}
-          title={channel.name}
+          title={
+            openChannel ? (
+              <Button variant="link" size="text" onClick={openChannel}>
+                {channel.name}
+              </Button>
+            ) : (
+              channel.name
+            )
+          }
           subtitle={channel.archived && "Archived"}
         />
       )}
