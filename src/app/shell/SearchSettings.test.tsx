@@ -607,3 +607,112 @@ it("lists a gated admin card only once visible, retaining visibility while open"
     await root.fiber.dispose();
   }
 });
+
+/** The rendered title and subtitle of a ⌘K row, apart from its accessible
+ * name, which is stated separately and can drift from what is shown. */
+function shown(row: HTMLElement) {
+  return [
+    row.querySelector(".buzz-preference-row-label")?.textContent,
+    row.querySelector(".buzz-preference-row-description")?.textContent,
+  ];
+}
+
+function namedRows({ developmentPaused = false } = {}) {
+  const pluginState = {
+    configuration: {
+      status: "ready",
+      catalog: {
+        plugins: [
+          {
+            manifest: {
+              id: "example.reminders",
+              name: "Reminders",
+              description: "Reminder messages",
+              discovery: { category: "productivity" },
+            },
+            enabled: true,
+          },
+          {
+            manifest: {
+              id: "buzz.channels",
+              name: "Channels",
+              description: "Channel conversations",
+              discovery: { category: "communication" },
+            },
+            enabled: true,
+          },
+        ],
+      },
+    },
+    activation: {},
+    busy: false,
+  };
+  const plugins = {
+    subscribe: () => () => {},
+    snapshot: () => pluginState,
+    change: vi.fn(),
+  } as unknown as AppServices["plugins"];
+  const appearanceState = { preference: "system" };
+  const appearance = {
+    subscribe: () => () => {},
+    snapshot: () => appearanceState,
+    setMode: vi.fn(),
+  } as unknown as AppServices["appearance"];
+  const notificationState = {
+    preferences: { enabled: true, sound: true, notifyWhileViewing: false },
+    developmentPaused,
+  };
+  const notifications = {
+    subscribe: () => () => {},
+    snapshot: () => notificationState,
+    updatePreferences: vi.fn(),
+  } as unknown as AppServices["notifications"];
+  return function Palette({ query }: { query: string }) {
+    const inlineSettings = useSearchSettings({
+      query,
+      plugins,
+      appearance,
+      notifications,
+      navigation: {} as AppServices["navigation"],
+      close: vi.fn(),
+      openSection: vi.fn(),
+    });
+    return (
+      <SearchChoices
+        query={query}
+        onQueryChange={() => {}}
+        input={createRef()}
+        groups={[]}
+        inlineSettings={inlineSettings}
+      />
+    );
+  };
+}
+
+it.each([
+  ["reminders", "Reminders — Productivity", "Reminders", "Productivity"],
+  ["channels", "Channels — Communication", "Channels", "Communication"],
+  ["color mode", "Color mode — Appearance", "Color mode", "Appearance"],
+  ["sound", "Sound — Notifications", "Sound", "Notifications"],
+  [
+    "notify while viewing",
+    "Notify while viewing — Notifications",
+    "Notify while viewing",
+    "Notifications",
+  ],
+])(
+  "titles the %s row with its name and subtitles it with its category",
+  (query, name, title, subtitle) => {
+    const Palette = namedRows();
+    render(<Palette query={query} />);
+    expect(shown(screen.getByRole("row", { name }))).toEqual([title, subtitle]);
+  },
+);
+
+it("keeps the name as the title of a notification row paused in a development build", () => {
+  const Palette = namedRows({ developmentPaused: true });
+  render(<Palette query="sound" />);
+  expect(
+    shown(screen.getByRole("row", { name: "Sound — Notifications" })),
+  ).toEqual(["Sound", "Notifications · Paused in this development build"]);
+});
