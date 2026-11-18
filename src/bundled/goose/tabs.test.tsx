@@ -925,6 +925,7 @@ function activity(
     },
     sessions: () => live,
     conversations: () => world.saved,
+    folders: () => new Map<string, string>(),
     channelLabel: (_: string, id: string) =>
       world.names?.[id] ? { name: world.names[id], kind: "stream" } : undefined,
     prompts: () => ({
