@@ -42,6 +42,14 @@ function matchSection(label: string, needle: string) {
   return found && found.rank <= MatchRank.wordRuns ? found : undefined;
 }
 
+/** The rank of a match no looser than `cap`, else Infinity. Text that is not
+ * the row's own name is capped: a sentence holds most short words, and many
+ * names, as letters merely in order. */
+function rankWithin(label: string, needle: string, cap: MatchRank) {
+  const rank = matchRank(label, needle);
+  return rank !== undefined && rank <= cap ? rank : Infinity;
+}
+
 function controlDestination(
   key: string,
   label: string,
@@ -154,7 +162,7 @@ export function useSearchSettings({
     const rank = Math.min(
       matchRank(entry.label, needle) ?? Infinity,
       matchRank(entry.section, needle) ?? Infinity,
-      (matchRank(entry.keywords + " settings", needle) ?? Infinity) + 1,
+      rankWithin(entry.keywords + " settings", needle, MatchRank.substring) + 1,
     );
     if (!Number.isFinite(rank)) return [];
     const key = "search-setting-" + entry.id;
@@ -222,9 +230,12 @@ export function useSearchSettings({
               )?.label ?? "Other";
             const rank = Math.min(
               matchRank(plugin.manifest.name, needle) ?? Infinity,
-              (matchRank(category, needle) ?? Infinity) + 1,
-              (matchRank("plugins " + plugin.manifest.description, needle) ??
-                Infinity) + 2,
+              rankWithin(category, needle, MatchRank.wordRuns) + 1,
+              rankWithin(
+                "plugins " + plugin.manifest.description,
+                needle,
+                MatchRank.substring,
+              ) + 2,
             );
             if (!Number.isFinite(rank)) return [];
             const restricted =
