@@ -583,7 +583,12 @@ and are asked to sign in again in Buzz.
   Solo and each workspace; creating a workspace opens a chat draft filed there.
   Folders are optional unless **Work in a new worktree** is on. In that mode,
   add at least one project folder; the form shows a message beside Folders
-  until you add one or turn worktree mode off. In **New chat**, typing **#**
+  until you add one or turn worktree mode off. An agent changes code in a
+  workspace's project folders directly, on a branch other than the default
+  branch, or in a new worktree when **Work in a new worktree** is on. In a chat
+  without project folders, an agent that changes a repository makes a new
+  worktree of it and leaves the main worktree as it is. A conversation that a
+  plugin gave its own folder works in that folder instead. In **New chat**, typing **#**
   lists your workspaces above channels; choosing one sets the composer's
   workspace control and leaves no text in the message. A plugin's chat, such as
   a Nexus task, shows the workspace control when its plugin files it; until
@@ -596,8 +601,9 @@ and are asked to sign in again in Buzz.
   any composer to list matching folders in this community's repositories folder
   (**Local settings**). Choosing one adds it to the message as a chip; the
   message shows the folder's name. When you send it to your own Claude or Codex
-  agent on this device, the agent is told the folder's path, and Claude may also
-  work in that folder for the rest of the conversation. A chip someone else
+  agent on this device, the agent is told the folder's path as context, and
+  Claude can also reach that folder for the rest of the conversation. A chip
+  does not choose where the agent works. A chip someone else
   sends, or a folder no longer in your repositories folder, grants nothing.
   A bare **!**, or **!** before a space, stays text.
 - **Activity** (the bell at the top of the Messages sidebar) collects DMs, ordinary responses in Solo chats, mentions of you, and
