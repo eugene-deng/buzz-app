@@ -616,8 +616,10 @@ function MessageRowContent({
     () => keepMounted && (() => keepMounted(row.id)),
     [keepMounted, row.id],
   );
-  // Reporting yourself is not a real action. Messages from the viewer's agents
-  // keep Report; that is a separate product decision.
+  // Reporting yourself is not a real action. Messages from the viewer's agents,
+  // and workflow rows the viewer owns (workflowOwnerId === viewer, authored by
+  // the workflow's key), keep Report on purpose; whether they should is a
+  // separate product decision.
   const report =
     row.authorId !== viewer &&
     !row.membership &&

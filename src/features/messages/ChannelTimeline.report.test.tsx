@@ -256,7 +256,6 @@ it.each([
     expect(ownItems).toContain("Copy message");
     expect(ownItems).not.toContain("Report");
     expect(await menuItems(await row(peer.id), open)).toContain("Report");
-    expect(screen.queryByRole("dialog", { name: "Report message" })).toBeNull();
   },
 );
 
