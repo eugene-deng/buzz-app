@@ -1082,14 +1082,15 @@ and are asked to sign in again in Buzz.
 - **Live message alerts** still follow your notification settings when a channel
   read loads the message before its live delivery arrives. Loading history alone
   does not send alerts.
-- **Notification permission on macOS**: the first time an alert would appear
-  before macOS has been asked, Buzz shows the system permission prompt in place
-  of that alert. It asks this way only once on a device. If that prompt is
-  declined or left unanswered, macOS reports notifications as off and Buzz
-  cannot ask again: turn them on in macOS **System Settings → Notifications →
-  Buzz**. In Buzz, **Settings → Notifications → Allow notifications** works only
-  while macOS has never been asked. Windows and Linux have no permission prompt,
-  and a browser asks only from Settings.
+- **Notification permission on macOS**: Buzz shows the system permission
+  prompt the first time you are in the app with a community and the Buzz window
+  is in front. It asks this way only once on a Mac. Alerts that arrive before
+  you answer appear if you allow soon after. If that prompt is declined or left
+  unanswered, macOS reports notifications as off and Buzz cannot ask again:
+  turn them on in macOS **System Settings → Notifications → Buzz**. In Buzz,
+  **Settings → Notifications → Allow notifications** works only while macOS has
+  never been asked. Windows and Linux have no permission prompt, and a browser
+  asks only from Settings.
 - **Sidebar width**: drag the sidebar's right edge, or focus its resize handle
   and use the Left/Right arrow keys. Double-click the handle to reset the width.
   Messages and plugin pages share the saved width within the same community
