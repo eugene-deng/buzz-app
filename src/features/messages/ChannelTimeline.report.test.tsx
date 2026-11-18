@@ -16,7 +16,7 @@ import { StrictMode, type ReactElement, type ReactNode } from "react";
 import { ToastProvider } from "../../shared/design-system/ui/Toast";
 import { createRelaySession } from "../relay/session";
 import type { LiveCallbacks } from "../relay/live";
-import type { RelayEvent } from "../relay/events";
+import { eventDto, type RelayEvent } from "../relay/events";
 import {
   keypair,
   message,
@@ -114,6 +114,8 @@ function mount(
   const owner = createRelaySession(
     {
       ...scriptedTransport(viewer.pubkey, relay.pubkey).transport,
+      // The relay names itself explicitly, so its signed output is attributed.
+      archiveAuthority: relay.pubkey,
       ...(threadRoot ? { query: async () => initial } : {}),
       ...(options.media ? { media: options.media } : {}),
       writer: { sign: async (template) => signed(viewer, template), publish },
@@ -220,28 +222,40 @@ it.each([
   ["thread", "more"],
   ["thread", "context"],
 ] as const)(
-  "offers Report on a peer's message but not the viewer's own in the %s %s menu",
+  "offers Report on a peer's message and the viewer's workflow output but not the viewer's own in the %s %s menu",
   async (host, open) => {
     const root = message(viewer, "c", "Root", 1);
+    const inThread =
+      host === "thread"
+        ? [
+            ["e", root.id, "", "root"],
+            ["e", root.id, "", "reply"],
+          ]
+        : [];
     const reply = (author: typeof viewer, content: string, at: number) =>
-      message(
-        author,
-        "c",
-        content,
-        at,
-        host === "thread"
-          ? [
-              ["e", root.id, "", "root"],
-              ["e", root.id, "", "reply"],
-            ]
-          : [],
-      );
+      message(author, "c", content, at, inThread);
     const own = reply(viewer, "Mine", 2);
     const peer = reply(other, "Theirs", 3);
+    // The relay signs workflow output and names its owner in the leading `p`,
+    // which the fold shows as the author. Only an admitted event is attributed.
+    const workflow = eventDto(
+      signed(relay, {
+        kind: 9,
+        content: "Automated",
+        created_at: 4,
+        tags: [
+          ["p", viewer.pubkey, "", "owner"],
+          ["h", "c"],
+          ["buzz:workflow", "true"],
+          ["buzz:workflow-owner", viewer.pubkey],
+          ...inThread,
+        ],
+      }),
+    );
     mount(
       async () => {},
       own,
-      [root, own, peer],
+      [root, own, peer, workflow],
       host === "thread" ? root.id : undefined,
     );
     const row = (id: string) =>
@@ -256,6 +270,12 @@ it.each([
     expect(ownItems).toContain("Copy message");
     expect(ownItems).not.toContain("Report");
     expect(await menuItems(await row(peer.id), open)).toContain("Report");
+    const workflowRow = await row(workflow.id);
+    // Attributed to the viewer, so only the signer tells it from their own.
+    within(workflowRow).getByRole("button", {
+      name: "Workflow message details",
+    });
+    expect(await menuItems(workflowRow, open)).toContain("Report");
   },
 );
 
