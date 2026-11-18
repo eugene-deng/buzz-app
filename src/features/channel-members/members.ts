@@ -50,8 +50,8 @@ export function canAddToDirectMessage(
     channel.viewerRole !== "guest" &&
     !channel.archived &&
     !channel.cached &&
-    channel.members?.includes(session.viewer) &&
-    !(session.relayAuthor && channel.members.includes(session.relayAuthor))
+    viewerMember(channel, session.viewer) &&
+    !(session.relayAuthor && channel.members?.includes(session.relayAuthor))
   );
 }
 

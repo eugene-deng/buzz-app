@@ -8,6 +8,7 @@ import {
   addChannelMember,
   addChannelMembersAtOnce,
   canAddMembers,
+  canAddToDirectMessage,
   canShareSoloChat,
 } from "./members";
 
@@ -1701,3 +1702,37 @@ it("keeps invitation and Solo sharing viewer gates independent of unloaded peers
     }),
   ).toBe(false);
 });
+
+it.each([
+  ["legacy roster", { members: ["viewer", "peer"] }, true],
+  [
+    "joined without peers",
+    { viewerMembership: { pubkey: "viewer", joined: true } },
+    true,
+  ],
+  [
+    "denied with retained peers",
+    {
+      members: ["viewer", "peer"],
+      viewerMembership: { pubkey: "viewer", joined: false },
+    },
+    false,
+  ],
+])(
+  "uses viewer authority for DM additions: %s",
+  (_membership, evidence, expected) => {
+    const session = {
+      viewer: "viewer",
+      relayAuthor: "relay",
+      directMessages: { available: true },
+    };
+    expect(
+      canAddToDirectMessage(session, {
+        id: "dm",
+        name: "Direct message",
+        channelType: "dm",
+        ...evidence,
+      }),
+    ).toBe(expected);
+  },
+);
