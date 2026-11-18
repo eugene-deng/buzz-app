@@ -1,0 +1,1752 @@
+{
+  "commit": "c0f5cbcf6700545ea152809d763bea2b3f9fb432",
+  "scope": "Desktop src toast call sites; per-source family coverage, not proof of every runtime string or every branch.",
+  "rows": [
+    {
+      "file": "src/app/AgentSettings.tsx",
+      "line": 124,
+      "kind": "notice",
+      "examples": [
+        "Source notices · Agent preference wasn’t saved",
+        "Source notices · Keep-awake setting wasn’t saved"
+      ]
+    },
+    {
+      "file": "src/app/AgentSettings.tsx",
+      "line": 141,
+      "kind": "notice",
+      "examples": [
+        "Source notices · Agent preference wasn’t saved",
+        "Source notices · Keep-awake setting wasn’t saved"
+      ]
+    },
+    {
+      "file": "src/app/AgentSettings.tsx",
+      "line": 148,
+      "kind": "notice",
+      "examples": [
+        "Source notices · Agent preference wasn’t saved",
+        "Source notices · Keep-awake setting wasn’t saved"
+      ]
+    },
+    {
+      "file": "src/app/AppearanceSettings.tsx",
+      "line": 494,
+      "kind": "notice",
+      "examples": [
+        "Source notices · Message width wasn’t saved",
+        "Source notices · Follow-up preference wasn’t saved",
+        "Source notices · Clock preference wasn’t saved",
+        "Source notices · Spelling preference wasn’t saved",
+        "Source notices · Search preference wasn’t saved",
+        "Source notices · Thread preference wasn’t saved",
+        "Source notices · Vibe level wasn’t saved",
+        "Source notices · Message density wasn’t saved",
+        "Source notices · Accent color wasn’t saved",
+        "Source notices · Interface size wasn’t saved",
+        "Source notices · Appearance wasn’t saved"
+      ]
+    },
+    {
+      "file": "src/app/AppearanceSettings.tsx",
+      "line": 507,
+      "kind": "notice",
+      "examples": [
+        "Source notices · Message width wasn’t saved",
+        "Source notices · Follow-up preference wasn’t saved",
+        "Source notices · Clock preference wasn’t saved",
+        "Source notices · Spelling preference wasn’t saved",
+        "Source notices · Search preference wasn’t saved",
+        "Source notices · Thread preference wasn’t saved",
+        "Source notices · Vibe level wasn’t saved",
+        "Source notices · Message density wasn’t saved",
+        "Source notices · Accent color wasn’t saved",
+        "Source notices · Interface size wasn’t saved",
+        "Source notices · Appearance wasn’t saved"
+      ]
+    },
+    {
+      "file": "src/app/AppearanceSettings.tsx",
+      "line": 520,
+      "kind": "notice",
+      "examples": [
+        "Source notices · Message width wasn’t saved",
+        "Source notices · Follow-up preference wasn’t saved",
+        "Source notices · Clock preference wasn’t saved",
+        "Source notices · Spelling preference wasn’t saved",
+        "Source notices · Search preference wasn’t saved",
+        "Source notices · Thread preference wasn’t saved",
+        "Source notices · Vibe level wasn’t saved",
+        "Source notices · Message density wasn’t saved",
+        "Source notices · Accent color wasn’t saved",
+        "Source notices · Interface size wasn’t saved",
+        "Source notices · Appearance wasn’t saved"
+      ]
+    },
+    {
+      "file": "src/app/AppearanceSettings.tsx",
+      "line": 534,
+      "kind": "notice",
+      "examples": [
+        "Source notices · Message width wasn’t saved",
+        "Source notices · Follow-up preference wasn’t saved",
+        "Source notices · Clock preference wasn’t saved",
+        "Source notices · Spelling preference wasn’t saved",
+        "Source notices · Search preference wasn’t saved",
+        "Source notices · Thread preference wasn’t saved",
+        "Source notices · Vibe level wasn’t saved",
+        "Source notices · Message density wasn’t saved",
+        "Source notices · Accent color wasn’t saved",
+        "Source notices · Interface size wasn’t saved",
+        "Source notices · Appearance wasn’t saved"
+      ]
+    },
+    {
+      "file": "src/app/AppearanceSettings.tsx",
+      "line": 550,
+      "kind": "notice",
+      "examples": [
+        "Source notices · Message width wasn’t saved",
+        "Source notices · Follow-up preference wasn’t saved",
+        "Source notices · Clock preference wasn’t saved",
+        "Source notices · Spelling preference wasn’t saved",
+        "Source notices · Search preference wasn’t saved",
+        "Source notices · Thread preference wasn’t saved",
+        "Source notices · Vibe level wasn’t saved",
+        "Source notices · Message density wasn’t saved",
+        "Source notices · Accent color wasn’t saved",
+        "Source notices · Interface size wasn’t saved",
+        "Source notices · Appearance wasn’t saved"
+      ]
+    },
+    {
+      "file": "src/app/AppearanceSettings.tsx",
+      "line": 564,
+      "kind": "notice",
+      "examples": [
+        "Source notices · Message width wasn’t saved",
+        "Source notices · Follow-up preference wasn’t saved",
+        "Source notices · Clock preference wasn’t saved",
+        "Source notices · Spelling preference wasn’t saved",
+        "Source notices · Search preference wasn’t saved",
+        "Source notices · Thread preference wasn’t saved",
+        "Source notices · Vibe level wasn’t saved",
+        "Source notices · Message density wasn’t saved",
+        "Source notices · Accent color wasn’t saved",
+        "Source notices · Interface size wasn’t saved",
+        "Source notices · Appearance wasn’t saved"
+      ]
+    },
+    {
+      "file": "src/app/AppearanceSettings.tsx",
+      "line": 578,
+      "kind": "notice",
+      "examples": [
+        "Source notices · Message width wasn’t saved",
+        "Source notices · Follow-up preference wasn’t saved",
+        "Source notices · Clock preference wasn’t saved",
+        "Source notices · Spelling preference wasn’t saved",
+        "Source notices · Search preference wasn’t saved",
+        "Source notices · Thread preference wasn’t saved",
+        "Source notices · Vibe level wasn’t saved",
+        "Source notices · Message density wasn’t saved",
+        "Source notices · Accent color wasn’t saved",
+        "Source notices · Interface size wasn’t saved",
+        "Source notices · Appearance wasn’t saved"
+      ]
+    },
+    {
+      "file": "src/app/AppearanceSettings.tsx",
+      "line": 588,
+      "kind": "notice",
+      "examples": [
+        "Source notices · Message width wasn’t saved",
+        "Source notices · Follow-up preference wasn’t saved",
+        "Source notices · Clock preference wasn’t saved",
+        "Source notices · Spelling preference wasn’t saved",
+        "Source notices · Search preference wasn’t saved",
+        "Source notices · Thread preference wasn’t saved",
+        "Source notices · Vibe level wasn’t saved",
+        "Source notices · Message density wasn’t saved",
+        "Source notices · Accent color wasn’t saved",
+        "Source notices · Interface size wasn’t saved",
+        "Source notices · Appearance wasn’t saved"
+      ]
+    },
+    {
+      "file": "src/app/AppearanceSettings.tsx",
+      "line": 598,
+      "kind": "notice",
+      "examples": [
+        "Source notices · Message width wasn’t saved",
+        "Source notices · Follow-up preference wasn’t saved",
+        "Source notices · Clock preference wasn’t saved",
+        "Source notices · Spelling preference wasn’t saved",
+        "Source notices · Search preference wasn’t saved",
+        "Source notices · Thread preference wasn’t saved",
+        "Source notices · Vibe level wasn’t saved",
+        "Source notices · Message density wasn’t saved",
+        "Source notices · Accent color wasn’t saved",
+        "Source notices · Interface size wasn’t saved",
+        "Source notices · Appearance wasn’t saved"
+      ]
+    },
+    {
+      "file": "src/app/AppearanceSettings.tsx",
+      "line": 609,
+      "kind": "notice",
+      "examples": [
+        "Source notices · Message width wasn’t saved",
+        "Source notices · Follow-up preference wasn’t saved",
+        "Source notices · Clock preference wasn’t saved",
+        "Source notices · Spelling preference wasn’t saved",
+        "Source notices · Search preference wasn’t saved",
+        "Source notices · Thread preference wasn’t saved",
+        "Source notices · Vibe level wasn’t saved",
+        "Source notices · Message density wasn’t saved",
+        "Source notices · Accent color wasn’t saved",
+        "Source notices · Interface size wasn’t saved",
+        "Source notices · Appearance wasn’t saved"
+      ]
+    },
+    {
+      "file": "src/app/AppearanceSettings.tsx",
+      "line": 623,
+      "kind": "notice",
+      "examples": [
+        "Source notices · Message width wasn’t saved",
+        "Source notices · Follow-up preference wasn’t saved",
+        "Source notices · Clock preference wasn’t saved",
+        "Source notices · Spelling preference wasn’t saved",
+        "Source notices · Search preference wasn’t saved",
+        "Source notices · Thread preference wasn’t saved",
+        "Source notices · Vibe level wasn’t saved",
+        "Source notices · Message density wasn’t saved",
+        "Source notices · Accent color wasn’t saved",
+        "Source notices · Interface size wasn’t saved",
+        "Source notices · Appearance wasn’t saved"
+      ]
+    },
+    {
+      "file": "src/app/CommunityAddress.tsx",
+      "line": 84,
+      "kind": "feedback",
+      "examples": [
+        "Copy · community URL",
+        "Source feedback · Couldn’t copy the community URL. (CommunityAddress)"
+      ]
+    },
+    {
+      "file": "src/app/CommunityAddress.tsx",
+      "line": 89,
+      "kind": "feedback",
+      "examples": [
+        "Copy · community URL",
+        "Source feedback · Couldn’t copy the community URL. (CommunityAddress)"
+      ]
+    },
+    {
+      "file": "src/app/CommunityDepartureSettings.tsx",
+      "line": 64,
+      "kind": "feedback",
+      "examples": [
+        "Communities · Lighthouse Labs was removed from this device. Your membership wasn’t changed. You can add it again later.",
+        "Communities · Lighthouse Labs was removed from this device. Your membership wasn’t changed. You can add it again later. Some saved data couldn’t be cleared.",
+        "Communities · Lighthouse Labs was removed from this device. Its relay didn’t confirm the leave, so you may still be a member.",
+        "Communities · Lighthouse Labs was removed from this device. Its relay didn’t confirm the leave, so you may still be a member. Some saved data couldn’t be cleared.",
+        "Communities · Left Lighthouse Labs.",
+        "Communities · Left Lighthouse Labs. Some saved data couldn’t be cleared.",
+        "Communities · You were no longer a member of Lighthouse Labs, so it was removed from this device.",
+        "Communities · You were no longer a member of Lighthouse Labs, so it was removed from this device. Some saved data couldn’t be cleared.",
+        "Communities · You’re currently banned from Lighthouse Labs, so the leave was refused. It was removed from this device and can be added again by its URL if access is restored.",
+        "Communities · You’re currently banned from Lighthouse Labs, so the leave was refused. It was removed from this device and can be added again by its URL if access is restored. Some saved data couldn’t be cleared.",
+        "Communities · Couldn’t remove Lighthouse Labs from this device. Try again.",
+        "Communities · Left Lighthouse Labs, but this device couldn’t finish cleaning up. Leave it again to finish.",
+        "Communities · The relay no longer had a membership for Lighthouse Labs, but this device couldn’t finish removing it. Try again.",
+        "Communities · The leave was refused because you’re currently banned from Lighthouse Labs, and this device couldn’t finish removing it. Try again.",
+        "Communities · The relay owner can’t leave Lighthouse Labs.",
+        "Communities · Couldn’t leave Lighthouse Labs. Check your connection and try again."
+      ]
+    },
+    {
+      "file": "src/app/CommunityDepartureSettings.tsx",
+      "line": 75,
+      "kind": "feedback",
+      "examples": [
+        "Communities · Lighthouse Labs was removed from this device. Your membership wasn’t changed. You can add it again later.",
+        "Communities · Lighthouse Labs was removed from this device. Your membership wasn’t changed. You can add it again later. Some saved data couldn’t be cleared.",
+        "Communities · Lighthouse Labs was removed from this device. Its relay didn’t confirm the leave, so you may still be a member.",
+        "Communities · Lighthouse Labs was removed from this device. Its relay didn’t confirm the leave, so you may still be a member. Some saved data couldn’t be cleared.",
+        "Communities · Left Lighthouse Labs.",
+        "Communities · Left Lighthouse Labs. Some saved data couldn’t be cleared.",
+        "Communities · You were no longer a member of Lighthouse Labs, so it was removed from this device.",
+        "Communities · You were no longer a member of Lighthouse Labs, so it was removed from this device. Some saved data couldn’t be cleared.",
+        "Communities · You’re currently banned from Lighthouse Labs, so the leave was refused. It was removed from this device and can be added again by its URL if access is restored.",
+        "Communities · You’re currently banned from Lighthouse Labs, so the leave was refused. It was removed from this device and can be added again by its URL if access is restored. Some saved data couldn’t be cleared.",
+        "Communities · Couldn’t remove Lighthouse Labs from this device. Try again.",
+        "Communities · Left Lighthouse Labs, but this device couldn’t finish cleaning up. Leave it again to finish.",
+        "Communities · The relay no longer had a membership for Lighthouse Labs, but this device couldn’t finish removing it. Try again.",
+        "Communities · The leave was refused because you’re currently banned from Lighthouse Labs, and this device couldn’t finish removing it. Try again.",
+        "Communities · The relay owner can’t leave Lighthouse Labs.",
+        "Communities · Couldn’t leave Lighthouse Labs. Check your connection and try again."
+      ]
+    },
+    {
+      "file": "src/app/CommunityDepartureSettings.tsx",
+      "line": 92,
+      "kind": "feedback",
+      "examples": [
+        "Communities · Lighthouse Labs was removed from this device. Your membership wasn’t changed. You can add it again later.",
+        "Communities · Lighthouse Labs was removed from this device. Your membership wasn’t changed. You can add it again later. Some saved data couldn’t be cleared.",
+        "Communities · Lighthouse Labs was removed from this device. Its relay didn’t confirm the leave, so you may still be a member.",
+        "Communities · Lighthouse Labs was removed from this device. Its relay didn’t confirm the leave, so you may still be a member. Some saved data couldn’t be cleared.",
+        "Communities · Left Lighthouse Labs.",
+        "Communities · Left Lighthouse Labs. Some saved data couldn’t be cleared.",
+        "Communities · You were no longer a member of Lighthouse Labs, so it was removed from this device.",
+        "Communities · You were no longer a member of Lighthouse Labs, so it was removed from this device. Some saved data couldn’t be cleared.",
+        "Communities · You’re currently banned from Lighthouse Labs, so the leave was refused. It was removed from this device and can be added again by its URL if access is restored.",
+        "Communities · You’re currently banned from Lighthouse Labs, so the leave was refused. It was removed from this device and can be added again by its URL if access is restored. Some saved data couldn’t be cleared.",
+        "Communities · Couldn’t remove Lighthouse Labs from this device. Try again.",
+        "Communities · Left Lighthouse Labs, but this device couldn’t finish cleaning up. Leave it again to finish.",
+        "Communities · The relay no longer had a membership for Lighthouse Labs, but this device couldn’t finish removing it. Try again.",
+        "Communities · The leave was refused because you’re currently banned from Lighthouse Labs, and this device couldn’t finish removing it. Try again.",
+        "Communities · The relay owner can’t leave Lighthouse Labs.",
+        "Communities · Couldn’t leave Lighthouse Labs. Check your connection and try again."
+      ]
+    },
+    {
+      "file": "src/app/CommunityLocalSettings.tsx",
+      "line": 40,
+      "kind": "feedback",
+      "examples": [
+        "Source feedback · Community URL copied. (CommunityLocalSettings)"
+      ]
+    },
+    {
+      "file": "src/app/IdentitySettings.tsx",
+      "line": 461,
+      "kind": "notice",
+      "examples": [
+        "Identity · Identity wasn’t copied",
+        "Identity · identity copied (5 seconds)"
+      ]
+    },
+    {
+      "file": "src/app/NotificationSettings.tsx",
+      "line": 277,
+      "kind": "notice",
+      "examples": [
+        "Source notices · Notification choices weren’t saved",
+        "Source notices · Buzz couldn’t send the notification"
+      ]
+    },
+    {
+      "file": "src/app/NotificationSettings.tsx",
+      "line": 298,
+      "kind": "notice",
+      "examples": [
+        "Source notices · Notification choices weren’t saved",
+        "Source notices · Buzz couldn’t send the notification"
+      ]
+    },
+    {
+      "file": "src/app/PluginUpdates.tsx",
+      "line": 330,
+      "kind": "notice",
+      "examples": [
+        "Plugin · update",
+        "Plugin · permissions",
+        "Plugin · failed activation"
+      ]
+    },
+    {
+      "file": "src/app/PluginUpdates.tsx",
+      "line": 385,
+      "kind": "notice",
+      "examples": [
+        "Plugin · update",
+        "Plugin · permissions",
+        "Plugin · failed activation"
+      ]
+    },
+    {
+      "file": "src/app/ProfileSettings.tsx",
+      "line": 537,
+      "kind": "notice",
+      "examples": ["Source notices · Profile updated"]
+    },
+    {
+      "file": "src/app/Settings.tsx",
+      "line": 1769,
+      "kind": "notice",
+      "examples": [
+        "Source notices · Plugin settings couldn’t refresh",
+        "Source notices · Plugin change wasn’t confirmed"
+      ]
+    },
+    {
+      "file": "src/app/Settings.tsx",
+      "line": 1775,
+      "kind": "notice",
+      "examples": [
+        "Source notices · Plugin settings couldn’t refresh",
+        "Source notices · Plugin change wasn’t confirmed"
+      ]
+    },
+    {
+      "file": "src/app/UnreadIndicatorSettings.tsx",
+      "line": 70,
+      "kind": "notice",
+      "examples": ["Source notices · Dock badge unavailable"]
+    },
+    {
+      "file": "src/app/shell/PageSearch.tsx",
+      "line": 615,
+      "kind": "feedback",
+      "examples": ["Source feedback · New chat already has an unsent draft"]
+    },
+    {
+      "file": "src/bundled/agent-activity/ActivityAccessory.tsx",
+      "line": 415,
+      "kind": "feedback",
+      "examples": ["Agents · Couldn’t retry Honey. Connection unavailable."]
+    },
+    {
+      "file": "src/bundled/agents/AgentCardAttachment.tsx",
+      "line": 150,
+      "kind": "feedback",
+      "examples": ["Agents · Added Honey to your agents."]
+    },
+    {
+      "file": "src/bundled/agents/AgentShareDialog.tsx",
+      "line": 301,
+      "kind": "feedback",
+      "examples": [
+        "Agents · Published Honey to the Marketplace.",
+        "Agents · Removed Honey from the Marketplace.",
+        "Agents · Saved an agent card for Honey.",
+        "Agents · Saved Honey.",
+        "Agents · Sent Honey to Alex."
+      ]
+    },
+    {
+      "file": "src/bundled/agents/AgentShareDialog.tsx",
+      "line": 382,
+      "kind": "feedback",
+      "examples": [
+        "Agents · Published Honey to the Marketplace.",
+        "Agents · Removed Honey from the Marketplace.",
+        "Agents · Saved an agent card for Honey.",
+        "Agents · Saved Honey.",
+        "Agents · Sent Honey to Alex."
+      ]
+    },
+    {
+      "file": "src/bundled/agents/AgentShareDialog.tsx",
+      "line": 480,
+      "kind": "feedback",
+      "examples": [
+        "Agents · Published Honey to the Marketplace.",
+        "Agents · Removed Honey from the Marketplace.",
+        "Agents · Saved an agent card for Honey.",
+        "Agents · Saved Honey.",
+        "Agents · Sent Honey to Alex."
+      ]
+    },
+    {
+      "file": "src/bundled/builderlab/adapter-type/ModelSettings.tsx",
+      "line": 216,
+      "kind": "feedback",
+      "examples": ["Source feedback · Model preferences saved"]
+    },
+    {
+      "file": "src/bundled/builderlab/agents/RemoteAgents.tsx",
+      "line": 305,
+      "kind": "feedback",
+      "examples": [
+        "Source feedback · Key copied",
+        "Source feedback · Couldn’t copy the key"
+      ]
+    },
+    {
+      "file": "src/bundled/builderlab/agents/RemoteAgents.tsx",
+      "line": 307,
+      "kind": "feedback",
+      "examples": [
+        "Source feedback · Key copied",
+        "Source feedback · Couldn’t copy the key"
+      ]
+    },
+    {
+      "file": "src/bundled/channels/ArchiveInactiveChats.tsx",
+      "line": 191,
+      "kind": "feedback",
+      "examples": [
+        "Bulk action · progress",
+        "Conversations · No inactive chats left to archive",
+        "Conversations · Archived 3 chats",
+        "Conversations · Restored 3 chats",
+        "Conversations · Archived 2 chats. Couldn’t archive 1. Connection unavailable.",
+        "Conversations · Restored 2 chats. Couldn’t restore 1. Connection unavailable.",
+        "Conversations · Couldn’t archive 3 chats. Connection unavailable.",
+        "Conversations · Couldn’t restore 3 chats. Connection unavailable."
+      ]
+    },
+    {
+      "file": "src/bundled/channels/ArchiveInactiveChats.tsx",
+      "line": 198,
+      "kind": "feedback",
+      "examples": [
+        "Bulk action · progress",
+        "Conversations · No inactive chats left to archive",
+        "Conversations · Archived 3 chats",
+        "Conversations · Restored 3 chats",
+        "Conversations · Archived 2 chats. Couldn’t archive 1. Connection unavailable.",
+        "Conversations · Restored 2 chats. Couldn’t restore 1. Connection unavailable.",
+        "Conversations · Couldn’t archive 3 chats. Connection unavailable.",
+        "Conversations · Couldn’t restore 3 chats. Connection unavailable."
+      ]
+    },
+    {
+      "file": "src/bundled/channels/ArchiveInactiveChats.tsx",
+      "line": 233,
+      "kind": "notice",
+      "examples": [
+        "Bulk action · progress",
+        "Conversations · No inactive chats left to archive",
+        "Conversations · Archived 3 chats",
+        "Conversations · Restored 3 chats",
+        "Conversations · Archived 2 chats. Couldn’t archive 1. Connection unavailable.",
+        "Conversations · Restored 2 chats. Couldn’t restore 1. Connection unavailable.",
+        "Conversations · Couldn’t archive 3 chats. Connection unavailable.",
+        "Conversations · Couldn’t restore 3 chats. Connection unavailable."
+      ]
+    },
+    {
+      "file": "src/bundled/channels/ChannelCopyLinkMenuItem.tsx",
+      "line": 15,
+      "kind": "feedback",
+      "examples": [
+        "Copy · channel link",
+        "Source feedback · Couldn’t copy the link."
+      ]
+    },
+    {
+      "file": "src/bundled/channels/ChannelCopyLinkMenuItem.tsx",
+      "line": 16,
+      "kind": "feedback",
+      "examples": [
+        "Copy · channel link",
+        "Source feedback · Couldn’t copy the link."
+      ]
+    },
+    {
+      "file": "src/bundled/channels/ChannelInventory.tsx",
+      "line": 1323,
+      "kind": "notice",
+      "examples": [
+        "Connection · recent activity refresh failed",
+        "Connection · sidebar preferences refresh failed",
+        "Conversations · Channel setup couldn’t finish: Design review"
+      ]
+    },
+    {
+      "file": "src/bundled/channels/ChannelInventory.tsx",
+      "line": 1898,
+      "kind": "notice",
+      "examples": [
+        "Connection · recent activity refresh failed",
+        "Connection · sidebar preferences refresh failed",
+        "Conversations · Channel setup couldn’t finish: Design review"
+      ]
+    },
+    {
+      "file": "src/bundled/channels/ChannelInventory.tsx",
+      "line": 1913,
+      "kind": "notice",
+      "examples": [
+        "Connection · recent activity refresh failed",
+        "Connection · sidebar preferences refresh failed",
+        "Conversations · Channel setup couldn’t finish: Design review"
+      ]
+    },
+    {
+      "file": "src/bundled/channels/ChannelLifecycleDialog.tsx",
+      "line": 181,
+      "kind": "feedback",
+      "examples": [
+        "Conversations · Chat archived: Design review",
+        "Conversations · Archiving chat…",
+        "Conversations · Archive chat failed",
+        "Conversations · Chat unarchived: Design review",
+        "Conversations · Unarchiving chat…",
+        "Conversations · Unarchive chat failed",
+        "Conversations · Chat deleted: Design review",
+        "Conversations · Deleting chat…",
+        "Conversations · Delete chat failed",
+        "Conversations · Chat left: Design review",
+        "Conversations · Leaving chat…",
+        "Conversations · Leave chat failed",
+        "Conversations · Channel archived: Design review",
+        "Conversations · Archiving channel…",
+        "Conversations · Archive channel failed",
+        "Conversations · Channel unarchived: Design review",
+        "Conversations · Unarchiving channel…",
+        "Conversations · Unarchive channel failed",
+        "Conversations · Channel deleted: Design review",
+        "Conversations · Deleting channel…",
+        "Conversations · Delete channel failed",
+        "Conversations · Channel left: Design review",
+        "Conversations · Leaving channel…",
+        "Conversations · Leave channel failed",
+        "Conversations · Hiding conversation…",
+        "Conversations · Conversation hidden: Design review",
+        "Conversations · Hide conversation failed"
+      ]
+    },
+    {
+      "file": "src/bundled/channels/ChannelLifecycleDialog.tsx",
+      "line": 222,
+      "kind": "notice",
+      "examples": [
+        "Conversations · Chat archived: Design review",
+        "Conversations · Archiving chat…",
+        "Conversations · Archive chat failed",
+        "Conversations · Chat unarchived: Design review",
+        "Conversations · Unarchiving chat…",
+        "Conversations · Unarchive chat failed",
+        "Conversations · Chat deleted: Design review",
+        "Conversations · Deleting chat…",
+        "Conversations · Delete chat failed",
+        "Conversations · Chat left: Design review",
+        "Conversations · Leaving chat…",
+        "Conversations · Leave chat failed",
+        "Conversations · Channel archived: Design review",
+        "Conversations · Archiving channel…",
+        "Conversations · Archive channel failed",
+        "Conversations · Channel unarchived: Design review",
+        "Conversations · Unarchiving channel…",
+        "Conversations · Unarchive channel failed",
+        "Conversations · Channel deleted: Design review",
+        "Conversations · Deleting channel…",
+        "Conversations · Delete channel failed",
+        "Conversations · Channel left: Design review",
+        "Conversations · Leaving channel…",
+        "Conversations · Leave channel failed",
+        "Conversations · Hiding conversation…",
+        "Conversations · Conversation hidden: Design review",
+        "Conversations · Hide conversation failed"
+      ]
+    },
+    {
+      "file": "src/bundled/channels/ChannelsPage.tsx",
+      "line": 2461,
+      "kind": "feedback",
+      "examples": ["Conversations · Couldn’t restore the message."]
+    },
+    {
+      "file": "src/bundled/channels/ChannelsPage.tsx",
+      "line": 2597,
+      "kind": "feedback",
+      "examples": ["Conversations · Couldn’t restore the message."]
+    },
+    {
+      "file": "src/bundled/channels/SoloHeading.tsx",
+      "line": 254,
+      "kind": "notice",
+      "examples": [
+        "Source notices · Read state couldn’t be saved",
+        "Source notices · Chat wasn’t moved"
+      ]
+    },
+    {
+      "file": "src/bundled/channels/SoloHeading.tsx",
+      "line": 317,
+      "kind": "notice",
+      "examples": [
+        "Source notices · Read state couldn’t be saved",
+        "Source notices · Chat wasn’t moved"
+      ]
+    },
+    {
+      "file": "src/bundled/channels/StartLinkedChat.tsx",
+      "line": 81,
+      "kind": "feedback",
+      "examples": ["Dynamic errors · StartLinkedChat error"]
+    },
+    {
+      "file": "src/bundled/channels/useSoloShare.ts",
+      "line": 233,
+      "kind": "feedback",
+      "examples": [
+        "Conversations · Shared in Design review",
+        "Conversations · Chat changed to View only. Shared in Design review"
+      ]
+    },
+    {
+      "file": "src/bundled/emoji/CustomEmojiSettings.tsx",
+      "line": 461,
+      "kind": "notice",
+      "examples": ["Emoji · Added :wave:", "Emoji · Removed :wave:"]
+    },
+    {
+      "file": "src/bundled/emoji/CustomEmojiSettings.tsx",
+      "line": 469,
+      "kind": "notice",
+      "examples": ["Emoji · Added :wave:", "Emoji · Removed :wave:"]
+    },
+    {
+      "file": "src/bundled/file-viewer/CopyText.tsx",
+      "line": 36,
+      "kind": "feedback",
+      "examples": [
+        "Feedback · success",
+        "Source feedback · No text to copy",
+        "Source feedback · Failed to copy text",
+        "Copy · Copied the first 10,000 characters to clipboard"
+      ]
+    },
+    {
+      "file": "src/bundled/file-viewer/CopyText.tsx",
+      "line": 39,
+      "kind": "feedback",
+      "examples": [
+        "Feedback · success",
+        "Source feedback · No text to copy",
+        "Source feedback · Failed to copy text",
+        "Copy · Copied the first 10,000 characters to clipboard"
+      ]
+    },
+    {
+      "file": "src/bundled/file-viewer/CopyText.tsx",
+      "line": 45,
+      "kind": "feedback",
+      "examples": [
+        "Feedback · success",
+        "Source feedback · No text to copy",
+        "Source feedback · Failed to copy text",
+        "Copy · Copied the first 10,000 characters to clipboard"
+      ]
+    },
+    {
+      "file": "src/bundled/file-viewer/CopyText.tsx",
+      "line": 49,
+      "kind": "feedback",
+      "examples": [
+        "Feedback · success",
+        "Source feedback · No text to copy",
+        "Source feedback · Failed to copy text",
+        "Copy · Copied the first 10,000 characters to clipboard"
+      ]
+    },
+    {
+      "file": "src/bundled/github/ResolvePull.tsx",
+      "line": 135,
+      "kind": "feedback",
+      "examples": [
+        "GitHub · Couldn’t send the request. Try again.",
+        "GitHub · Couldn’t load agents. Try again."
+      ]
+    },
+    {
+      "file": "src/bundled/github/ResolvePull.tsx",
+      "line": 159,
+      "kind": "feedback",
+      "examples": [
+        "GitHub · Couldn’t send the request. Try again.",
+        "GitHub · Couldn’t load agents. Try again."
+      ]
+    },
+    {
+      "file": "src/bundled/github/SoloPull.tsx",
+      "line": 229,
+      "kind": "feedback",
+      "examples": [
+        "Source feedback · Pull request unlinked",
+        "GitHub · Couldn’t unlink pull request. Try again."
+      ]
+    },
+    {
+      "file": "src/bundled/github/SoloPull.tsx",
+      "line": 231,
+      "kind": "feedback",
+      "examples": [
+        "Source feedback · Pull request unlinked",
+        "GitHub · Couldn’t unlink pull request. Try again."
+      ]
+    },
+    {
+      "file": "src/bundled/github/SubmitReview.tsx",
+      "line": 103,
+      "kind": "feedback",
+      "examples": ["Source feedback · Review submitted"]
+    },
+    {
+      "file": "src/bundled/huddles/HuddleCapsule.tsx",
+      "line": 77,
+      "kind": "notice",
+      "examples": [
+        "Source notices · Agent voice stopped",
+        "Source notices · Couldn’t update Huddle",
+        "Huddles · Huddle audio unavailable",
+        "Huddles · Couldn’t connect to Huddle"
+      ]
+    },
+    {
+      "file": "src/bundled/huddles/HuddleCapsule.tsx",
+      "line": 189,
+      "kind": "notice",
+      "examples": [
+        "Source notices · Agent voice stopped",
+        "Source notices · Couldn’t update Huddle",
+        "Huddles · Huddle audio unavailable",
+        "Huddles · Couldn’t connect to Huddle"
+      ]
+    },
+    {
+      "file": "src/bundled/huddles/HuddleCapsule.tsx",
+      "line": 199,
+      "kind": "notice",
+      "examples": [
+        "Source notices · Agent voice stopped",
+        "Source notices · Couldn’t update Huddle",
+        "Huddles · Huddle audio unavailable",
+        "Huddles · Couldn’t connect to Huddle"
+      ]
+    },
+    {
+      "file": "src/bundled/inbox/InboxPage.tsx",
+      "line": 825,
+      "kind": "feedback",
+      "examples": ["Feedback · undo", "Source feedback · Couldn't mark unread"]
+    },
+    {
+      "file": "src/bundled/inbox/InboxPage.tsx",
+      "line": 842,
+      "kind": "feedback",
+      "examples": ["Feedback · undo", "Source feedback · Couldn't mark unread"]
+    },
+    {
+      "file": "src/bundled/inbox/InboxPreview.tsx",
+      "line": 288,
+      "kind": "feedback",
+      "examples": ["Feedback · error"]
+    },
+    {
+      "file": "src/bundled/mermaid/MermaidExpand.tsx",
+      "line": 41,
+      "kind": "feedback",
+      "examples": [
+        "Source feedback · Copied code to clipboard (MermaidExpand)",
+        "Source feedback · Failed to copy code (MermaidExpand)"
+      ]
+    },
+    {
+      "file": "src/bundled/mermaid/MermaidExpand.tsx",
+      "line": 42,
+      "kind": "feedback",
+      "examples": [
+        "Source feedback · Copied code to clipboard (MermaidExpand)",
+        "Source feedback · Failed to copy code (MermaidExpand)"
+      ]
+    },
+    {
+      "file": "src/bundled/profiles/ProfilePublicMetadata.tsx",
+      "line": 62,
+      "kind": "feedback",
+      "examples": [
+        "Copy · Copied public key",
+        "Copy · Couldn't copy public key."
+      ]
+    },
+    {
+      "file": "src/bundled/profiles/ProfilePublicMetadata.tsx",
+      "line": 66,
+      "kind": "feedback",
+      "examples": [
+        "Copy · Copied public key",
+        "Copy · Couldn't copy public key."
+      ]
+    },
+    {
+      "file": "src/bundled/relay-staff/DirectActions.tsx",
+      "line": 154,
+      "kind": "feedback",
+      "examples": [
+        "Moderation · dynamic enforcement error",
+        "Moderation · Ban member: done",
+        "Moderation · Ban member in example.test failed: The relay did not accept your signature.",
+        "Moderation · Time out member: done",
+        "Moderation · Time out member in example.test failed: The relay did not accept your signature.",
+        "Moderation · Delete message: done",
+        "Moderation · Delete message in example.test failed: The relay did not accept your signature."
+      ]
+    },
+    {
+      "file": "src/bundled/relay-staff/DirectActions.tsx",
+      "line": 159,
+      "kind": "feedback",
+      "examples": [
+        "Moderation · dynamic enforcement error",
+        "Moderation · Ban member: done",
+        "Moderation · Ban member in example.test failed: The relay did not accept your signature.",
+        "Moderation · Time out member: done",
+        "Moderation · Time out member in example.test failed: The relay did not accept your signature.",
+        "Moderation · Delete message: done",
+        "Moderation · Delete message in example.test failed: The relay did not accept your signature."
+      ]
+    },
+    {
+      "file": "src/bundled/relay-staff/Feedback.tsx",
+      "line": 202,
+      "kind": "feedback",
+      "examples": ["Save · attachment", "Moderation · Feedback marked resolved"]
+    },
+    {
+      "file": "src/bundled/relay-staff/Feedback.tsx",
+      "line": 204,
+      "kind": "feedback",
+      "examples": ["Save · attachment", "Moderation · Feedback marked resolved"]
+    },
+    {
+      "file": "src/bundled/relay-staff/Feedback.tsx",
+      "line": 323,
+      "kind": "feedback",
+      "examples": ["Save · attachment", "Moderation · Feedback marked resolved"]
+    },
+    {
+      "file": "src/bundled/relay-staff/Feedback.tsx",
+      "line": 324,
+      "kind": "feedback",
+      "examples": ["Save · attachment", "Moderation · Feedback marked resolved"]
+    },
+    {
+      "file": "src/bundled/relay-staff/Reports.tsx",
+      "line": 229,
+      "kind": "feedback",
+      "examples": [
+        "Source feedback · The relay did not confirm the result. Check the report and decide again.",
+        "Moderation · Report resolved: Dismiss",
+        "Moderation · Report reopened",
+        "Moderation · Your reopen went through, but the report has since been resolved.",
+        "Moderation · Enforcement cancelled. The report is open again.",
+        "Moderation · Cancel rejected: Connection unavailable.",
+        "Moderation · The relay did not confirm the request."
+      ]
+    },
+    {
+      "file": "src/bundled/relay-staff/Reports.tsx",
+      "line": 237,
+      "kind": "feedback",
+      "examples": [
+        "Source feedback · The relay did not confirm the result. Check the report and decide again.",
+        "Moderation · Report resolved: Dismiss",
+        "Moderation · Report reopened",
+        "Moderation · Your reopen went through, but the report has since been resolved.",
+        "Moderation · Enforcement cancelled. The report is open again.",
+        "Moderation · Cancel rejected: Connection unavailable.",
+        "Moderation · The relay did not confirm the request."
+      ]
+    },
+    {
+      "file": "src/bundled/relay-staff/Reports.tsx",
+      "line": 243,
+      "kind": "feedback",
+      "examples": [
+        "Source feedback · The relay did not confirm the result. Check the report and decide again.",
+        "Moderation · Report resolved: Dismiss",
+        "Moderation · Report reopened",
+        "Moderation · Your reopen went through, but the report has since been resolved.",
+        "Moderation · Enforcement cancelled. The report is open again.",
+        "Moderation · Cancel rejected: Connection unavailable.",
+        "Moderation · The relay did not confirm the request."
+      ]
+    },
+    {
+      "file": "src/bundled/relay-staff/Reports.tsx",
+      "line": 254,
+      "kind": "feedback",
+      "examples": [
+        "Source feedback · The relay did not confirm the result. Check the report and decide again.",
+        "Moderation · Report resolved: Dismiss",
+        "Moderation · Report reopened",
+        "Moderation · Your reopen went through, but the report has since been resolved.",
+        "Moderation · Enforcement cancelled. The report is open again.",
+        "Moderation · Cancel rejected: Connection unavailable.",
+        "Moderation · The relay did not confirm the request."
+      ]
+    },
+    {
+      "file": "src/bundled/relay-staff/Reports.tsx",
+      "line": 263,
+      "kind": "feedback",
+      "examples": [
+        "Source feedback · The relay did not confirm the result. Check the report and decide again.",
+        "Moderation · Report resolved: Dismiss",
+        "Moderation · Report reopened",
+        "Moderation · Your reopen went through, but the report has since been resolved.",
+        "Moderation · Enforcement cancelled. The report is open again.",
+        "Moderation · Cancel rejected: Connection unavailable.",
+        "Moderation · The relay did not confirm the request."
+      ]
+    },
+    {
+      "file": "src/bundled/relay-staff/Reports.tsx",
+      "line": 276,
+      "kind": "feedback",
+      "examples": [
+        "Source feedback · The relay did not confirm the result. Check the report and decide again.",
+        "Moderation · Report resolved: Dismiss",
+        "Moderation · Report reopened",
+        "Moderation · Your reopen went through, but the report has since been resolved.",
+        "Moderation · Enforcement cancelled. The report is open again.",
+        "Moderation · Cancel rejected: Connection unavailable.",
+        "Moderation · The relay did not confirm the request."
+      ]
+    },
+    {
+      "file": "src/bundled/terminal/TerminalSettings.tsx",
+      "line": 203,
+      "kind": "notice",
+      "examples": ["Source notices · Terminal font preference needs attention"]
+    },
+    {
+      "file": "src/bundled/workflows/WorkflowDeletionNotices.tsx",
+      "line": 87,
+      "kind": "notice",
+      "examples": [
+        "Workflow · deletion pending",
+        "Workflows · Couldn't delete Daily summary",
+        "Workflows · Couldn't confirm deletion of Daily summary"
+      ]
+    },
+    {
+      "file": "src/bundled/workflows/WorkflowDeletionNotices.tsx",
+      "line": 105,
+      "kind": "notice",
+      "examples": [
+        "Workflow · deletion pending",
+        "Workflows · Couldn't delete Daily summary",
+        "Workflows · Couldn't confirm deletion of Daily summary"
+      ]
+    },
+    {
+      "file": "src/bundled/workflows/WorkflowLanding.tsx",
+      "line": 1846,
+      "kind": "notice",
+      "examples": [
+        "Workflows · Run requested. Inspect run history for its result.",
+        "Workflows · Failed to trigger workflow",
+        "Workflows · The run may have started, but its response was lost. Checking configuration or dismissing this notice cannot confirm a run.",
+        "Dynamic errors · WorkflowLanding error"
+      ]
+    },
+    {
+      "file": "src/bundled/workflows/WorkflowLanding.tsx",
+      "line": 1884,
+      "kind": "notice",
+      "examples": [
+        "Workflows · Run requested. Inspect run history for its result.",
+        "Workflows · Failed to trigger workflow",
+        "Workflows · The run may have started, but its response was lost. Checking configuration or dismissing this notice cannot confirm a run.",
+        "Dynamic errors · WorkflowLanding error"
+      ]
+    },
+    {
+      "file": "src/bundled/workflows/WorkflowsPage.tsx",
+      "line": 324,
+      "kind": "notice",
+      "examples": ["Source notices · Couldn't start deletion"]
+    },
+    {
+      "file": "src/features/agents/AgentConnectionSetup.tsx",
+      "line": 295,
+      "kind": "feedback",
+      "examples": [
+        "Source feedback · Could not save dismissal. Try again.",
+        "Agents · connection error"
+      ]
+    },
+    {
+      "file": "src/features/agents/AgentConnectionSetup.tsx",
+      "line": 300,
+      "kind": "feedback",
+      "examples": [
+        "Source feedback · Could not save dismissal. Try again.",
+        "Agents · connection error"
+      ]
+    },
+    {
+      "file": "src/features/agents/ExternalAuthorizationDialog.tsx",
+      "line": 70,
+      "kind": "notice",
+      "examples": ["Source notices · External app authorization failed"]
+    },
+    {
+      "file": "src/features/agents/InterruptedNotice.tsx",
+      "line": 21,
+      "kind": "notice",
+      "examples": [
+        "Agent · interrupted work",
+        "Agents · Resume interrupted agents?"
+      ]
+    },
+    {
+      "file": "src/features/agents/MemoryPanel.tsx",
+      "line": 424,
+      "kind": "feedback",
+      "examples": [
+        "Copy · Memory name copied.",
+        "Copy · Couldn’t copy the memory name.",
+        "Copy · Memory body copied.",
+        "Copy · Couldn’t copy the memory body."
+      ]
+    },
+    {
+      "file": "src/features/agents/MemoryPanel.tsx",
+      "line": 425,
+      "kind": "feedback",
+      "examples": [
+        "Copy · Memory name copied.",
+        "Copy · Couldn’t copy the memory name.",
+        "Copy · Memory body copied.",
+        "Copy · Couldn’t copy the memory body."
+      ]
+    },
+    {
+      "file": "src/features/agents/use-work-stops.ts",
+      "line": 53,
+      "kind": "feedback",
+      "examples": [
+        "Feedback · informational",
+        "Agents · Stopped Honey",
+        "Agents · Stopping Honey",
+        "Agents · Honey hasn’t stopped yet. Try again.",
+        "Agents · Couldn’t stop Honey. Connection unavailable."
+      ]
+    },
+    {
+      "file": "src/features/agents/use-work-stops.ts",
+      "line": 60,
+      "kind": "feedback",
+      "examples": [
+        "Feedback · informational",
+        "Agents · Stopped Honey",
+        "Agents · Stopping Honey",
+        "Agents · Honey hasn’t stopped yet. Try again.",
+        "Agents · Couldn’t stop Honey. Connection unavailable."
+      ]
+    },
+    {
+      "file": "src/features/agents/use-work-stops.ts",
+      "line": 66,
+      "kind": "feedback",
+      "examples": [
+        "Feedback · informational",
+        "Agents · Stopped Honey",
+        "Agents · Stopping Honey",
+        "Agents · Honey hasn’t stopped yet. Try again.",
+        "Agents · Couldn’t stop Honey. Connection unavailable."
+      ]
+    },
+    {
+      "file": "src/features/agents/use-work-stops.ts",
+      "line": 74,
+      "kind": "feedback",
+      "examples": [
+        "Feedback · informational",
+        "Agents · Stopped Honey",
+        "Agents · Stopping Honey",
+        "Agents · Honey hasn’t stopped yet. Try again.",
+        "Agents · Couldn’t stop Honey. Connection unavailable."
+      ]
+    },
+    {
+      "file": "src/features/channel-navigation/ChannelNavigationState.tsx",
+      "line": 465,
+      "kind": "notice",
+      "examples": [
+        "Conversations · Chat archived: Design review",
+        "Conversations · Archiving chat…",
+        "Conversations · Archive chat failed",
+        "Conversations · Chat unarchived: Design review",
+        "Conversations · Unarchiving chat…",
+        "Conversations · Unarchive chat failed",
+        "Conversations · Chat deleted: Design review",
+        "Conversations · Deleting chat…",
+        "Conversations · Delete chat failed",
+        "Conversations · Chat left: Design review",
+        "Conversations · Leaving chat…",
+        "Conversations · Leave chat failed",
+        "Conversations · Channel archived: Design review",
+        "Conversations · Archiving channel…",
+        "Conversations · Archive channel failed",
+        "Conversations · Channel unarchived: Design review",
+        "Conversations · Unarchiving channel…",
+        "Conversations · Unarchive channel failed",
+        "Conversations · Channel deleted: Design review",
+        "Conversations · Deleting channel…",
+        "Conversations · Delete channel failed",
+        "Conversations · Channel left: Design review",
+        "Conversations · Leaving channel…",
+        "Conversations · Leave channel failed",
+        "Conversations · Hiding conversation…",
+        "Conversations · Conversation hidden: Design review",
+        "Conversations · Hide conversation failed",
+        "Conversations · Couldn’t mute Design review",
+        "Conversations · Couldn’t unmute Design review"
+      ]
+    },
+    {
+      "file": "src/features/channel-navigation/ChannelNavigationState.tsx",
+      "line": 570,
+      "kind": "notice",
+      "examples": [
+        "Conversations · Chat archived: Design review",
+        "Conversations · Archiving chat…",
+        "Conversations · Archive chat failed",
+        "Conversations · Chat unarchived: Design review",
+        "Conversations · Unarchiving chat…",
+        "Conversations · Unarchive chat failed",
+        "Conversations · Chat deleted: Design review",
+        "Conversations · Deleting chat…",
+        "Conversations · Delete chat failed",
+        "Conversations · Chat left: Design review",
+        "Conversations · Leaving chat…",
+        "Conversations · Leave chat failed",
+        "Conversations · Channel archived: Design review",
+        "Conversations · Archiving channel…",
+        "Conversations · Archive channel failed",
+        "Conversations · Channel unarchived: Design review",
+        "Conversations · Unarchiving channel…",
+        "Conversations · Unarchive channel failed",
+        "Conversations · Channel deleted: Design review",
+        "Conversations · Deleting channel…",
+        "Conversations · Delete channel failed",
+        "Conversations · Channel left: Design review",
+        "Conversations · Leaving channel…",
+        "Conversations · Leave channel failed",
+        "Conversations · Hiding conversation…",
+        "Conversations · Conversation hidden: Design review",
+        "Conversations · Hide conversation failed",
+        "Conversations · Couldn’t mute Design review",
+        "Conversations · Couldn’t unmute Design review"
+      ]
+    },
+    {
+      "file": "src/features/channel-navigation/SoloDestination.tsx",
+      "line": 281,
+      "kind": "notice",
+      "examples": ["Dynamic errors · SoloDestination error"]
+    },
+    {
+      "file": "src/features/communities/CommunityPicker.tsx",
+      "line": 198,
+      "kind": "feedback",
+      "examples": [
+        "Communities · Lighthouse Labs was removed from this device. Your membership wasn’t changed. You can add it again later.",
+        "Communities · Lighthouse Labs was removed from this device. Your membership wasn’t changed. You can add it again later. Some saved data couldn’t be cleared.",
+        "Communities · Lighthouse Labs was removed from this device. Its relay didn’t confirm the leave, so you may still be a member.",
+        "Communities · Lighthouse Labs was removed from this device. Its relay didn’t confirm the leave, so you may still be a member. Some saved data couldn’t be cleared.",
+        "Communities · Left Lighthouse Labs.",
+        "Communities · Left Lighthouse Labs. Some saved data couldn’t be cleared.",
+        "Communities · You were no longer a member of Lighthouse Labs, so it was removed from this device.",
+        "Communities · You were no longer a member of Lighthouse Labs, so it was removed from this device. Some saved data couldn’t be cleared.",
+        "Communities · You’re currently banned from Lighthouse Labs, so the leave was refused. It was removed from this device and can be added again by its URL if access is restored.",
+        "Communities · You’re currently banned from Lighthouse Labs, so the leave was refused. It was removed from this device and can be added again by its URL if access is restored. Some saved data couldn’t be cleared.",
+        "Communities · Couldn’t remove Lighthouse Labs from this device. Try again.",
+        "Communities · Left Lighthouse Labs, but this device couldn’t finish cleaning up. Leave it again to finish.",
+        "Communities · The relay no longer had a membership for Lighthouse Labs, but this device couldn’t finish removing it. Try again.",
+        "Communities · The leave was refused because you’re currently banned from Lighthouse Labs, and this device couldn’t finish removing it. Try again.",
+        "Communities · The relay owner can’t leave Lighthouse Labs.",
+        "Communities · Couldn’t leave Lighthouse Labs. Check your connection and try again."
+      ]
+    },
+    {
+      "file": "src/features/communities/CommunityPicker.tsx",
+      "line": 221,
+      "kind": "feedback",
+      "examples": [
+        "Communities · Lighthouse Labs was removed from this device. Your membership wasn’t changed. You can add it again later.",
+        "Communities · Lighthouse Labs was removed from this device. Your membership wasn’t changed. You can add it again later. Some saved data couldn’t be cleared.",
+        "Communities · Lighthouse Labs was removed from this device. Its relay didn’t confirm the leave, so you may still be a member.",
+        "Communities · Lighthouse Labs was removed from this device. Its relay didn’t confirm the leave, so you may still be a member. Some saved data couldn’t be cleared.",
+        "Communities · Left Lighthouse Labs.",
+        "Communities · Left Lighthouse Labs. Some saved data couldn’t be cleared.",
+        "Communities · You were no longer a member of Lighthouse Labs, so it was removed from this device.",
+        "Communities · You were no longer a member of Lighthouse Labs, so it was removed from this device. Some saved data couldn’t be cleared.",
+        "Communities · You’re currently banned from Lighthouse Labs, so the leave was refused. It was removed from this device and can be added again by its URL if access is restored.",
+        "Communities · You’re currently banned from Lighthouse Labs, so the leave was refused. It was removed from this device and can be added again by its URL if access is restored. Some saved data couldn’t be cleared.",
+        "Communities · Couldn’t remove Lighthouse Labs from this device. Try again.",
+        "Communities · Left Lighthouse Labs, but this device couldn’t finish cleaning up. Leave it again to finish.",
+        "Communities · The relay no longer had a membership for Lighthouse Labs, but this device couldn’t finish removing it. Try again.",
+        "Communities · The leave was refused because you’re currently banned from Lighthouse Labs, and this device couldn’t finish removing it. Try again.",
+        "Communities · The relay owner can’t leave Lighthouse Labs.",
+        "Communities · Couldn’t leave Lighthouse Labs. Check your connection and try again."
+      ]
+    },
+    {
+      "file": "src/features/communities/CommunityPickerItem.tsx",
+      "line": 60,
+      "kind": "feedback",
+      "examples": [
+        "Source feedback · Marked all as read.",
+        "Source feedback · Couldn’t mark everything as read.",
+        "Source feedback · Community URL copied. (CommunityPickerItem)",
+        "Source feedback · Couldn’t copy the community URL. (CommunityPickerItem)"
+      ]
+    },
+    {
+      "file": "src/features/communities/CommunityPickerItem.tsx",
+      "line": 61,
+      "kind": "feedback",
+      "examples": [
+        "Source feedback · Marked all as read.",
+        "Source feedback · Couldn’t mark everything as read.",
+        "Source feedback · Community URL copied. (CommunityPickerItem)",
+        "Source feedback · Couldn’t copy the community URL. (CommunityPickerItem)"
+      ]
+    },
+    {
+      "file": "src/features/communities/CommunityPickerItem.tsx",
+      "line": 151,
+      "kind": "feedback",
+      "examples": [
+        "Source feedback · Marked all as read.",
+        "Source feedback · Couldn’t mark everything as read.",
+        "Source feedback · Community URL copied. (CommunityPickerItem)",
+        "Source feedback · Couldn’t copy the community URL. (CommunityPickerItem)"
+      ]
+    },
+    {
+      "file": "src/features/communities/CommunityPickerItem.tsx",
+      "line": 152,
+      "kind": "feedback",
+      "examples": [
+        "Source feedback · Marked all as read.",
+        "Source feedback · Couldn’t mark everything as read.",
+        "Source feedback · Community URL copied. (CommunityPickerItem)",
+        "Source feedback · Couldn’t copy the community URL. (CommunityPickerItem)"
+      ]
+    },
+    {
+      "file": "src/features/conversation/MessageLink.tsx",
+      "line": 521,
+      "kind": "notice",
+      "examples": [
+        "Copy · message link",
+        "Messages · Couldn’t copy the link. Try again from the link menu.",
+        "Messages · Couldn’t open the link in your browser."
+      ]
+    },
+    {
+      "file": "src/features/federated-identity/CommunitySignIn.tsx",
+      "line": 528,
+      "kind": "notice",
+      "examples": [
+        "Community · unsupported sign-in",
+        "Community · access denied",
+        "Community · sign-in required",
+        "Sign-in · recovery 1",
+        "Sign-in · recovery 2",
+        "Sign-in · recovery 3",
+        "Sign-in · recovery 4",
+        "Sign-in · recovery 5",
+        "Sign-in · recovery 6",
+        "Sign-in · recovery 7",
+        "Sign-in · account refused"
+      ]
+    },
+    {
+      "file": "src/features/federated-identity/CommunitySignIn.tsx",
+      "line": 533,
+      "kind": "notice",
+      "examples": [
+        "Community · unsupported sign-in",
+        "Community · access denied",
+        "Community · sign-in required",
+        "Sign-in · recovery 1",
+        "Sign-in · recovery 2",
+        "Sign-in · recovery 3",
+        "Sign-in · recovery 4",
+        "Sign-in · recovery 5",
+        "Sign-in · recovery 6",
+        "Sign-in · recovery 7",
+        "Sign-in · account refused"
+      ]
+    },
+    {
+      "file": "src/features/federated-identity/CommunitySignIn.tsx",
+      "line": 546,
+      "kind": "notice",
+      "examples": [
+        "Community · unsupported sign-in",
+        "Community · access denied",
+        "Community · sign-in required",
+        "Sign-in · recovery 1",
+        "Sign-in · recovery 2",
+        "Sign-in · recovery 3",
+        "Sign-in · recovery 4",
+        "Sign-in · recovery 5",
+        "Sign-in · recovery 6",
+        "Sign-in · recovery 7",
+        "Sign-in · account refused"
+      ]
+    },
+    {
+      "file": "src/features/federated-identity/CommunitySignIn.tsx",
+      "line": 588,
+      "kind": "notice",
+      "examples": [
+        "Community · unsupported sign-in",
+        "Community · access denied",
+        "Community · sign-in required",
+        "Sign-in · recovery 1",
+        "Sign-in · recovery 2",
+        "Sign-in · recovery 3",
+        "Sign-in · recovery 4",
+        "Sign-in · recovery 5",
+        "Sign-in · recovery 6",
+        "Sign-in · recovery 7",
+        "Sign-in · account refused"
+      ]
+    },
+    {
+      "file": "src/features/federated-identity/CommunitySignIn.tsx",
+      "line": 595,
+      "kind": "notice",
+      "examples": [
+        "Community · unsupported sign-in",
+        "Community · access denied",
+        "Community · sign-in required",
+        "Sign-in · recovery 1",
+        "Sign-in · recovery 2",
+        "Sign-in · recovery 3",
+        "Sign-in · recovery 4",
+        "Sign-in · recovery 5",
+        "Sign-in · recovery 6",
+        "Sign-in · recovery 7",
+        "Sign-in · account refused"
+      ]
+    },
+    {
+      "file": "src/features/federated-identity/LaunchSignIn.tsx",
+      "line": 196,
+      "kind": "notice",
+      "examples": [
+        "Sign-in · expiring",
+        "Sign-in · browser pending",
+        "Sign-in · timed out"
+      ]
+    },
+    {
+      "file": "src/features/identity/PrivateKey.tsx",
+      "line": 253,
+      "kind": "notice",
+      "examples": ["Source notices · Private key copied"]
+    },
+    {
+      "file": "src/features/markdown/code-blocks.tsx",
+      "line": 183,
+      "kind": "feedback",
+      "examples": [
+        "Source feedback · Copied code to clipboard (code-blocks)",
+        "Source feedback · Failed to copy code (code-blocks)"
+      ]
+    },
+    {
+      "file": "src/features/markdown/code-blocks.tsx",
+      "line": 184,
+      "kind": "feedback",
+      "examples": [
+        "Source feedback · Copied code to clipboard (code-blocks)",
+        "Source feedback · Failed to copy code (code-blocks)"
+      ]
+    },
+    {
+      "file": "src/features/messages/ActivityGroupActions.tsx",
+      "line": 173,
+      "kind": "feedback",
+      "examples": ["Agents · Couldn’t retry Honey. Connection unavailable."]
+    },
+    {
+      "file": "src/features/messages/BackgroundUploadStatus.tsx",
+      "line": 108,
+      "kind": "notice",
+      "examples": [
+        "Upload · recovery",
+        "Attachments · Message to Design review failed to send",
+        "Attachments · Upload to Design review failed",
+        "Attachments · Failed send to Design review was kept because its draft changed. Clear that draft, then retry recovery before leaving this session.",
+        "Attachments · Could not restore the failed send to Design review. Retry recovery before leaving this session."
+      ]
+    },
+    {
+      "file": "src/features/messages/ForwardMessage.tsx",
+      "line": 280,
+      "kind": "notice",
+      "examples": [
+        "Copy · forwarded link",
+        "Source notices · Retry the pending forward before forwarding another message.",
+        "Messages · Message forwarded to Design review",
+        "Messages · Copied. Paste it in any message box to forward it.",
+        "Messages · Couldn't copy. Try again, or use Forward."
+      ]
+    },
+    {
+      "file": "src/features/messages/ForwardMessage.tsx",
+      "line": 751,
+      "kind": "notice",
+      "examples": [
+        "Copy · forwarded link",
+        "Source notices · Retry the pending forward before forwarding another message.",
+        "Messages · Message forwarded to Design review",
+        "Messages · Copied. Paste it in any message box to forward it.",
+        "Messages · Couldn't copy. Try again, or use Forward."
+      ]
+    },
+    {
+      "file": "src/features/messages/MediaActionAnnouncements.tsx",
+      "line": 43,
+      "kind": "feedback",
+      "examples": [
+        "Source feedback · Starting download…",
+        "Media · Image copied",
+        "Media · Image URL copied",
+        "Media · Video URL copied",
+        "Media · Saved to Downloads",
+        "Media · Couldn’t copy image. Try again.",
+        "Media · Couldn’t copy URL. Try again.",
+        "Media · Couldn’t download. Try again."
+      ]
+    },
+    {
+      "file": "src/features/messages/MediaContextMenu.tsx",
+      "line": 95,
+      "kind": "feedback",
+      "examples": [
+        "Source feedback · Starting download…",
+        "Media · Image copied",
+        "Media · Image URL copied",
+        "Media · Video URL copied",
+        "Media · Saved to Downloads",
+        "Media · Couldn’t copy image. Try again.",
+        "Media · Couldn’t copy URL. Try again.",
+        "Media · Couldn’t download. Try again."
+      ]
+    },
+    {
+      "file": "src/features/messages/MediaContextMenu.tsx",
+      "line": 99,
+      "kind": "feedback",
+      "examples": [
+        "Source feedback · Starting download…",
+        "Media · Image copied",
+        "Media · Image URL copied",
+        "Media · Video URL copied",
+        "Media · Saved to Downloads",
+        "Media · Couldn’t copy image. Try again.",
+        "Media · Couldn’t copy URL. Try again.",
+        "Media · Couldn’t download. Try again."
+      ]
+    },
+    {
+      "file": "src/features/messages/MediaContextMenu.tsx",
+      "line": 101,
+      "kind": "feedback",
+      "examples": [
+        "Source feedback · Starting download…",
+        "Media · Image copied",
+        "Media · Image URL copied",
+        "Media · Video URL copied",
+        "Media · Saved to Downloads",
+        "Media · Couldn’t copy image. Try again.",
+        "Media · Couldn’t copy URL. Try again.",
+        "Media · Couldn’t download. Try again."
+      ]
+    },
+    {
+      "file": "src/features/messages/MediaDownloadAction.tsx",
+      "line": 131,
+      "kind": "feedback",
+      "examples": [
+        "Source feedback · Starting download…",
+        "Media · Image copied",
+        "Media · Image URL copied",
+        "Media · Video URL copied",
+        "Media · Saved to Downloads",
+        "Media · Couldn’t copy image. Try again.",
+        "Media · Couldn’t copy URL. Try again.",
+        "Media · Couldn’t download. Try again."
+      ]
+    },
+    {
+      "file": "src/features/messages/MediaDownloadAction.tsx",
+      "line": 132,
+      "kind": "feedback",
+      "examples": [
+        "Source feedback · Starting download…",
+        "Media · Image copied",
+        "Media · Image URL copied",
+        "Media · Video URL copied",
+        "Media · Saved to Downloads",
+        "Media · Couldn’t copy image. Try again.",
+        "Media · Couldn’t copy URL. Try again.",
+        "Media · Couldn’t download. Try again."
+      ]
+    },
+    {
+      "file": "src/features/messages/MessageActionBar.tsx",
+      "line": 547,
+      "kind": "notice",
+      "examples": [
+        "Messages · Message copied",
+        "Messages · Sending to channel",
+        "Messages · Couldn’t send to channel",
+        "Messages · Couldn’t copy. Try again from the message menu."
+      ]
+    },
+    {
+      "file": "src/features/messages/MessageComposer.tsx",
+      "line": 1410,
+      "kind": "feedback",
+      "examples": [
+        "Source feedback · Text copied",
+        "Source feedback · Couldn’t copy text",
+        "Messages · Chat archived: Design review",
+        "Messages · Channel archived: Design review",
+        "Attachments · Finish editing before attaching new files.",
+        "Attachments · Create this conversation before attaching files.",
+        "Attachments · Uploads are unavailable on this connection.",
+        "Attachments · Could not attach 2 of 3 files",
+        "Attachments · Could not attach 2 files"
+      ]
+    },
+    {
+      "file": "src/features/messages/MessageComposer.tsx",
+      "line": 1412,
+      "kind": "feedback",
+      "examples": [
+        "Source feedback · Text copied",
+        "Source feedback · Couldn’t copy text",
+        "Messages · Chat archived: Design review",
+        "Messages · Channel archived: Design review",
+        "Attachments · Finish editing before attaching new files.",
+        "Attachments · Create this conversation before attaching files.",
+        "Attachments · Uploads are unavailable on this connection.",
+        "Attachments · Could not attach 2 of 3 files",
+        "Attachments · Could not attach 2 files"
+      ]
+    },
+    {
+      "file": "src/features/messages/MessageComposer.tsx",
+      "line": 1419,
+      "kind": "feedback",
+      "examples": [
+        "Source feedback · Text copied",
+        "Source feedback · Couldn’t copy text",
+        "Messages · Chat archived: Design review",
+        "Messages · Channel archived: Design review",
+        "Attachments · Finish editing before attaching new files.",
+        "Attachments · Create this conversation before attaching files.",
+        "Attachments · Uploads are unavailable on this connection.",
+        "Attachments · Could not attach 2 of 3 files",
+        "Attachments · Could not attach 2 files"
+      ]
+    },
+    {
+      "file": "src/features/messages/MessageComposer.tsx",
+      "line": 3667,
+      "kind": "notice",
+      "examples": [
+        "Source feedback · Text copied",
+        "Source feedback · Couldn’t copy text",
+        "Messages · Chat archived: Design review",
+        "Messages · Channel archived: Design review",
+        "Attachments · Finish editing before attaching new files.",
+        "Attachments · Create this conversation before attaching files.",
+        "Attachments · Uploads are unavailable on this connection.",
+        "Attachments · Could not attach 2 of 3 files",
+        "Attachments · Could not attach 2 files"
+      ]
+    },
+    {
+      "file": "src/features/messages/MessageRow.tsx",
+      "line": 1307,
+      "kind": "notice",
+      "examples": ["Source notices · Report submitted to community moderators"]
+    },
+    {
+      "file": "src/features/navigation/RejectedLinkNotice.tsx",
+      "line": 13,
+      "kind": "notice",
+      "examples": ["Link · rejected"]
+    },
+    {
+      "file": "src/features/notifications/AgentCompletionNotifications.tsx",
+      "line": 59,
+      "kind": "feedback",
+      "examples": ["Agent · completed", "Agent · error"]
+    },
+    {
+      "file": "src/features/relay/RecoveryNotice.tsx",
+      "line": 116,
+      "kind": "notice",
+      "examples": ["Connection · recovery"]
+    },
+    {
+      "file": "src/features/settings/SavedApiKey.tsx",
+      "line": 118,
+      "kind": "feedback",
+      "examples": ["Save · API key"]
+    },
+    {
+      "file": "src/features/solo/ConvertToChannel.tsx",
+      "line": 258,
+      "kind": "feedback",
+      "examples": ["Source feedback · Converted to channel."]
+    },
+    {
+      "file": "src/features/solo/SoloDraft.tsx",
+      "line": 679,
+      "kind": "feedback",
+      "examples": [
+        "Source feedback · Could not clear model and effort from New chat. Reset them before starting another chat.",
+        "Source feedback · Could not save model and effort for this chat. Choose them again before your next message."
+      ]
+    },
+    {
+      "file": "src/features/solo/SoloDraft.tsx",
+      "line": 684,
+      "kind": "feedback",
+      "examples": [
+        "Source feedback · Could not clear model and effort from New chat. Reset them before starting another chat.",
+        "Source feedback · Could not save model and effort for this chat. Choose them again before your next message."
+      ]
+    },
+    {
+      "file": "src/features/updates/UpdateNotice.tsx",
+      "line": 38,
+      "kind": "notice",
+      "examples": ["App update · failure", "App update · retrying"]
+    },
+    {
+      "file": "src/shared/identity/IdentityRow.tsx",
+      "line": 118,
+      "kind": "feedback",
+      "examples": [
+        "Copy · identity",
+        "Source feedback · Couldn’t copy npub. Select the text to copy it."
+      ]
+    },
+    {
+      "file": "src/shared/identity/IdentityRow.tsx",
+      "line": 120,
+      "kind": "feedback",
+      "examples": [
+        "Copy · identity",
+        "Source feedback · Couldn’t copy npub. Select the text to copy it."
+      ]
+    }
+  ]
+}

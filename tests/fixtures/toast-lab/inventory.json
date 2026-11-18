@@ -1,0 +1,893 @@
+{
+  "commit": "c0f5cbcf6700545ea152809d763bea2b3f9fb432",
+  "entries": [
+    {
+      "file": "src/app/AgentSettings.tsx",
+      "line": 124,
+      "kind": "notice",
+      "source": "<ToastNotice\n          title=\"Agent preference wasn\u2019t saved\"\n          description={mentionError}\n        >\n          <Button\n            type=\"button\"\n            size=\"sm\"\n            onClick={() => changeRememberAgents(rememberAgents)}\n          >\n            Retry saving mentioned agents\n          </Button>\n        </ToastNotice>\n      )}\n      {/* One notice at a time; whether the Mac sleeps matters more than\n          whether the choice outlives a restart. */}\n      {active &&\n        (keepAwakeAvailable && keepAwakeApplyError ? (\n          <ToastNotice title={keepAwakeApplyError}>\n            <Button type=\"button\" size=\"sm\" onClick={retryKeepAwake}>\n              Try again\n            </Button>\n          </ToastNotice>"
+    },
+    {
+      "file": "src/app/AgentSettings.tsx",
+      "line": 141,
+      "kind": "notice",
+      "source": "<ToastNotice title={keepAwakeApplyError}>\n            <Button type=\"button\" size=\"sm\" onClick={retryKeepAwake}>\n              Try again\n            </Button>\n          </ToastNotice>\n        ) : (\n          keepAwakeError && (\n            <ToastNotice\n              title=\"Keep-awake setting wasn\u2019t saved\"\n              description={keepAwakeError}\n            >\n              <Button\n                type=\"button\"\n                size=\"sm\"\n                onClick={() => changeKeepAwake(keepAwake)}\n              >\n                Try again\n              </Button>\n            </ToastNotice>\n          )\n        ))}\n    </section>"
+    },
+    {
+      "file": "src/app/AgentSettings.tsx",
+      "line": 148,
+      "kind": "notice",
+      "source": "<ToastNotice\n              title=\"Keep-awake setting wasn\u2019t saved\"\n              description={keepAwakeError}\n            >\n              <Button\n                type=\"button\"\n                size=\"sm\"\n                onClick={() => changeKeepAwake(keepAwake)}\n              >\n                Try again\n              </Button>\n            </ToastNotice>\n          )\n        ))}\n    </section>\n  );\n}"
+    },
+    {
+      "file": "src/app/AppearanceSettings.tsx",
+      "line": 494,
+      "kind": "notice",
+      "source": "<ToastNotice\n            title=\"Message width wasn\u2019t saved\"\n            description={messageWidthError}\n          >\n            <Button\n              size=\"sm\"\n              onClick={() => appearance.setMessageWidth(messageWidth)}\n            >\n              Retry saving message width\n            </Button>\n          </ToastNotice>\n        )}\n        {active && followUp.unsaved && (\n          <ToastNotice\n            title=\"Follow-up preference wasn\u2019t saved\"\n            description=\"This choice is active, but could not be saved on this device.\"\n          >\n            <Button\n              size=\"sm\"\n              onClick={() => setFollowUpBehaviorPreference(followUp.behavior)}\n            >\n              Retry saving follow-up behavior"
+    },
+    {
+      "file": "src/app/AppearanceSettings.tsx",
+      "line": 507,
+      "kind": "notice",
+      "source": "<ToastNotice\n            title=\"Follow-up preference wasn\u2019t saved\"\n            description=\"This choice is active, but could not be saved on this device.\"\n          >\n            <Button\n              size=\"sm\"\n              onClick={() => setFollowUpBehaviorPreference(followUp.behavior)}\n            >\n              Retry saving follow-up behavior\n            </Button>\n          </ToastNotice>\n        )}\n        {active && clock.unsaved && (\n          <ToastNotice\n            title=\"Clock preference wasn\u2019t saved\"\n            description=\"This choice is active, but could not be saved on this device. Try again.\"\n          >\n            <Button\n              type=\"button\"\n              size=\"sm\"\n              onClick={() => setClockPreference({})}\n            >"
+    },
+    {
+      "file": "src/app/AppearanceSettings.tsx",
+      "line": 520,
+      "kind": "notice",
+      "source": "<ToastNotice\n            title=\"Clock preference wasn\u2019t saved\"\n            description=\"This choice is active, but could not be saved on this device. Try again.\"\n          >\n            <Button\n              type=\"button\"\n              size=\"sm\"\n              onClick={() => setClockPreference({})}\n            >\n              Retry saving clock preference\n            </Button>\n          </ToastNotice>\n        )}\n        {active && autocorrect.unsaved && (\n          <ToastNotice\n            title=\"Spelling preference wasn\u2019t saved\"\n            description=\"This choice is active, but could not be saved on this device. Try again.\"\n          >\n            <Button\n              type=\"button\"\n              size=\"sm\"\n              onClick={() =>"
+    },
+    {
+      "file": "src/app/AppearanceSettings.tsx",
+      "line": 534,
+      "kind": "notice",
+      "source": "<ToastNotice\n            title=\"Spelling preference wasn\u2019t saved\"\n            description=\"This choice is active, but could not be saved on this device. Try again.\"\n          >\n            <Button\n              type=\"button\"\n              size=\"sm\"\n              onClick={() =>\n                setMessageAutocorrectPreference(autocorrect.enabled)\n              }\n            >\n              Retry saving spelling correction\n            </Button>\n          </ToastNotice>\n        )}\n        {active && unreadFirst.unsaved && (\n          <ToastNotice\n            title=\"Search preference wasn\u2019t saved\"\n            description=\"This choice is active, but could not be saved on this device. Try again.\"\n          >\n            <Button\n              type=\"button\""
+    },
+    {
+      "file": "src/app/AppearanceSettings.tsx",
+      "line": 550,
+      "kind": "notice",
+      "source": "<ToastNotice\n            title=\"Search preference wasn\u2019t saved\"\n            description=\"This choice is active, but could not be saved on this device. Try again.\"\n          >\n            <Button\n              type=\"button\"\n              size=\"sm\"\n              onClick={() => setUnreadFirstPreference(unreadFirst.enabled)}\n            >\n              Retry saving search preference\n            </Button>\n          </ToastNotice>\n        )}\n        {active && unsaved && (\n          <ToastNotice\n            title=\"Thread preference wasn\u2019t saved\"\n            description=\"This choice is active, but could not be saved on this device. Try again.\"\n          >\n            <Button\n              type=\"button\"\n              size=\"sm\"\n              onClick={() => setThreadPlacementPreference(placement)}"
+    },
+    {
+      "file": "src/app/AppearanceSettings.tsx",
+      "line": 564,
+      "kind": "notice",
+      "source": "<ToastNotice\n            title=\"Thread preference wasn\u2019t saved\"\n            description=\"This choice is active, but could not be saved on this device. Try again.\"\n          >\n            <Button\n              type=\"button\"\n              size=\"sm\"\n              onClick={() => setThreadPlacementPreference(placement)}\n            >\n              Retry saving thread placement\n            </Button>\n          </ToastNotice>\n        )}\n        {active && contrastError && (\n          <ToastNotice\n            title=\"Vibe level wasn\u2019t saved\"\n            description={contrastError}\n          >\n            <Button size=\"sm\" onClick={() => appearance.setContrast(contrast)}>\n              Retry saving vibe level\n            </Button>\n          </ToastNotice>"
+    },
+    {
+      "file": "src/app/AppearanceSettings.tsx",
+      "line": 578,
+      "kind": "notice",
+      "source": "<ToastNotice\n            title=\"Vibe level wasn\u2019t saved\"\n            description={contrastError}\n          >\n            <Button size=\"sm\" onClick={() => appearance.setContrast(contrast)}>\n              Retry saving vibe level\n            </Button>\n          </ToastNotice>\n        )}\n        {active && densityError && (\n          <ToastNotice\n            title=\"Message density wasn\u2019t saved\"\n            description={densityError}\n          >\n            <Button size=\"sm\" onClick={() => appearance.setDensity(density)}>\n              Retry saving message density\n            </Button>\n          </ToastNotice>\n        )}\n        {active && accentError && (\n          <ToastNotice\n            title=\"Accent color wasn\u2019t saved\""
+    },
+    {
+      "file": "src/app/AppearanceSettings.tsx",
+      "line": 588,
+      "kind": "notice",
+      "source": "<ToastNotice\n            title=\"Message density wasn\u2019t saved\"\n            description={densityError}\n          >\n            <Button size=\"sm\" onClick={() => appearance.setDensity(density)}>\n              Retry saving message density\n            </Button>\n          </ToastNotice>\n        )}\n        {active && accentError && (\n          <ToastNotice\n            title=\"Accent color wasn\u2019t saved\"\n            description={accentError}\n          >\n            <Button size=\"sm\" onClick={() => appearance.setAccent(accent)}>\n              Retry saving accent color\n            </Button>\n          </ToastNotice>\n        )}\n\n        {active && fontError && (\n          <ToastNotice"
+    },
+    {
+      "file": "src/app/AppearanceSettings.tsx",
+      "line": 598,
+      "kind": "notice",
+      "source": "<ToastNotice\n            title=\"Accent color wasn\u2019t saved\"\n            description={accentError}\n          >\n            <Button size=\"sm\" onClick={() => appearance.setAccent(accent)}>\n              Retry saving accent color\n            </Button>\n          </ToastNotice>\n        )}\n\n        {active && fontError && (\n          <ToastNotice\n            title=\"Interface size wasn\u2019t saved\"\n            description={fontError}\n          >\n            <Button\n              type=\"button\"\n              size=\"sm\"\n              onClick={() => appearance.setFontScale(fontScale)}\n            >\n              Retry saving interface size\n            </Button>"
+    },
+    {
+      "file": "src/app/AppearanceSettings.tsx",
+      "line": 609,
+      "kind": "notice",
+      "source": "<ToastNotice\n            title=\"Interface size wasn\u2019t saved\"\n            description={fontError}\n          >\n            <Button\n              type=\"button\"\n              size=\"sm\"\n              onClick={() => appearance.setFontScale(fontScale)}\n            >\n              Retry saving interface size\n            </Button>\n          </ToastNotice>\n        )}\n        {active && error && (\n          <ToastNotice title=\"Appearance wasn\u2019t saved\" description={error}>\n            <Button\n              type=\"button\"\n              size=\"sm\"\n              onClick={() => appearance.setMode(preference)}\n            >\n              Retry saving appearance\n            </Button>"
+    },
+    {
+      "file": "src/app/AppearanceSettings.tsx",
+      "line": 623,
+      "kind": "notice",
+      "source": "<ToastNotice title=\"Appearance wasn\u2019t saved\" description={error}>\n            <Button\n              type=\"button\"\n              size=\"sm\"\n              onClick={() => appearance.setMode(preference)}\n            >\n              Retry saving appearance\n            </Button>\n          </ToastNotice>\n        )}\n      </div>\n    </section>\n  );\n}"
+    },
+    {
+      "file": "src/app/CommunityAddress.tsx",
+      "line": 84,
+      "kind": "feedback",
+      "source": "notify(\"Community URL copied.\", \"success\");\n        }\n      }\n    } catch {\n      if (current === attempt.current)\n        notify(\"Couldn\u2019t copy the community URL.\", \"error\");\n    }\n  };\n  return (\n    <>\n      <Tooltip\n        content={\n          copied ? (\n            <>\n              <CheckIcon size={12} aria-hidden=\"true\" /> Copied\n            </>\n          ) : (\n            \"Copy\"\n          )\n        }\n        follow=\"pointer\"\n        open={hint}"
+    },
+    {
+      "file": "src/app/CommunityAddress.tsx",
+      "line": 89,
+      "kind": "feedback",
+      "source": "notify(\"Couldn\u2019t copy the community URL.\", \"error\");\n    }\n  };\n  return (\n    <>\n      <Tooltip\n        content={\n          copied ? (\n            <>\n              <CheckIcon size={12} aria-hidden=\"true\" /> Copied\n            </>\n          ) : (\n            \"Copy\"\n          )\n        }\n        follow=\"pointer\"\n        open={hint}\n        onOpenChange={(open) => {\n          if (open && toasted.current) return;\n          visible.current = open;\n          setHint(open);\n          if (!open) setCopied(false);"
+    },
+    {
+      "file": "src/app/CommunityDepartureSettings.tsx",
+      "line": 64,
+      "kind": "feedback",
+      "source": "notify(\n            leftCommunityText(\n              communityActionLabel(community),\n              result.outcome,\n              result.residue.length > 0,\n            ),\n            result.outcome === \"left\" ? \"success\" : \"info\",\n          );\n      } else {\n        const result = await removeCommunityFromDevice(communities, community);\n        if (communities.snapshot().viewer === viewer)\n          notify(\n            removedFromDeviceText(\n              communityActionLabel(community),\n              result.residue.length > 0,\n            ),\n            \"success\",\n          );\n      }\n      if (mounted.current && communities.snapshot().viewer === viewer) {\n        completed.current = true;\n        setIntent(null);"
+    },
+    {
+      "file": "src/app/CommunityDepartureSettings.tsx",
+      "line": 75,
+      "kind": "feedback",
+      "source": "notify(\n            removedFromDeviceText(\n              communityActionLabel(community),\n              result.residue.length > 0,\n            ),\n            \"success\",\n          );\n      }\n      if (mounted.current && communities.snapshot().viewer === viewer) {\n        completed.current = true;\n        setIntent(null);\n        onRemoved();\n      }\n    } catch (error) {\n      if (communities.snapshot().viewer !== viewer) return;\n      const departure =\n        error instanceof CommunityDepartureError ? error : undefined;\n      notify(\n        intent === \"remove\"\n          ? deviceRemovalFailureText(\n              communityActionLabel(community),\n              departure?.reason ?? error,"
+    },
+    {
+      "file": "src/app/CommunityDepartureSettings.tsx",
+      "line": 92,
+      "kind": "feedback",
+      "source": "notify(\n        intent === \"remove\"\n          ? deviceRemovalFailureText(\n              communityActionLabel(community),\n              departure?.reason ?? error,\n            )\n          : departure?.phase === \"device\"\n            ? leaveCleanupFailureText(\n                communityActionLabel(community),\n                departure.reason,\n                departure.outcome,\n              )\n            : leaveCommunityFailureText(\n                communityActionLabel(community),\n                departure?.reason ?? error,\n              ),\n        \"error\",\n      );\n      if (mounted.current) setIntent(null);\n    } finally {\n      busy.current = false;\n      if (mounted.current) {"
+    },
+    {
+      "file": "src/app/CommunityLocalSettings.tsx",
+      "line": 40,
+      "kind": "feedback",
+      "source": "notify(\"Community URL copied.\", \"success\");\n    } catch {\n      setCopyError(\"Couldn\u2019t copy the URL. Select it and copy manually.\");\n    } finally {\n      setCopying(false);\n    }\n  };\n  const [editingConnection, setEditingConnection] = useState(false);\n  const nameInput = useRef<HTMLInputElement>(null);\n  const [draft, setDraft] = useState<string | null>(null);\n  const [error, setError] = useState(\"\");\n  const [saved, setSaved] = useState(false);\n  const value = draft ?? community.localName ?? \"\";\n  const changed = value.trim() !== (community.localName ?? \"\");\n  const save = (value: string) => {\n    setSaved(false);\n    try {\n      if (!viewer)\n        throw new Error(\n          \"Your account is unavailable. Open Local settings again.\",\n        );\n      communities.setLocalName(community.id, viewer, value);"
+    },
+    {
+      "file": "src/app/IdentitySettings.tsx",
+      "line": 461,
+      "kind": "notice",
+      "source": "<ToastNotice\n              title={\n                copyStatus.failed\n                  ? \"Identity wasn\u2019t copied\"\n                  : copyStatus.message\n              }\n              {...(copyStatus.failed\n                ? { description: copyStatus.message }\n                : {})}\n              tone={copyStatus.failed ? \"error\" : \"success\"}\n              timeout={copyStatus.failed ? 0 : 5000}\n              onDismiss={() => setCopyStatus(null)}\n            />\n          )}\n        </>\n      )}\n    </section>\n  );\n}\n\n/** Every server's session, live: one stable array until one changes. */\nfunction useSessions(sessions: readonly FederatedIdentity[]) {"
+    },
+    {
+      "file": "src/app/NotificationSettings.tsx",
+      "line": 277,
+      "kind": "notice",
+      "source": "<ToastNotice\n            title=\"Notification choices weren\u2019t saved\"\n            description={state.preferencesError}\n          >\n            <Button\n              type=\"button\"\n              size=\"sm\"\n              onClick={() => notifications.updatePreferences({})}\n            >\n              Retry saving choices\n            </Button>{\" \"}\n            <Button\n              type=\"button\"\n              size=\"sm\"\n              onClick={() => notifications.reloadPreferences()}\n            >\n              Reload saved choices\n            </Button>\n          </ToastNotice>\n        )}\n        {active && state.error && (\n          <ToastNotice"
+    },
+    {
+      "file": "src/app/NotificationSettings.tsx",
+      "line": 298,
+      "kind": "notice",
+      "source": "<ToastNotice\n            title=\"Buzz couldn\u2019t send the notification\"\n            description={state.error}\n          />\n        )}\n      </div>\n    </section>\n  );\n}"
+    },
+    {
+      "file": "src/app/PluginUpdates.tsx",
+      "line": 330,
+      "kind": "notice",
+      "source": "<ToastNotice\n              key={update.id}\n              title={`Update ${name}`}\n              description=\"Save unfinished forms and stop active plugin workers first. Updating an enabled plugin reloads it immediately.\"\n              tone=\"info\"\n              onDismiss={() => store?.later(update)}\n              closeLabel=\"Dismiss plugin update notice\"\n              navigation={manage}\n            >\n              <Button\n                size=\"sm\"\n                disabled={state.busy || !!action}\n                onClick={() => open(update)}\n              >\n                {review ? \"Review permissions\" : \"Update and reload\"}\n              </Button>\n              <Button size=\"sm\" onClick={() => store?.later(update)}>\n                Later\n              </Button>\n            </ToastNotice>\n          );\n        })}"
+    },
+    {
+      "file": "src/app/PluginUpdates.tsx",
+      "line": 385,
+      "kind": "notice",
+      "source": "<ToastNotice\n              key={recovery.manifest.id}\n              title={`${recovery.manifest.name} cannot start`}\n              description={`${activation.error}${recovery.rollbackBlockedReason ? ` ${recovery.rollbackBlockedReason}` : \"\"}`}\n              tone=\"error\"\n            >\n              <Button\n                size=\"sm\"\n                disabled={\n                  state.busy ||\n                  !canRetryPlugin(\n                    recovery,\n                    activation,\n                    configuration.status === \"ready\" &&\n                      configuration.externalPluginsPaused,\n                  )\n                }\n                onClick={() => plugins.retryPlugin(recovery.manifest.id)}\n              >\n                Retry activation\n              </Button>\n              <PluginMenu"
+    },
+    {
+      "file": "src/app/ProfileSettings.tsx",
+      "line": 537,
+      "kind": "notice",
+      "source": "<ToastNotice\n                      title=\"Profile updated\"\n                      tone=\"success\"\n                      timeout={5000}\n                      onDismiss={() => setSaved(false)}\n                    />\n                  )}\n                </form>\n              </SettingsGroup>\n            </div>\n          </LoadingRegion>\n        )}\n      </div>\n    </section>\n  );\n}"
+    },
+    {
+      "file": "src/app/Settings.tsx",
+      "line": 1769,
+      "kind": "notice",
+      "source": "<ToastNotice\n                    title=\"Plugin settings couldn\u2019t refresh\"\n                    description={`Showing the last available configuration; retrying automatically. ${refreshError}`}\n                  />\n                )}\n                {selected === \"plugins\" && error && (\n                  <ToastNotice\n                    title=\"Plugin change wasn\u2019t confirmed\"\n                    description={`Check the current settings before trying again. ${error}`}\n                    onDismiss={plugins.dismissError}\n                    closeLabel=\"Dismiss\"\n                  />\n                )}\n              </div>\n              {catalog &&\n                ([\"all\", \"essentials\"] as const).map((filter) => (\n                  <div\n                    key={filter}\n                    hidden={filter !== pluginFilter}\n                    className={\n                      filter === pluginFilter\n                        ? styles.pluginCategories"
+    },
+    {
+      "file": "src/app/Settings.tsx",
+      "line": 1775,
+      "kind": "notice",
+      "source": "<ToastNotice\n                    title=\"Plugin change wasn\u2019t confirmed\"\n                    description={`Check the current settings before trying again. ${error}`}\n                    onDismiss={plugins.dismissError}\n                    closeLabel=\"Dismiss\"\n                  />\n                )}\n              </div>\n              {catalog &&\n                ([\"all\", \"essentials\"] as const).map((filter) => (\n                  <div\n                    key={filter}\n                    hidden={filter !== pluginFilter}\n                    className={\n                      filter === pluginFilter\n                        ? styles.pluginCategories\n                        : undefined\n                    }\n                    role=\"tabpanel\"\n                    id={`plugin-results-${filter}`}\n                    aria-labelledby={`plugin-results-${filter}-tab`}\n                  >"
+    },
+    {
+      "file": "src/app/UnreadIndicatorSettings.tsx",
+      "line": 70,
+      "kind": "notice",
+      "source": "<ToastNotice title=\"Dock badge unavailable\" description={state.error} />\n      )}\n    </div>\n  );\n}"
+    },
+    {
+      "file": "src/app/shell/PageSearch.tsx",
+      "line": 615,
+      "kind": "feedback",
+      "source": "notify(\"New chat already has an unsent draft\", \"info\", {\n              label: \"Replace it\",\n              // The notice outlives search: after a community or session\n              // switch it does nothing rather than overwrite the old draft.\n              onClick: () => {\n                if (\n                  inScope() &&\n                  services.communities.relay.snapshot().scope === scopeKey\n                )\n                  ask();\n              },\n            });\n        }}\n        openAgentSession={(pubkey) => {\n          const current = services.communities.snapshot();\n          const relay = services.communities.relay.snapshot();\n          if (\n            !isOpen() ||\n            current.viewer !== scope.viewer ||\n            current.selected !== client.selected ||\n            relay.session !== connection.session ||\n            !relay.scope"
+    },
+    {
+      "file": "src/bundled/agent-activity/ActivityAccessory.tsx",
+      "line": 415,
+      "kind": "feedback",
+      "source": "notify(\n        `Couldn\u2019t retry ${entry.name}. ${error instanceof Error ? error.message : String(error)}`,\n        \"error\",\n      );\n    }\n  };\n  const trigger = useRef<HTMLButtonElement>(null);\n  const popup = useRef<HTMLDivElement>(null);\n  const controlsRoot = useRef<HTMLDivElement>(null);\n  const restoreFocusOnRemoval = useCallback((node: HTMLElement | null) => {\n    if (!node) return;\n    return () => {\n      if (node.contains(node.ownerDocument.activeElement))\n        trigger.current?.focus({ preventScroll: true });\n    };\n  }, []);\n  const stoppedFocus = useRef<HTMLElement | null>(null);\n  useLayoutEffect(() => {\n    const source = stoppedFocus.current;\n    if (!compact || !source) return;\n    stoppedFocus.current = null;\n    const active = source.ownerDocument.activeElement;"
+    },
+    {
+      "file": "src/bundled/agents/AgentCardAttachment.tsx",
+      "line": 150,
+      "kind": "feedback",
+      "source": "notify(\n              `Added ${agent.name} to your agents.`,\n              \"success\",\n              show && { label: \"Open\", onClick: show },\n            );\n          }}\n          {...(navigator && {\n            onOpen: (agent: Agent) => {\n              setAdding(false);\n              opener(agent)?.();\n            },\n            openSettings: (section: string) =>\n              void navigator.open({ version: 1, kind: \"settings\", section }),\n          })}\n          onClose={() => setAdding(false)}\n          finalFocus={trigger}\n        />\n      )}\n    </div>\n  );\n}"
+    },
+    {
+      "file": "src/bundled/agents/AgentShareDialog.tsx",
+      "line": 301,
+      "kind": "feedback",
+      "source": "notify(\n        shared\n          ? `Published ${agent.name} to the Marketplace.`\n          : `Removed ${agent.name} from the Marketplace.`,\n        \"success\",\n        listed && onViewListing\n          ? { label: \"View\", onClick: () => onViewListing(listed) }\n          : undefined,\n      );\n      return true;\n    }\n    // The switch keeps what was asked for, so Done tries again.\n    setFailure(\n      `Couldn\u2019t ${shared ? \"publish\" : \"remove\"} ${agent.name}. ${reason}`,\n    );\n    return false;\n  };\n  const finish = async () => {\n    if (wanted === undefined || wanted === listed) return onClose();\n    if (await share(wanted, \"done\")) onClose();\n  };\n  const file = async (as: \"png\" | \"json\") =>"
+    },
+    {
+      "file": "src/bundled/agents/AgentShareDialog.tsx",
+      "line": 382,
+      "kind": "feedback",
+      "source": "notify(\n        `${as === \"png\" ? \"Saved an agent card for\" : \"Saved\"} ${agent.name}${path ? ` to ${path}` : \"\"}.`,\n        \"success\",\n      );\n      if (as === \"png\") preview(false);\n    } catch (reason) {\n      setError(`Couldn\u2019t export ${agent.name}. ${message(reason)}`);\n    } finally {\n      setPending(undefined);\n    }\n  };\n  const primary = useRef<HTMLButtonElement>(null);\n  const upload = useRef<{ content: string; file: UploadedAttachment }>(\n    undefined,\n  );\n  const sending = useRef<AbortController>(null);\n  useEffect(() => () => sending.current?.abort(), []);\n  const send = async () => {\n    if (pending || !definition || !targets.length) return;\n    const uploads = session.attachments;\n    const outbox = session.outbox;\n    if (!uploads || !outbox) {"
+    },
+    {
+      "file": "src/bundled/agents/AgentShareDialog.tsx",
+      "line": 480,
+      "kind": "feedback",
+      "source": "notify(`Sent ${agent.name} to ${names(delivered)}.`, \"success\");\n    // What it couldn't reach stays chosen, to try again.\n    setTargets(failed);\n    if (failed.length)\n      setError(\n        `Couldn\u2019t send to ${names(failed)}. ${reasons.size === 1 ? [...reasons][0] : \"Try again.\"}`,\n      );\n    // Send gives way to Done once everyone is reached; focus follows it.\n    requestAnimationFrame(() => primary.current?.focus());\n  };\n  const busy = !!pending;\n  return (\n    <Dialog\n      open\n      footerGap=\"compact\"\n      title={previewing ? `Export ${agent.name}` : `Share ${agent.name}`}\n      description={\n        previewing\n          ? `Anyone with this card can add ${agent.name}, instructions and settings included. Memories and chats stay with you.`\n          : \"Everyone gets their own copy. Later changes won\u2019t sync.\"\n      }\n      // Keep the same frame across steps so entering and leaving the card"
+    },
+    {
+      "file": "src/bundled/builderlab/adapter-type/ModelSettings.tsx",
+      "line": 216,
+      "kind": "feedback",
+      "source": "notify(\"Model preferences saved\", \"success\");\n    } catch (reason) {\n      if (!signal.aborted && session.snapshot().status === \"signed-in\")\n        setError(reason);\n    } finally {\n      if (!signal.aborted) setSaving(false);\n    }\n  };\n  const pending =\n    hasAccess && (\"pending\" in settings ? settings.pending : loading);\n  const [slow, setSlow] = useState(false);\n  // biome-ignore lint/correctness/useExhaustiveDependencies: each agent/catalog retry starts a new loading phase, even if pending stays true.\n  useEffect(() => {\n    setSlow(false);\n    if (!pending) return;\n    const timer = setTimeout(() => setSlow(true), 3000);\n    return () => clearTimeout(timer);\n  }, [pending, agent, revision]);\n  const placeholder =\n    login.status !== \"signed-in\"\n      ? \"\"\n      : pending"
+    },
+    {
+      "file": "src/bundled/builderlab/agents/RemoteAgents.tsx",
+      "line": 305,
+      "kind": "feedback",
+      "source": "notify(\"Key copied\", \"success\");\n    } catch {\n      if (active()) notify(\"Couldn\u2019t copy the key\", \"error\");\n    }\n  };\n  return (\n    <li>\n      <ManagementRow\n        icon={\n          <Avatar\n            src={saved?.picture}\n            alt=\"\"\n            fallback={agent.name}\n            fallbackContent={<RobotIcon size={20} />}\n            size=\"fill\"\n            shape=\"squircle\"\n          />\n        }\n        title={agent.name}\n        onOpen={\n          saved && openAgent\n            ? () => {"
+    },
+    {
+      "file": "src/bundled/builderlab/agents/RemoteAgents.tsx",
+      "line": 307,
+      "kind": "feedback",
+      "source": "notify(\"Couldn\u2019t copy the key\", \"error\");\n    }\n  };\n  return (\n    <li>\n      <ManagementRow\n        icon={\n          <Avatar\n            src={saved?.picture}\n            alt=\"\"\n            fallback={agent.name}\n            fallbackContent={<RobotIcon size={20} />}\n            size=\"fill\"\n            shape=\"squircle\"\n          />\n        }\n        title={agent.name}\n        onOpen={\n          saved && openAgent\n            ? () => {\n                if (active()) openAgent(agent.pubkey);\n              }"
+    },
+    {
+      "file": "src/bundled/channels/ArchiveInactiveChats.tsx",
+      "line": 191,
+      "kind": "feedback",
+      "source": "notify(\n        failed\n          ? `Couldn\u2019t ${verb} ${chats(failed)}. ${failure}`\n          : \"No inactive chats left to archive\",\n        failed ? \"error\" : \"info\",\n      );\n    else\n      notify(\n        `${archive ? \"Archived\" : \"Restored\"} ${chats(done.length)}${\n          failed ? `. Couldn\u2019t ${verb} ${failed}. ${failure}` : \"\"\n        }`,\n        failed ? \"info\" : \"success\",\n        archive\n          ? {\n              label: \"Undo\",\n              onClick: () =>\n                callbacks.current.undo({\n                  action: \"unarchive\",\n                  workspaceId: run.workspaceId,\n                  ids: restorable,\n                }),\n            }"
+    },
+    {
+      "file": "src/bundled/channels/ArchiveInactiveChats.tsx",
+      "line": 198,
+      "kind": "feedback",
+      "source": "notify(\n        `${archive ? \"Archived\" : \"Restored\"} ${chats(done.length)}${\n          failed ? `. Couldn\u2019t ${verb} ${failed}. ${failure}` : \"\"\n        }`,\n        failed ? \"info\" : \"success\",\n        archive\n          ? {\n              label: \"Undo\",\n              onClick: () =>\n                callbacks.current.undo({\n                  action: \"unarchive\",\n                  workspaceId: run.workspaceId,\n                  ids: restorable,\n                }),\n            }\n          : undefined,\n      );\n    callbacks.current.close();\n  };\n  // The confirmation unmounts once the run starts; focus returns to its\n  // workspace heading rather than the page.\n  const started = progress !== undefined;"
+    },
+    {
+      "file": "src/bundled/channels/ArchiveInactiveChats.tsx",
+      "line": 233,
+      "kind": "notice",
+      "source": "<ToastNotice\n        title={archive ? \"Archiving inactive chats\u2026\" : \"Restoring chats\u2026\"}\n        description={`${progress + 1} of ${total}`}\n        tone=\"info\"\n      />\n    );\n  if (!archive) return null;\n  return (\n    <AlertDialog\n      title=\"Archive inactive chats\"\n      description={\n        !ids\n          ? unchecked\n            ? \"Couldn\u2019t check which chats are inactive.\"\n            : \"Checking which chats are inactive\u2026\"\n          : total\n            ? `${total === 1 ? \"1 chat has\" : `${total} chats have`} been inactive for the last ${INACTIVE_DAYS} days.`\n            : `No chats have been inactive for the last ${INACTIVE_DAYS} days.`\n      }\n      initialFocus={cancel}\n      finalFocus={() => workspaceHeading(run.workspaceId) ?? true}\n      onClose={close}"
+    },
+    {
+      "file": "src/bundled/channels/ChannelCopyLinkMenuItem.tsx",
+      "line": 15,
+      "kind": "feedback",
+      "source": "notify(\"Link copied.\", \"success\"),\n          () => notify(\"Couldn\u2019t copy the link.\", \"error\"),\n        )\n      }\n    >\n      <MenuIcon>\n        <LinkIcon size={14} />\n      </MenuIcon>\n      Copy link\n    </MenuItem>\n  );\n}"
+    },
+    {
+      "file": "src/bundled/channels/ChannelCopyLinkMenuItem.tsx",
+      "line": 16,
+      "kind": "feedback",
+      "source": "notify(\"Couldn\u2019t copy the link.\", \"error\"),\n        )\n      }\n    >\n      <MenuIcon>\n        <LinkIcon size={14} />\n      </MenuIcon>\n      Copy link\n    </MenuItem>\n  );\n}"
+    },
+    {
+      "file": "src/bundled/channels/ChannelInventory.tsx",
+      "line": 1323,
+      "kind": "notice",
+      "source": "<ToastNotice\n            key={notice.id}\n            title={`Channel setup couldn\u2019t finish: ${notice.name}`}\n            description={notice.error}\n            tone=\"warning\"\n          >\n            <Button\n              size=\"sm\"\n              onClick={() => queries.channelCreation.dismissNotice(notice.id)}\n            >\n              Dismiss\n            </Button>\n          </ToastNotice>\n        ))}\n        {!cached && dmVisibility.status === \"error\" && (\n          <div role=\"alert\">\n            Hidden conversations could not be refreshed.{\" \"}\n            <Button\n              onClick={() =>\n                void lifecycle.refreshVisibility(\n                  visibilityRequest.current?.signal,\n                )"
+    },
+    {
+      "file": "src/bundled/channels/ChannelInventory.tsx",
+      "line": 1898,
+      "kind": "notice",
+      "source": "<ToastNotice\n            title=\"Saved sidebar preferences couldn\u2019t refresh\"\n            description=\"Your conversations are still available.\"\n            tone=\"warning\"\n          >\n            <Button type=\"button\" size=\"sm\" onClick={preferences.reload}>\n              Retry\n            </Button>\n          </ToastNotice>\n        ) : !cached && startup.ready && preferences.status === \"unsupported\" ? (\n          <p className={styles.preferenceNotice} role=\"status\">\n            Saved groups and stars aren\u2019t supported by this host yet.\n          </p>\n        ) : null}\n        {list.activityStatus === \"error\" && !activityErrorDismissed && (\n          <ToastNotice\n            title=\"Couldn\u2019t refresh recent activity\"\n            description=\"Activity filters and Recent sorting may be out of date.\"\n            tone=\"warning\"\n            onDismiss={() => setActivityErrorDismissed(true)}\n          >\n            <Button"
+    },
+    {
+      "file": "src/bundled/channels/ChannelInventory.tsx",
+      "line": 1913,
+      "kind": "notice",
+      "source": "<ToastNotice\n            title=\"Couldn\u2019t refresh recent activity\"\n            description=\"Activity filters and Recent sorting may be out of date.\"\n            tone=\"warning\"\n            onDismiss={() => setActivityErrorDismissed(true)}\n          >\n            <Button\n              type=\"button\"\n              size=\"sm\"\n              onClick={() => queries.channels.refreshList?.()}\n            >\n              Retry\n            </Button>\n          </ToastNotice>\n        )}\n      </>\n    ),\n    dialogs: (\n      <>\n        {creatingSection && (\n          <CreateSidebarSection\n            session={queries}"
+    },
+    {
+      "file": "src/bundled/channels/ChannelLifecycleDialog.tsx",
+      "line": 181,
+      "kind": "feedback",
+      "source": "notify(\n          `${copy.done}: ${channelName}`,\n          \"success\",\n          immediate && action === \"archive\" && undo\n            ? { label: \"Undo\", onClick: undo, timeout: 3000 }\n            : undefined,\n        );\n        callbacks.current.completed();\n      }\n    } catch (error) {\n      if (\n        !controller.signal.aborted &&\n        action === \"delete\" &&\n        !immediate &&\n        error instanceof ApiPaused\n      ) {\n        // Admission refused it before sending, and `run` wraps anything after\n        // publication, so a bare pause proves nothing was sent.\n        const at = performance.now();\n        setNow(at);\n        setPausedUntil(at + (error.retryAfterMs ?? 0));\n      } else if (!controller.signal.aborted) {"
+    },
+    {
+      "file": "src/bundled/channels/ChannelLifecycleDialog.tsx",
+      "line": 222,
+      "kind": "notice",
+      "source": "<ToastNotice\n          title={busy ? copy.pending : `${copy.title} failed`}\n          description={busy ? channelName : error}\n          tone={busy ? \"info\" : \"error\"}\n          {...(!busy && { onDismiss: close })}\n        />\n      )}\n      <Dialog\n        size=\"compact\"\n        open={!immediate && !busy && !error}\n        dismissOnOutsideClick\n        initialFocus={confirms ? confirm : cancel}\n        // Cancellation remains sidebar-owned; submission returns to the trigger.\n        finalFocus={busy || error ? finalFocus : false}\n        onOpenChange={(open) => {\n          if (!open) close();\n        }}\n        title={\n          action === \"delete\"\n            ? `Delete ${channelName}?`\n            : `${copy.title}: ${channelName}`\n        }"
+    },
+    {
+      "file": "src/bundled/channels/ChannelsPage.tsx",
+      "line": 2461,
+      "kind": "feedback",
+      "source": "notify(\n                            reason instanceof Error\n                              ? reason.message\n                              : String(reason),\n                            \"error\",\n                          ),\n                        ),\n                  }\n                : undefined\n            }\n            onSend={onComposerSend}\n            onCommand={handleCommand}\n            focusRequest={composerFocus}\n          />\n        )}\n    </div>\n  );\n  const workspace = (\n    <div\n      data-channel-workspace={currentId ?? \"\"}\n      data-reading-thread={readingThread ? \"\" : undefined}\n      data-companion={companion ? \"\" : undefined}"
+    },
+    {
+      "file": "src/bundled/channels/ChannelsPage.tsx",
+      "line": 2597,
+      "kind": "feedback",
+      "source": "notify(\n                  message,\n                  \"error\",\n                  retry\n                    ? {\n                        label: \"Retry restoring message\",\n                        onClick: () => void retry(),\n                        timeout: Infinity,\n                      }\n                    : undefined,\n                );\n                // A failure behind Settings must not navigate away from it.\n                if (\n                  showing.current === channelId &&\n                  navigator &&\n                  !behindSettings()\n                )\n                  // The chat was never made: its draft takes its place.\n                  void navigator.open(soloDraftTarget(scope, draft), {\n                    replace: true,\n                  });\n              }}"
+    },
+    {
+      "file": "src/bundled/channels/SoloHeading.tsx",
+      "line": 254,
+      "kind": "notice",
+      "source": "<ToastNotice\n          title=\"Read state couldn\u2019t be saved\"\n          description={readError}\n          onDismiss={() => setReadError(undefined)}\n        />\n      )}\n      {settingsOpen && (\n        <WorkspaceSettings\n          signal={settingsOpen.visit}\n          finalFocus={settingsOpen.trigger}\n          key={channel.id}\n          session={session}\n          scope={scope}\n          target={{ kind: \"chat\", id: channel.id, name: channel.name }}\n          close={() => setSettingsOpen(undefined)}\n        />\n      )}\n    </>\n  );\n}\n\n/** Reports failed moves started from Solo headers. The sidebar may be hidden,"
+    },
+    {
+      "file": "src/bundled/channels/SoloHeading.tsx",
+      "line": 317,
+      "kind": "notice",
+      "source": "<ToastNotice\n          key={`${id}:${error}`}\n          title=\"Chat wasn\u2019t moved\"\n          description={error}\n          onDismiss={() => {\n            preferences.dismissMoveError(channelId);\n            untrack(channelId);\n          }}\n        >\n          <Button\n            size=\"sm\"\n            disabled={!preferences.writable}\n            onClick={() =>\n              !prepareSoloMove(session, channelId) &&\n              track(channelId, preferences.retryMove(channelId))\n            }\n          >\n            Retry move\n          </Button>\n        </ToastNotice>\n      ),\n  );"
+    },
+    {
+      "file": "src/bundled/channels/StartLinkedChat.tsx",
+      "line": 81,
+      "kind": "feedback",
+      "source": "notify(error instanceof Error ? error.message : String(error), \"error\");\n      setBusy(false);\n    }\n  }\n  return (\n    <MenuItem\n      disabled={busy || !canStartLinkedChat(session)}\n      onClick={() => void start()}\n    >\n      <MenuIcon>\n        <ChatCircleIcon size={16} aria-hidden=\"true\" />\n      </MenuIcon>\n      Start Solo chat\n    </MenuItem>\n  );\n}"
+    },
+    {
+      "file": "src/bundled/channels/useSoloShare.ts",
+      "line": 233,
+      "kind": "feedback",
+      "source": "notify(\n        `${accessChanged.current ? \"Chat changed to View only. \" : \"\"}${shared ? `Shared in ${channelText(shared)}` : \"Shared\"}`,\n        \"success\",\n        view && navigationController\n          ? {\n              label: \"View\",\n              onClick: () => {\n                void navigationController.open(view);\n              },\n            }\n          : undefined,\n      );\n      accessChanged.current = false;\n      close();\n    } catch (reason) {\n      if (!visible()) return;\n      setFailed(true);\n      setError(\n        `${reason instanceof Error ? reason.message : \"Couldn\u2019t share this chat.\"} The link was not posted. Any access change already saved is kept.`,\n      );\n    } finally {\n      signal?.removeEventListener(\"abort\", cancelled);"
+    },
+    {
+      "file": "src/bundled/emoji/CustomEmojiSettings.tsx",
+      "line": 461,
+      "kind": "notice",
+      "source": "<ToastNotice\n          title={`Added :${added}:`}\n          tone=\"success\"\n          timeout={5000}\n          onDismiss={() => setAdded(undefined)}\n        />\n      )}\n      {removed && (\n        <ToastNotice\n          title={`Removed :${removed}:`}\n          tone=\"success\"\n          timeout={5000}\n          onDismiss={() => setRemoved(undefined)}\n        />\n      )}\n    </>\n  );\n}"
+    },
+    {
+      "file": "src/bundled/emoji/CustomEmojiSettings.tsx",
+      "line": 469,
+      "kind": "notice",
+      "source": "<ToastNotice\n          title={`Removed :${removed}:`}\n          tone=\"success\"\n          timeout={5000}\n          onDismiss={() => setRemoved(undefined)}\n        />\n      )}\n    </>\n  );\n}"
+    },
+    {
+      "file": "src/bundled/file-viewer/CopyText.tsx",
+      "line": 36,
+      "kind": "feedback",
+      "source": "notify(\"No text to copy\", \"info\");\n            return writeClipboardText(text).then(\n              () =>\n                notify(\n                  limit !== undefined && text.length >= limit\n                    ? `Copied the first ${limit.toLocaleString()} characters to clipboard`\n                    : \"Copied text to clipboard\",\n                  \"success\",\n                ),\n              () => notify(\"Failed to copy text\", \"error\"),\n            );\n          })\n          .catch(() => {\n            if (live()) notify(\"Failed to copy text\", \"error\");\n          })\n          .finally(() => {\n            if (live()) setBusy(false);\n          });\n      }}\n    />\n  );\n}"
+    },
+    {
+      "file": "src/bundled/file-viewer/CopyText.tsx",
+      "line": 39,
+      "kind": "feedback",
+      "source": "notify(\n                  limit !== undefined && text.length >= limit\n                    ? `Copied the first ${limit.toLocaleString()} characters to clipboard`\n                    : \"Copied text to clipboard\",\n                  \"success\",\n                ),\n              () => notify(\"Failed to copy text\", \"error\"),\n            );\n          })\n          .catch(() => {\n            if (live()) notify(\"Failed to copy text\", \"error\");\n          })\n          .finally(() => {\n            if (live()) setBusy(false);\n          });\n      }}\n    />\n  );\n}"
+    },
+    {
+      "file": "src/bundled/file-viewer/CopyText.tsx",
+      "line": 45,
+      "kind": "feedback",
+      "source": "notify(\"Failed to copy text\", \"error\"),\n            );\n          })\n          .catch(() => {\n            if (live()) notify(\"Failed to copy text\", \"error\");\n          })\n          .finally(() => {\n            if (live()) setBusy(false);\n          });\n      }}\n    />\n  );\n}"
+    },
+    {
+      "file": "src/bundled/file-viewer/CopyText.tsx",
+      "line": 49,
+      "kind": "feedback",
+      "source": "notify(\"Failed to copy text\", \"error\");\n          })\n          .finally(() => {\n            if (live()) setBusy(false);\n          });\n      }}\n    />\n  );\n}"
+    },
+    {
+      "file": "src/bundled/github/ResolvePull.tsx",
+      "line": 135,
+      "kind": "feedback",
+      "source": "notify(\n          error instanceof Error\n            ? error.message\n            : \"Couldn\u2019t send the request. Try again.\",\n          \"error\",\n        );\n    } finally {\n      running.current = false;\n      if (alive.current) setBusy(false);\n    }\n  }\n  return (\n    <span className={styles.resolutionAction}>\n      {choices.error && (\n        <span role=\"alert\">\n          {choices.error}{\" \"}\n          <Button\n            ref={retryButton}\n            size=\"sm\"\n            loading={choices.pending}\n            onClick={() =>\n              void session.agentChoices"
+    },
+    {
+      "file": "src/bundled/github/ResolvePull.tsx",
+      "line": 159,
+      "kind": "feedback",
+      "source": "notify(\n                    error instanceof Error\n                      ? error.message\n                      : \"Couldn\u2019t load agents. Try again.\",\n                    \"error\",\n                  ),\n                )\n            }\n          >\n            Retry agents\n          </Button>\n        </span>\n      )}\n      {(agents.length > 1 || (!choices.complete && agents.length > 0)) && (\n        <Select\n          label=\"Agent\"\n          variant=\"inline\"\n          size=\"sm\"\n          value={selected}\n          placeholder=\"Choose agent\"\n          disabled={busy || sent}\n          groups={["
+    },
+    {
+      "file": "src/bundled/github/SoloPull.tsx",
+      "line": 229,
+      "kind": "feedback",
+      "source": "notify(\"Pull request unlinked\", \"success\");\n        } catch (error) {\n          notify(\n            error instanceof Error\n              ? error.message\n              : \"Couldn\u2019t unlink pull request. Try again.\",\n            \"error\",\n          );\n        } finally {\n          setBusy(false);\n        }\n      }}\n    >\n      <MenuIcon>\n        <LinkBreakIcon size={16} />\n      </MenuIcon>\n      {busy ? \"Unlinking pull request\u2026\" : \"Unlink pull request\"}\n    </MenuItem>\n  );\n}"
+    },
+    {
+      "file": "src/bundled/github/SoloPull.tsx",
+      "line": 231,
+      "kind": "feedback",
+      "source": "notify(\n            error instanceof Error\n              ? error.message\n              : \"Couldn\u2019t unlink pull request. Try again.\",\n            \"error\",\n          );\n        } finally {\n          setBusy(false);\n        }\n      }}\n    >\n      <MenuIcon>\n        <LinkBreakIcon size={16} />\n      </MenuIcon>\n      {busy ? \"Unlinking pull request\u2026\" : \"Unlink pull request\"}\n    </MenuItem>\n  );\n}"
+    },
+    {
+      "file": "src/bundled/github/SubmitReview.tsx",
+      "line": 103,
+      "kind": "feedback",
+      "source": "notify(\"Review submitted\", \"success\");\n      }\n    } catch (failure) {\n      // Back for the next panel, unless another panel has started a draft\n      // since; this panel keeps showing it either way.\n      if (!isEmptyDraft(body) && !memory.get(url).review)\n        memory.setReview(url, draft);\n      if (alive.current) setError(readable(failure).message);\n    } finally {\n      if (alive.current) setBusy(false);\n    }\n  }\n  // A review that is open when the pull request merges or closes keeps its\n  // draft; GitHub decides whether it still goes in.\n  if (!open && pull.state !== \"open\" && pull.state !== \"draft\") return null;\n  return (\n    <PopoverRoot\n      open={open}\n      onOpenChange={(next) => {\n        if (busy) return;\n        setOpen(next);\n        if (next) {"
+    },
+    {
+      "file": "src/bundled/huddles/HuddleCapsule.tsx",
+      "line": 77,
+      "kind": "notice",
+      "source": "<ToastNotice\n        title={\n          audioUnavailable\n            ? \"Huddle audio unavailable\"\n            : \"Couldn\u2019t connect to Huddle\"\n        }\n        description={\n          audioUnavailable\n            ? \"Huddle audio isn\u2019t available on this server. A relay administrator needs to check its configuration.\"\n            : `${call.error || \"The connection failed.\"} Try the headphone button again.`\n        }\n        closeLabel=\"Dismiss Huddle error\"\n        onDismiss={() => void huddles.leave()}\n      />\n    );\n  if (\n    (call.phase === \"incoming\" ||\n      (call.phase === \"connecting\" && call.requester)) &&\n    call.destination &&\n    call.room\n  ) {\n    const { destination, room } = call;"
+    },
+    {
+      "file": "src/bundled/huddles/HuddleCapsule.tsx",
+      "line": 189,
+      "kind": "notice",
+      "source": "<ToastNotice\n          title=\"Agent voice stopped\"\n          description={call.error}\n          closeLabel=\"Dismiss agent voice error\"\n          onDismiss={() => {\n            if (call.id) huddles.voiceError(call.id);\n          }}\n        />\n      )}\n      {presentation.error && (\n        <ToastNotice\n          title=\"Couldn\u2019t update Huddle\"\n          description={presentation.error}\n          closeLabel=\"Dismiss Huddle window error\"\n          onDismiss={companion.dismissError}\n        />\n      )}\n      <fieldset\n        id=\"huddle-capsule\"\n        tabIndex={-1}\n        className={`${styles.capsule} glass-primary`}\n        aria-label=\"Active Huddle\""
+    },
+    {
+      "file": "src/bundled/huddles/HuddleCapsule.tsx",
+      "line": 199,
+      "kind": "notice",
+      "source": "<ToastNotice\n          title=\"Couldn\u2019t update Huddle\"\n          description={presentation.error}\n          closeLabel=\"Dismiss Huddle window error\"\n          onDismiss={companion.dismissError}\n        />\n      )}\n      <fieldset\n        id=\"huddle-capsule\"\n        tabIndex={-1}\n        className={`${styles.capsule} glass-primary`}\n        aria-label=\"Active Huddle\"\n      >\n        <Button\n          variant=\"ghost\"\n          size=\"sm\"\n          style={{ padding: \"var(--space-1)\", paddingLeft: \"var(--space-2)\" }}\n          aria-label={`Open Huddle window for ${call.destination?.channelName ?? \"conversation\"}`}\n          title=\"Open Huddle window\"\n          onClick={() => {\n            setError(undefined);\n            void companion.open().catch((e) => setError(String(e)));"
+    },
+    {
+      "file": "src/bundled/inbox/InboxPage.tsx",
+      "line": 825,
+      "kind": "feedback",
+      "source": "notify(\"Marked as read\", \"success\", {\n          label: \"Undo\",\n          onClick: () => undoRead(item),\n        });\n      },\n      () => {\n        if (held != null && listOwnsFocus()) focusRow.current = item.id;\n      },\n    );\n  }\n  /** Undo outlives the page and the busy guard: unread again on this device\n   * (saved read state is not rewound), on the same local path as Mark unread. */\n  function undoRead(item: InboxItem) {\n    void (async () => {\n      try {\n        await session.unread.markUnreadLocal(item.target);\n      } catch {\n        notify(\"Couldn't mark unread\", \"error\");\n      }\n    })();\n  }\n"
+    },
+    {
+      "file": "src/bundled/inbox/InboxPage.tsx",
+      "line": 842,
+      "kind": "feedback",
+      "source": "notify(\"Couldn't mark unread\", \"error\");\n      }\n    })();\n  }\n\n  /** `threadId` is the thread an opened tab shows, which bounds a DM read. */\n  function mutate(\n    item: InboxItem,\n    unread: boolean,\n    onSuccess?: () => void,\n    onFailure?: () => void,\n    threadId?: string,\n  ) {\n    // An open menu is not authority: recheck the current session at action entry.\n    if (\n      !active.current ||\n      busy.current ||\n      session.unread.sync().capability !== \"frontier-sync\"\n    )\n      return;\n    // Capture the admitted row and access evidence. Retry is explicit and cannot\n    // reuse the intent after retargeting, access changes, or newer read/activity intent."
+    },
+    {
+      "file": "src/bundled/inbox/InboxPreview.tsx",
+      "line": 288,
+      "kind": "feedback",
+      "source": "notify(\"Couldn't mark as read\", \"error\");\n    } finally {\n      setReading((current) => {\n        const next = new Set(current);\n        next.delete(item.id);\n        return next;\n      });\n    }\n    if (!held) return;\n    requestAnimationFrame(() => {\n      // Only focus the action took with it when it left: a failed read keeps\n      // its action, and focus elsewhere stays where the user put it. When\n      // Unread only empties the list, Unread only takes focus.\n      const focused = document.activeElement;\n      if (focused && focused !== document.body) return;\n      const rows = previewRows();\n      const row = [item.id, order[index + 1], order[index - 1]]\n        .map((id) =>\n          rows\n            .find((entry) => entry.dataset.previewRow === id)\n            ?.querySelector<HTMLElement>(\"button\"),\n        )"
+    },
+    {
+      "file": "src/bundled/mermaid/MermaidExpand.tsx",
+      "line": 41,
+      "kind": "feedback",
+      "source": "notify(\"Copied code to clipboard\", \"success\"),\n                  () => notify(\"Failed to copy code\", \"error\"),\n                )\n                .finally(() => setCopying(false));\n            }}\n          >\n            <CopyIcon size={16} aria-hidden=\"true\" />\n            Copy code\n          </Button>\n        }\n      >\n        <MermaidDiagram code={code} expanded />\n      </Dialog>\n    </>\n  );\n}"
+    },
+    {
+      "file": "src/bundled/mermaid/MermaidExpand.tsx",
+      "line": 42,
+      "kind": "feedback",
+      "source": "notify(\"Failed to copy code\", \"error\"),\n                )\n                .finally(() => setCopying(false));\n            }}\n          >\n            <CopyIcon size={16} aria-hidden=\"true\" />\n            Copy code\n          </Button>\n        }\n      >\n        <MermaidDiagram code={code} expanded />\n      </Dialog>\n    </>\n  );\n}"
+    },
+    {
+      "file": "src/bundled/profiles/ProfilePublicMetadata.tsx",
+      "line": 62,
+      "kind": "feedback",
+      "source": "notify(`Copied ${label.toLowerCase()}`, \"success\");\n                  },\n                  () => {\n                    if (current === generation.current)\n                      notify(`Couldn't copy ${label.toLowerCase()}.`, \"error\");\n                  },\n                );\n            }}\n          >\n            {copied ? (\n              <CheckIcon size={16} aria-hidden=\"true\" />\n            ) : (\n              <CopyIcon size={16} aria-hidden=\"true\" />\n            )}\n            {copied ? \"Copied\" : \"Copy\"}\n          </Button>\n        }\n      />\n    </SettingsGroup>\n  );\n}"
+    },
+    {
+      "file": "src/bundled/profiles/ProfilePublicMetadata.tsx",
+      "line": 66,
+      "kind": "feedback",
+      "source": "notify(`Couldn't copy ${label.toLowerCase()}.`, \"error\");\n                  },\n                );\n            }}\n          >\n            {copied ? (\n              <CheckIcon size={16} aria-hidden=\"true\" />\n            ) : (\n              <CopyIcon size={16} aria-hidden=\"true\" />\n            )}\n            {copied ? \"Copied\" : \"Copy\"}\n          </Button>\n        }\n      />\n    </SettingsGroup>\n  );\n}"
+    },
+    {
+      "file": "src/bundled/relay-staff/DirectActions.tsx",
+      "line": 154,
+      "kind": "feedback",
+      "source": "notify(`${LABELS[intent.action]}: done`, \"success\");\n        setDraft(emptyDraft(intent.communityHost));\n        return;\n      }\n      if (!outcome.ok && shownHost.current !== intent.communityHost)\n        notify(\n          `${LABELS[intent.action]} in ${intent.communityHost} failed: ${directFailure(outcome.failure)}`,\n          \"error\",\n        );\n    },\n  );\n  const { held } = write;\n  const frozen = held?.request ? { ...held.meta, intent: held.request } : null;\n  const outcome = held?.outcome ?? null;\n  const pending = outcome?.ok === true && unresolved(outcome);\n  const errorFor = (host: string) =>\n    outcome?.ok === false && held?.sent?.communityHost === host\n      ? directFailure(outcome.failure)\n      : null;\n\n  const confirm = () => write.run();\n"
+    },
+    {
+      "file": "src/bundled/relay-staff/DirectActions.tsx",
+      "line": 159,
+      "kind": "feedback",
+      "source": "notify(\n          `${LABELS[intent.action]} in ${intent.communityHost} failed: ${directFailure(outcome.failure)}`,\n          \"error\",\n        );\n    },\n  );\n  const { held } = write;\n  const frozen = held?.request ? { ...held.meta, intent: held.request } : null;\n  const outcome = held?.outcome ?? null;\n  const pending = outcome?.ok === true && unresolved(outcome);\n  const errorFor = (host: string) =>\n    outcome?.ok === false && held?.sent?.communityHost === host\n      ? directFailure(outcome.failure)\n      : null;\n\n  const confirm = () => write.run();\n\n  const value: Controller = {\n    draftFor: (host) => (draft?.host === host ? draft : emptyDraft(host)),\n    setDraft,\n    frozen,\n    pending,"
+    },
+    {
+      "file": "src/bundled/relay-staff/Feedback.tsx",
+      "line": 202,
+      "kind": "feedback",
+      "source": "notify(describe(outcome.failure), \"error\");\n      setStatus(outcome.value.status);\n      notify(`Feedback marked ${outcome.value.status}`, \"success\");\n      onChanged();\n    },\n  );\n  const shownStatus = write.busy ? (write.frozen?.status ?? status) : status;\n  const { shown, hidden } = attachmentBudget(parseAttachments(feedback.tags));\n  const change = (next: FeedbackStatus) => {\n    if (next === status || write.busy) return;\n    write.run({ route: \"setFeedbackStatus\", id: feedback.id, status: next });\n  };\n  return (\n    <>\n      <div className=\"flex flex-col gap-1.5 rounded-md border px-3 py-2.5\">\n        <Row label=\"Community\">\n          <CommunityBadge\n            id={feedback.communityId}\n            host={feedback.communityHost}\n          />\n        </Row>\n        <Row label=\"Submitter\">"
+    },
+    {
+      "file": "src/bundled/relay-staff/Feedback.tsx",
+      "line": 204,
+      "kind": "feedback",
+      "source": "notify(`Feedback marked ${outcome.value.status}`, \"success\");\n      onChanged();\n    },\n  );\n  const shownStatus = write.busy ? (write.frozen?.status ?? status) : status;\n  const { shown, hidden } = attachmentBudget(parseAttachments(feedback.tags));\n  const change = (next: FeedbackStatus) => {\n    if (next === status || write.busy) return;\n    write.run({ route: \"setFeedbackStatus\", id: feedback.id, status: next });\n  };\n  return (\n    <>\n      <div className=\"flex flex-col gap-1.5 rounded-md border px-3 py-2.5\">\n        <Row label=\"Community\">\n          <CommunityBadge\n            id={feedback.communityId}\n            host={feedback.communityHost}\n          />\n        </Row>\n        <Row label=\"Submitter\">\n          <Person pubkey={feedback.submitterPubkey} />\n        </Row>"
+    },
+    {
+      "file": "src/bundled/relay-staff/Feedback.tsx",
+      "line": 323,
+      "kind": "feedback",
+      "source": "notify(\"Attachment saved\", \"success\");\n    if (result.state === \"failed\") notify(describe(result.failure), \"error\");\n  };\n\n  return (\n    <div className=\"flex flex-col gap-2 text-caption\">\n      {image &&\n        (!preview ? (\n          <Loading />\n        ) : \"url\" in preview ? (\n          <>\n            <button\n              type=\"button\"\n              aria-label=\"Open image\"\n              className=\"w-fit cursor-zoom-in\"\n              onClick={() => setViewing(true)}\n            >\n              <img\n                src={preview.url}\n                alt=\"Feedback attachment\"\n                className=\"max-h-80 max-w-full rounded-md border object-contain\"\n              />"
+    },
+    {
+      "file": "src/bundled/relay-staff/Feedback.tsx",
+      "line": 324,
+      "kind": "feedback",
+      "source": "notify(describe(result.failure), \"error\");\n  };\n\n  return (\n    <div className=\"flex flex-col gap-2 text-caption\">\n      {image &&\n        (!preview ? (\n          <Loading />\n        ) : \"url\" in preview ? (\n          <>\n            <button\n              type=\"button\"\n              aria-label=\"Open image\"\n              className=\"w-fit cursor-zoom-in\"\n              onClick={() => setViewing(true)}\n            >\n              <img\n                src={preview.url}\n                alt=\"Feedback attachment\"\n                className=\"max-h-80 max-w-full rounded-md border object-contain\"\n              />\n            </button>"
+    },
+    {
+      "file": "src/bundled/relay-staff/Reports.tsx",
+      "line": 229,
+      "kind": "feedback",
+      "source": "notify(`Report resolved: ${resolutionLabel(outcome.value)}`, \"success\");\n      return changed();\n    }\n    // Dismiss and Escalate carry no replay protection on the relay: a retry\n    // after the report was reopened would close the new cycle too. Drop the\n    // held request and ask for a fresh decision against the reloaded report.\n    if (decisionOnly(sent.action) && unresolved(outcome)) {\n      resolve.discard();\n      notify(\n        \"The relay did not confirm the result. Check the report and decide again.\",\n        \"error\",\n      );\n      return changed();\n    }\n    notify(describe(outcome.failure), \"error\");\n    // A failure may follow a resolve that landed (a retry then conflicts) or\n    // a recorded enforcement failure: show the report as it is now.\n    changed();\n  });\n  // A reopen's 200 confirms the original reopen, not the current status: a\n  // retry is answered `open` even if the report was resolved again since.\n  // The reloaded report decides what to announce."
+    },
+    {
+      "file": "src/bundled/relay-staff/Reports.tsx",
+      "line": 237,
+      "kind": "feedback",
+      "source": "notify(\n        \"The relay did not confirm the result. Check the report and decide again.\",\n        \"error\",\n      );\n      return changed();\n    }\n    notify(describe(outcome.failure), \"error\");\n    // A failure may follow a resolve that landed (a retry then conflicts) or\n    // a recorded enforcement failure: show the report as it is now.\n    changed();\n  });\n  // A reopen's 200 confirms the original reopen, not the current status: a\n  // retry is answered `open` even if the report was resolved again since.\n  // The reloaded report decides what to announce.\n  const [reopened, setReopened] = useState<number | null>(null);\n  const reopen = useWrite<ReopenRequest>(`reopen ${id}`, (outcome) => {\n    if (outcome.ok) setReopened(detail.settled);\n    else notify(describe(outcome.failure), \"error\");\n    changed();\n  });\n  useEffect(() => {\n    if (reopened === null || detail.state === \"loading\") return;"
+    },
+    {
+      "file": "src/bundled/relay-staff/Reports.tsx",
+      "line": 243,
+      "kind": "feedback",
+      "source": "notify(describe(outcome.failure), \"error\");\n    // A failure may follow a resolve that landed (a retry then conflicts) or\n    // a recorded enforcement failure: show the report as it is now.\n    changed();\n  });\n  // A reopen's 200 confirms the original reopen, not the current status: a\n  // retry is answered `open` even if the report was resolved again since.\n  // The reloaded report decides what to announce.\n  const [reopened, setReopened] = useState<number | null>(null);\n  const reopen = useWrite<ReopenRequest>(`reopen ${id}`, (outcome) => {\n    if (outcome.ok) setReopened(detail.settled);\n    else notify(describe(outcome.failure), \"error\");\n    changed();\n  });\n  useEffect(() => {\n    if (reopened === null || detail.state === \"loading\") return;\n    // A failed reload keeps the confirmation for the next successful read.\n    if (detail.settled <= reopened || detail.state !== \"ok\") return;\n    setReopened(null);\n    const now = detail.value.status;\n    notify(\n      now === \"open\" || now === \"processing\""
+    },
+    {
+      "file": "src/bundled/relay-staff/Reports.tsx",
+      "line": 254,
+      "kind": "feedback",
+      "source": "notify(describe(outcome.failure), \"error\");\n    changed();\n  });\n  useEffect(() => {\n    if (reopened === null || detail.state === \"loading\") return;\n    // A failed reload keeps the confirmation for the next successful read.\n    if (detail.settled <= reopened || detail.state !== \"ok\") return;\n    setReopened(null);\n    const now = detail.value.status;\n    notify(\n      now === \"open\" || now === \"processing\"\n        ? \"Report reopened\"\n        : `Your reopen went through, but the report has since been ${now}.`,\n      \"success\",\n    );\n  }, [reopened, detail, notify]);\n  useWrite<CancelRequest>(`cancel ${id}`, (outcome) => {\n    // A cancel proves the action it names landed and was undone; on `open`\n    // the relay would reject that request id. Release the held resolve only\n    // if it is that action: a newer resolve keeps its own uncertain outcome.\n    const undone = outcome.ok ? outcome.value.activeAction?.requestId : null;\n    if (undone) resolve.release(undone);"
+    },
+    {
+      "file": "src/bundled/relay-staff/Reports.tsx",
+      "line": 263,
+      "kind": "feedback",
+      "source": "notify(\n      now === \"open\" || now === \"processing\"\n        ? \"Report reopened\"\n        : `Your reopen went through, but the report has since been ${now}.`,\n      \"success\",\n    );\n  }, [reopened, detail, notify]);\n  useWrite<CancelRequest>(`cancel ${id}`, (outcome) => {\n    // A cancel proves the action it names landed and was undone; on `open`\n    // the relay would reject that request id. Release the held resolve only\n    // if it is that action: a newer resolve keeps its own uncertain outcome.\n    const undone = outcome.ok ? outcome.value.activeAction?.requestId : null;\n    if (undone) resolve.release(undone);\n    notify(\n      outcome.ok\n        ? \"Enforcement cancelled. The report is open again.\"\n        : `Cancel rejected: ${describe(outcome.failure)}`,\n      outcome.ok ? \"success\" : \"error\",\n    );\n    changed();\n  });\n  // An enforcement resolve replays its request id only while the report is"
+    },
+    {
+      "file": "src/bundled/relay-staff/Reports.tsx",
+      "line": 276,
+      "kind": "feedback",
+      "source": "notify(\n      outcome.ok\n        ? \"Enforcement cancelled. The report is open again.\"\n        : `Cancel rejected: ${describe(outcome.failure)}`,\n      outcome.ok ? \"success\" : \"error\",\n    );\n    changed();\n  });\n  // An enforcement resolve replays its request id only while the report is\n  // `processing`; a reopen replays its original success even after the report\n  // is resolved again. A held write whose report has moved on can only\n  // conflict or answer without acting, so release it: a resolve once the\n  // report is past processing, a reopen once it is open again. A resolve that\n  // landed and whose report was reopened by someone else before we saw it\n  // stays held, and its Retry keeps failing; Discard is the way out. Our own\n  // Cancel and reopen releases it when the action it undid is that resolve.\n  const status = detail.state === \"ok\" ? detail.value.status : null;\n  const active = status === \"open\" || status === \"processing\";\n  const releaseResolve =\n    !!resolve.frozen && !resolve.busy && !!status && !active;\n  const releaseReopen = !!reopen.frozen && !reopen.busy && active;\n  const { discard: discardResolve } = resolve;"
+    },
+    {
+      "file": "src/bundled/terminal/TerminalSettings.tsx",
+      "line": 203,
+      "kind": "notice",
+      "source": "<ToastNotice\n          title=\"Terminal font preference needs attention\"\n          description={error}\n        >\n          <Button type=\"button\" size=\"sm\" onClick={font.retry}>\n            Retry terminal font preference\n          </Button>\n        </ToastNotice>\n      )}\n    </section>\n  );\n}\n\nfunction OptionMetaSetting() {\n  const checked = optionMetaPreference.usePreference();\n  const error = optionMetaPreference.useSaveError();\n  return (\n    <section className=\"mt-section-gap\">\n      <InlineHeader title=\"Keyboard\" />\n      <SettingsGroup>\n        <SwitchPreferenceRow\n          label=\"Use Option as Meta key\""
+    },
+    {
+      "file": "src/bundled/workflows/WorkflowDeletionNotices.tsx",
+      "line": 87,
+      "kind": "notice",
+      "source": "<ToastNotice\n                key={operation.eventId}\n                title=\"Deleting workflow\u2026\"\n                description=\"Waiting for deletion confirmation.\"\n                tone=\"info\"\n              />\n            );\n          }\n          if (\n            !snapshot ||\n            snapshot.status === \"idle\" ||\n            snapshot.status === \"unavailable\" ||\n            confirmedDeletion(operation, snapshot)\n          )\n            return null;\n          const rejected = operation.outcome === \"rejected\";\n          const name = readWorkflowDocumentFields(definition?.yaml ?? \"\").name;\n          return (\n            <ToastNotice\n              key={operation.eventId}\n              title={\n                rejected"
+    },
+    {
+      "file": "src/bundled/workflows/WorkflowDeletionNotices.tsx",
+      "line": 105,
+      "kind": "notice",
+      "source": "<ToastNotice\n              key={operation.eventId}\n              title={\n                rejected\n                  ? `Couldn't delete ${name || \"workflow\"}`\n                  : `Couldn't confirm deletion${name ? ` of ${name}` : \"\"}`\n              }\n              description={\n                rejected\n                  ? \"Check the workflow and try again from its menu.\"\n                  : \"Check saved configuration before deleting again. Work already running may continue.\"\n              }\n            >\n              <Button\n                size=\"compact\"\n                disabled={working || snapshot.status === \"loading\"}\n                onClick={() => onCheck([operation.workflow.channelId])}\n              >\n                {snapshot.status === \"loading\"\n                  ? \"Checking deletion\u2026\"\n                  : \"Check saved configuration\"}\n              </Button>"
+    },
+    {
+      "file": "src/bundled/workflows/WorkflowLanding.tsx",
+      "line": 1846,
+      "kind": "notice",
+      "source": "<ToastNotice\n            key={run.eventId}\n            title={messages.trigger[run.outcome]}\n            {...(run.outcome === \"rejected\"\n              ? {\n                  description:\n                    run.error || \"The relay did not create a workflow run.\",\n                }\n              : {})}\n            tone={\n              run.outcome === \"succeeded\"\n                ? \"success\"\n                : run.outcome === \"unknown\"\n                  ? \"warning\"\n                  : \"error\"\n            }\n            timeout={run.outcome === \"succeeded\" ? 4000 : 0}\n            {...(run.outcome === \"succeeded\"\n              ? {\n                  onDismiss: () =>\n                    setRunRequests((current) =>\n                      current.filter((eventId) => eventId !== run.eventId),"
+    },
+    {
+      "file": "src/bundled/workflows/WorkflowLanding.tsx",
+      "line": 1884,
+      "kind": "notice",
+      "source": "<ToastNotice\n          key={error}\n          title={error}\n          onDismiss={() => setError(null)}\n        />\n      )}\n      <p className=\"workflow-page-footnote text-caption text-subtle\">\n        Saved configuration only. Turning off does not confirm runs have stopped\n        or cancel active runs.\n      </p>\n    </>\n  );\n}"
+    },
+    {
+      "file": "src/bundled/workflows/WorkflowsPage.tsx",
+      "line": 324,
+      "kind": "notice",
+      "source": "<ToastNotice\n          title=\"Couldn't start deletion\"\n          description={deleteError}\n          onDismiss={() => setDeleteError(undefined)}\n        />\n      )}\n      {channel && selectedDefinition ? (\n        <WorkflowMentionMembers.Provider value={mentionMembers}>\n          <WorkflowChannel\n            key={`${channel.id}:${\n              typeof selectedDefinition === \"object\"\n                ? selectedDefinition.revision\n                : selectedDefinition\n            }`}\n            capability={capability}\n            channelId={channel.id}\n            channel={channel}\n            initialSelection={selectedDefinition}\n            onSaveReadback={setSaveReadback}\n            onDelete={deleteWorkflow}\n            viewer={viewer}\n            agentMentions={agentMentions}"
+    },
+    {
+      "file": "src/features/agents/AgentConnectionSetup.tsx",
+      "line": 295,
+      "kind": "feedback",
+      "source": "notify(\"Could not save dismissal. Try again.\", \"error\");\n      }}\n      onStart={() => setPhase(\"pending\")}\n      onFinish={(success, error) => {\n        if (error)\n          notify(error, \"error\", {\n            label: \"Dismiss\",\n            onClick() {},\n            timeout: Infinity,\n          });\n        setPhase(success ? \"done\" : \"idle\");\n      }}\n      onSendAgain={\n        message\n          ? async () => {\n              session.messages.reply(\n                message.channelId,\n                message.threadRootId ?? message.id,\n                \"Please respond to my message above.\",\n                [peer],\n                [],\n                message.id,"
+    },
+    {
+      "file": "src/features/agents/AgentConnectionSetup.tsx",
+      "line": 300,
+      "kind": "feedback",
+      "source": "notify(error, \"error\", {\n            label: \"Dismiss\",\n            onClick() {},\n            timeout: Infinity,\n          });\n        setPhase(success ? \"done\" : \"idle\");\n      }}\n      onSendAgain={\n        message\n          ? async () => {\n              session.messages.reply(\n                message.channelId,\n                message.threadRootId ?? message.id,\n                \"Please respond to my message above.\",\n                [peer],\n                [],\n                message.id,\n              );\n            }\n          : undefined\n      }\n    />"
+    },
+    {
+      "file": "src/features/agents/ExternalAuthorizationDialog.tsx",
+      "line": 70,
+      "kind": "notice",
+      "source": "<ToastNotice\n          title=\"External app authorization failed\"\n          description={state.error}\n          onDismiss={connection.clearError}\n        />\n      )}\n    </>\n  );\n}\nfunction ConsentDialog({\n  connection,\n  communities,\n  actions,\n  children,\n}: ConsentProps & { actions?: ReactNode; children: ReactNode }) {\n  const state = useSyncExternalStore(connection.subscribe, connection.snapshot);\n  const client = useSyncExternalStore(\n    communities.subscribe,\n    communities.snapshot,\n  );\n  const request = state.pending?.request;\n  const deny = ("
+    },
+    {
+      "file": "src/features/agents/InterruptedNotice.tsx",
+      "line": 21,
+      "kind": "notice",
+      "source": "<ToastNotice\n      title={\n        interrupted.length === 1\n          ? \"Resume interrupted agent?\"\n          : \"Resume interrupted agents?\"\n      }\n      description={`${names} ${interrupted.length === 1 ? \"was\" : \"were\"} working when Buzz closed or reloaded.`}\n      details={<InterruptedDetails agents={agents} interrupted={interrupted} />}\n      tone=\"info\"\n    >\n      <Button\n        type=\"button\"\n        size=\"sm\"\n        variant=\"prominent\"\n        onClick={agents.resumeInterrupted}\n      >\n        Resume\n      </Button>\n      <Button type=\"button\" size=\"sm\" onClick={agents.dismissInterrupted}>\n        Don\u2019t resume\n      </Button>\n    </ToastNotice>"
+    },
+    {
+      "file": "src/features/agents/MemoryPanel.tsx",
+      "line": 424,
+      "kind": "feedback",
+      "source": "notify(`Memory ${label} copied.`, \"success\"),\n      () => notify(`Couldn\u2019t copy the memory ${label}.`, \"error\"),\n    );\n  return (\n    <>\n      <MenuItem onClick={() => copy(entry.slug, \"name\")}>Copy name</MenuItem>\n      <MenuItem onClick={() => copy(entry.body, \"body\")}>\n        Copy full body\n      </MenuItem>\n    </>\n  );\n}\n\nfunction memoryTimestamp(createdAt: number, nowSeconds = Date.now() / 1_000) {\n  const age = Math.max(0, nowSeconds - createdAt);\n  if (age >= WEEK_SECONDS && age < MONTH_SECONDS) {\n    const weeks = Math.floor(age / WEEK_SECONDS);\n    return `${weeks} week${weeks === 1 ? \"\" : \"s\"} ago`;\n  }\n  if (age >= MONTH_SECONDS && age < TWO_MONTHS_SECONDS) return \"1 month ago\";\n  return relativeTimestamp(createdAt, nowSeconds).replace(/^on /, \"\");\n}"
+    },
+    {
+      "file": "src/features/agents/MemoryPanel.tsx",
+      "line": 425,
+      "kind": "feedback",
+      "source": "notify(`Couldn\u2019t copy the memory ${label}.`, \"error\"),\n    );\n  return (\n    <>\n      <MenuItem onClick={() => copy(entry.slug, \"name\")}>Copy name</MenuItem>\n      <MenuItem onClick={() => copy(entry.body, \"body\")}>\n        Copy full body\n      </MenuItem>\n    </>\n  );\n}\n\nfunction memoryTimestamp(createdAt: number, nowSeconds = Date.now() / 1_000) {\n  const age = Math.max(0, nowSeconds - createdAt);\n  if (age >= WEEK_SECONDS && age < MONTH_SECONDS) {\n    const weeks = Math.floor(age / WEEK_SECONDS);\n    return `${weeks} week${weeks === 1 ? \"\" : \"s\"} ago`;\n  }\n  if (age >= MONTH_SECONDS && age < TWO_MONTHS_SECONDS) return \"1 month ago\";\n  return relativeTimestamp(createdAt, nowSeconds).replace(/^on /, \"\");\n}\n"
+    },
+    {
+      "file": "src/features/agents/use-work-stops.ts",
+      "line": 53,
+      "kind": "feedback",
+      "source": "notify(\n          control.lifecycle\n            ? `Stopped ${name}`\n            : `${name} had nothing running to stop`,\n          control.lifecycle ? \"success\" : \"info\",\n        );\n      } else {\n        notify(`Stopping ${name}`, \"success\");\n        timers.current.set(\n          key,\n          setTimeout(() => {\n            if (attempts.current.get(key) !== attempt) return;\n            forget(key);\n            notify(`${name} hasn\u2019t stopped yet. Try again.`, \"error\");\n          }, HOSTED_STOP_MS),\n        );\n      }\n    } catch (error) {\n      const current = attempts.current.get(key);\n      if (current && current !== attempt) return;\n      if (current) forget(key);\n      notify("
+    },
+    {
+      "file": "src/features/agents/use-work-stops.ts",
+      "line": 60,
+      "kind": "feedback",
+      "source": "notify(`Stopping ${name}`, \"success\");\n        timers.current.set(\n          key,\n          setTimeout(() => {\n            if (attempts.current.get(key) !== attempt) return;\n            forget(key);\n            notify(`${name} hasn\u2019t stopped yet. Try again.`, \"error\");\n          }, HOSTED_STOP_MS),\n        );\n      }\n    } catch (error) {\n      const current = attempts.current.get(key);\n      if (current && current !== attempt) return;\n      if (current) forget(key);\n      notify(\n        `Couldn\u2019t stop ${name}. ${error instanceof Error ? error.message : String(error)}`,\n        \"error\",\n      );\n    }\n  };\n  return { pending, stop };\n}"
+    },
+    {
+      "file": "src/features/agents/use-work-stops.ts",
+      "line": 66,
+      "kind": "feedback",
+      "source": "notify(`${name} hasn\u2019t stopped yet. Try again.`, \"error\");\n          }, HOSTED_STOP_MS),\n        );\n      }\n    } catch (error) {\n      const current = attempts.current.get(key);\n      if (current && current !== attempt) return;\n      if (current) forget(key);\n      notify(\n        `Couldn\u2019t stop ${name}. ${error instanceof Error ? error.message : String(error)}`,\n        \"error\",\n      );\n    }\n  };\n  return { pending, stop };\n}"
+    },
+    {
+      "file": "src/features/agents/use-work-stops.ts",
+      "line": 74,
+      "kind": "feedback",
+      "source": "notify(\n        `Couldn\u2019t stop ${name}. ${error instanceof Error ? error.message : String(error)}`,\n        \"error\",\n      );\n    }\n  };\n  return { pending, stop };\n}"
+    },
+    {
+      "file": "src/features/channel-navigation/ChannelNavigationState.tsx",
+      "line": 465,
+      "kind": "notice",
+      "source": "<ToastNotice\n            key={intent.channelId}\n            title={`Couldn\u2019t ${intent.muted ? \"mute\" : \"unmute\"} ${intent.name}`}\n            description={intent.error ?? \"Please try again.\"}\n            tone=\"warning\"\n          >\n            <Button\n              type=\"button\"\n              size=\"sm\"\n              onClick={() => {\n                mute.change(intent.channelId, intent.name, intent.muted);\n                muteRecovery.current?.closeMenu();\n                muteRecovery.current?.focus(intent.channelId);\n              }}\n            >\n              Retry\n            </Button>\n            <Button\n              type=\"button\"\n              size=\"sm\"\n              onClick={() => {\n                mute.dismiss(intent.channelId);"
+    },
+    {
+      "file": "src/features/channel-navigation/ChannelNavigationState.tsx",
+      "line": 570,
+      "kind": "notice",
+      "source": "<ToastNotice\n          title={failure.title}\n          description={failure.message}\n          onDismiss={() => setFailure(undefined)}\n        />\n      )}\n    </ChannelNavigationContext>\n  );\n}\n/** Whether the relay has answered for an own loss: a ready list no longer\n * has its channel, or a complete roster read since it ended still lists it.\n * Live events and exact reads commit the list too, but only a complete read\n * proves the request did not take effect. */\nfunction answered(loss: OwnLoss, list: ChannelList) {\n  if (list.status !== \"ready\") return false;\n  if (!list.channels.some(({ id }) => id === loss.channelId)) return true;\n  return list.rosterAsOf !== undefined && list.rosterAsOf !== loss.rosterAsOf;\n}\nfunction restore(session: RelaySession, scope: string): State {\n  return {\n    session,\n    scope,"
+    },
+    {
+      "file": "src/features/channel-navigation/SoloDestination.tsx",
+      "line": 281,
+      "kind": "notice",
+      "source": "<ToastNotice title={error} onDismiss={() => setError(undefined)} />\n      )}\n    </div>\n  );\n}\n\nfunction ConversationLink(props: SoloConversationLinkProps) {\n  const state = useContext(ConversationContext);\n  const context = useContext(RegionDestinationContext);\n  const primary = !props.secondary;\n  const activation = useSoloRowActivation(\n    context?.navigator,\n    context?.pendingClick,\n    () => state?.open(),\n    primary && props.rename !== false && state?.canRename\n      ? state.rename\n      : undefined,\n  );\n  if (!state) return null;\n  return (\n    <NavigationItem\n      {...(primary ? { \"data-solo-destination-id\": state.channel.id } : {})}"
+    },
+    {
+      "file": "src/features/communities/CommunityPicker.tsx",
+      "line": 198,
+      "kind": "feedback",
+      "source": "notify(\n        departureFailureText(communityActionLabel(membership), intent, error),\n        \"error\",\n      );\n      setLeaving(null);\n      return;\n    }\n    // The community is gone from this device whatever happens next, so only\n    // the service call above may read as a cleanup failure.\n    if (result.wasSelected) {\n      // The service already fell back to Personal space. Telling the host too\n      // gives the departure the same navigation and ingress recovery as\n      // clicking Personal space, instead of a page scoped to a gone community.\n      try {\n        onSelect?.(null);\n      } catch (error) {\n        // A host that cannot navigate is the host's failure, not the device's.\n        console.error(\n          `Couldn't select Personal space after removing ${communityName(membership)}`,\n          error,\n        );\n      }"
+    },
+    {
+      "file": "src/features/communities/CommunityPicker.tsx",
+      "line": 221,
+      "kind": "feedback",
+      "source": "notify(...departedText(communityActionLabel(membership), result));\n    setLeaving(null);\n  };\n  const active = client.memberships.find(\n    (membership) => membership.id === client.selected,\n  );\n  const unread = useSyncExternalStore(\n    unreads?.subscribe ?? noSubscription,\n    () => unreads?.snapshot() ?? noUnreads,\n  );\n  const elsewhere = client.memberships.some(\n    (membership) =>\n      membership.id !== client.selected && unread.get(membership.id)?.unread,\n  );\n  return (\n    <>\n      <nav aria-label=\"Communities\" className={styles.picker}>\n        <PopoverRoot open={switcherOpen} onOpenChange={setSwitcherOpen}>\n          <PopoverTrigger\n            render={\n              <IconButton\n                ref={triggerRef}"
+    },
+    {
+      "file": "src/features/communities/CommunityPickerItem.tsx",
+      "line": 60,
+      "kind": "feedback",
+      "source": "notify(\"Marked all as read.\", \"success\"),\n    () => notify(\"Couldn\u2019t mark everything as read.\", \"error\"),\n  );\n}\n\n/** One picker row and its context menu. Selection stays with the picker. */\nexport function CommunityPickerItem({\n  membership,\n  icon,\n  selected,\n  viewer,\n  session,\n  unread,\n  manager,\n  leaving,\n  onSelect,\n  onOpenTarget,\n  onMenuOpen,\n  onLeave,\n}: {\n  membership: Membership;\n  icon: string | undefined;"
+    },
+    {
+      "file": "src/features/communities/CommunityPickerItem.tsx",
+      "line": 61,
+      "kind": "feedback",
+      "source": "notify(\"Couldn\u2019t mark everything as read.\", \"error\"),\n  );\n}\n\n/** One picker row and its context menu. Selection stays with the picker. */\nexport function CommunityPickerItem({\n  membership,\n  icon,\n  selected,\n  viewer,\n  session,\n  unread,\n  manager,\n  leaving,\n  onSelect,\n  onOpenTarget,\n  onMenuOpen,\n  onLeave,\n}: {\n  membership: Membership;\n  icon: string | undefined;\n  selected: boolean;"
+    },
+    {
+      "file": "src/features/communities/CommunityPickerItem.tsx",
+      "line": 151,
+      "kind": "feedback",
+      "source": "notify(\"Community URL copied.\", \"success\"),\n      () => notify(\"Couldn\u2019t copy the community URL.\", \"error\"),\n    );\n  return (\n    <ContextMenuRoot\n      open={menu !== null}\n      onOpenChange={(next) => {\n        if (next) openMenu();\n        else setMenu(null);\n      }}\n    >\n      <ContextMenuTrigger\n        render={<div className={styles.item} />}\n        onKeyDown={openFromKeyboard}\n        onPointerDown={rememberInterrupted}\n      >\n        <NavigationItem\n          ref={(node) => {\n            button.current = node;\n          }}\n          label={name}\n          title={`${name} \u2014 ${origin}`}"
+    },
+    {
+      "file": "src/features/communities/CommunityPickerItem.tsx",
+      "line": 152,
+      "kind": "feedback",
+      "source": "notify(\"Couldn\u2019t copy the community URL.\", \"error\"),\n    );\n  return (\n    <ContextMenuRoot\n      open={menu !== null}\n      onOpenChange={(next) => {\n        if (next) openMenu();\n        else setMenu(null);\n      }}\n    >\n      <ContextMenuTrigger\n        render={<div className={styles.item} />}\n        onKeyDown={openFromKeyboard}\n        onPointerDown={rememberInterrupted}\n      >\n        <NavigationItem\n          ref={(node) => {\n            button.current = node;\n          }}\n          label={name}\n          title={`${name} \u2014 ${origin}`}\n          aria-label={`Switch to ${name}${unread ? unreadLabel(unread) : \"\"}`}"
+    },
+    {
+      "file": "src/features/conversation/MessageLink.tsx",
+      "line": 521,
+      "kind": "notice",
+      "source": "<ToastNotice\n          title={notice.text}\n          tone={notice.error ? \"error\" : \"success\"}\n          timeout={notice.error ? 0 : 4000}\n          onDismiss={() => setNotice(undefined)}\n        />\n      )}\n      {unavailable && (\n        <span role=\"status\"> This Buzz link couldn\u2019t be opened here.</span>\n      )}\n    </>\n  );\n  return (\n    <LinkChannelPrivateContext\n      value={channelPrivate || withheld || !!named?.private}\n    >\n      <LinkLabelContext value={display}>\n        <LinkContentContext value={shown}>\n          <LinkInteractiveContext value={interactive}>\n            <LinkDescriptionContext\n              value={interactive ? setDescription : undefined}\n            >"
+    },
+    {
+      "file": "src/features/federated-identity/CommunitySignIn.tsx",
+      "line": 528,
+      "kind": "notice",
+      "source": "<ToastNotice\n        title=\"This community needs a sign-in Buzz doesn\u2019t support yet\"\n        description=\"Ask the community\u2019s admin which Buzz version or server to use.\"\n      />\n    ) : (\n      <ToastNotice\n        title={NO_ACCESS}\n        description=\"Ask the community\u2019s admin to add you.\"\n      >\n        {checkAgain}\n      </ToastNotice>\n    );\n  const server = serverName(authority);\n  const signedIn = state.status === \"signed-in\";\n  // A switch signs out first, so its progress and recovery come before the\n  // signed-out answer.\n  if (refusal === \"access\" && !signedIn && !switching)\n    return (\n      <ToastNotice\n        title={NO_ACCESS}\n        description=\"Ask the community\u2019s admin to add you.\"\n      >"
+    },
+    {
+      "file": "src/features/federated-identity/CommunitySignIn.tsx",
+      "line": 533,
+      "kind": "notice",
+      "source": "<ToastNotice\n        title={NO_ACCESS}\n        description=\"Ask the community\u2019s admin to add you.\"\n      >\n        {checkAgain}\n      </ToastNotice>\n    );\n  const server = serverName(authority);\n  const signedIn = state.status === \"signed-in\";\n  // A switch signs out first, so its progress and recovery come before the\n  // signed-out answer.\n  if (refusal === \"access\" && !signedIn && !switching)\n    return (\n      <ToastNotice\n        title={NO_ACCESS}\n        description=\"Ask the community\u2019s admin to add you.\"\n      >\n        {checkAgain}\n      </ToastNotice>\n    );\n  // Signing in again where Buzz still holds the refused session, or as\n  // another account, both sign out of this server first."
+    },
+    {
+      "file": "src/features/federated-identity/CommunitySignIn.tsx",
+      "line": 546,
+      "kind": "notice",
+      "source": "<ToastNotice\n        title={NO_ACCESS}\n        description=\"Ask the community\u2019s admin to add you.\"\n      >\n        {checkAgain}\n      </ToastNotice>\n    );\n  // Signing in again where Buzz still holds the refused session, or as\n  // another account, both sign out of this server first.\n  const action = switching ? (\n    <SwitchProgress\n      identity={identity}\n      state={state}\n      switching={switching}\n      onChange={setSwitching}\n      retry={retry}\n    />\n  ) : refusal === \"sign-in\" && !signedIn ? (\n    <SignInButton identity={identity} state={state} retry={retry} />\n  ) : (\n    <>\n      {refusal === \"access\" && ("
+    },
+    {
+      "file": "src/features/federated-identity/CommunitySignIn.tsx",
+      "line": 588,
+      "kind": "notice",
+      "source": "<ToastNotice\n      title={SIGN_IN}\n      description={`This community needs your ${server} sign-in.`}\n    >\n      {action}\n    </ToastNotice>\n  ) : (\n    <ToastNotice\n      title={NO_ACCESS}\n      description={`This community didn\u2019t accept ${state.email ?? `your ${server} account`}.`}\n    >\n      {action}\n    </ToastNotice>\n  );\n}"
+    },
+    {
+      "file": "src/features/federated-identity/CommunitySignIn.tsx",
+      "line": 595,
+      "kind": "notice",
+      "source": "<ToastNotice\n      title={NO_ACCESS}\n      description={`This community didn\u2019t accept ${state.email ?? `your ${server} account`}.`}\n    >\n      {action}\n    </ToastNotice>\n  );\n}"
+    },
+    {
+      "file": "src/features/federated-identity/LaunchSignIn.tsx",
+      "line": 196,
+      "kind": "notice",
+      "source": "<ToastNotice\n      tone=\"warning\"\n      title={`Your ${name} sign-in ends ${ends}`}\n      description={\n        renewing\n          ? \"Finish signing in in your browser.\"\n          : failure\n            ? recoveryMessage(failure)\n            : \"Sign in again to keep Buzz open.\"\n      }\n    >\n      {renewing ? (\n        <Button size=\"sm\" onClick={() => void identity.cancelSignIn()}>\n          Cancel\n        </Button>\n      ) : (\n        <Button\n          size=\"sm\"\n          onClick={() => {\n            const { revision } = state;\n            setRenewing(true);\n            setAttempt({ revision, failure: \"\" });"
+    },
+    {
+      "file": "src/features/identity/PrivateKey.tsx",
+      "line": 253,
+      "kind": "notice",
+      "source": "<ToastNotice\n        title=\"Private key copied\"\n        description=\"Paste it somewhere safe now: Buzz tries to clear it from your clipboard in a minute.\"\n        tone=\"success\"\n        timeout={5000}\n        onDismiss={() => setMessage(\"\")}\n      />\n    ) : (\n      <p role={failed ? \"alert\" : \"status\"}>{message}</p>\n    )\n  ) : null;\n  if (children) return children({ input, warning, actions, feedback });\n  return (\n    <div>\n      <label\n        className=\"mb-2 block text-label-sm\"\n        htmlFor=\"identity-private-key\"\n      >\n        Private key (nsec)\n      </label>\n      {warning}\n      {input}"
+    },
+    {
+      "file": "src/features/markdown/code-blocks.tsx",
+      "line": 183,
+      "kind": "feedback",
+      "source": "notify(\"Copied code to clipboard\", \"success\"),\n              () => notify(\"Failed to copy code\", \"error\"),\n            )\n            .finally(() => setCopying(false));\n        }}\n      />\n    </span>\n  );\n}"
+    },
+    {
+      "file": "src/features/markdown/code-blocks.tsx",
+      "line": 184,
+      "kind": "feedback",
+      "source": "notify(\"Failed to copy code\", \"error\"),\n            )\n            .finally(() => setCopying(false));\n        }}\n      />\n    </span>\n  );\n}"
+    },
+    {
+      "file": "src/features/messages/ActivityGroupActions.tsx",
+      "line": 173,
+      "kind": "feedback",
+      "source": "notify(\n                      `Couldn\u2019t retry ${named(entry.agent)}. ${error instanceof Error ? error.message : String(error)}`,\n                      \"error\",\n                    );\n                  }\n                }}\n              >\n                Retry\n              </Button>\n            )}\n            <IconButton\n              size=\"sm\"\n              variant=\"ghost\"\n              aria-label={`Dismiss error from ${named(entry.agent)}`}\n              icon={<XIcon aria-hidden=\"true\" />}\n              onClick={() => {\n                if (requestId)\n                  session.agentActivity.dismissError?.(\n                    entry.agent,\n                    channelId,\n                    requestId,\n                  );"
+    },
+    {
+      "file": "src/features/messages/BackgroundUploadStatus.tsx",
+      "line": 108,
+      "kind": "notice",
+      "source": "<ToastNotice\n            key={notice.id}\n            title={notice.title}\n            {...(notice.description && { description: notice.description })}\n            {...(!notice.retry && { onDismiss: dismiss })}\n          >\n            {notice.retry && (\n              <Button type=\"button\" onClick={notice.retry}>\n                Retry failed send recovery\n              </Button>\n            )}\n            {onOpenLink && link && link !== here && (\n              <Button\n                type=\"button\"\n                onClick={() => {\n                  // Opening answers a failure; recovery stays until it succeeds.\n                  if (onOpenLink(link) && !notice.retry) dismiss();\n                }}\n              >\n                {`Open ${notice.destination.name}`}\n              </Button>\n            )}"
+    },
+    {
+      "file": "src/features/messages/ForwardMessage.tsx",
+      "line": 280,
+      "kind": "notice",
+      "source": "<ToastNotice\n            title=\"Retry the pending forward before forwarding another message.\"\n            tone=\"info\"\n            timeout={pending ? 0 : 4000}\n            onDismiss={() => setBlocked(false)}\n          >\n            {pending && (\n              <Button\n                onClick={() => {\n                  setBlocked(false);\n                  open(pending.source.channelId, pending.source.forward);\n                }}\n              >\n                Review pending forward\n              </Button>\n            )}\n          </ToastNotice>\n        )}\n      </ForwardMessageContext>\n    </ForwardOwnerContext>\n  );\n}"
+    },
+    {
+      "file": "src/features/messages/ForwardMessage.tsx",
+      "line": 751,
+      "kind": "notice",
+      "source": "<ToastNotice\n          title={notice.text}\n          tone={notice.error ? \"error\" : \"success\"}\n          timeout={notice.error ? 0 : 4000}\n          onDismiss={() => setNotice(undefined)}\n          navigation={notice.navigation}\n        />\n      )}\n    </>\n  );\n}"
+    },
+    {
+      "file": "src/features/messages/MediaActionAnnouncements.tsx",
+      "line": 43,
+      "kind": "feedback",
+      "source": "notify(title, tone);\n  };\n}"
+    },
+    {
+      "file": "src/features/messages/MediaContextMenu.tsx",
+      "line": 95,
+      "kind": "feedback",
+      "source": "notify(\"Starting download\u2026\", \"info\")\n      : undefined;\n    try {\n      await action();\n      notify(success, \"success\");\n    } catch {\n      notify(failure, \"error\");\n    } finally {\n      if (notice) dismiss(notice);\n      if (downloadSource) pending.delete(downloadSource);\n    }\n  };\n  const show = (element: HTMLElement, rect: DOMRect, focus?: HTMLElement) => {\n    if (!source || !url) return;\n    setTarget({\n      source,\n      url,\n      anchor: { getBoundingClientRect: () => rect },\n      focus:\n        focus ??\n        (element.matches(\"button, a[href], [tabindex]\")\n          ? element"
+    },
+    {
+      "file": "src/features/messages/MediaContextMenu.tsx",
+      "line": 99,
+      "kind": "feedback",
+      "source": "notify(success, \"success\");\n    } catch {\n      notify(failure, \"error\");\n    } finally {\n      if (notice) dismiss(notice);\n      if (downloadSource) pending.delete(downloadSource);\n    }\n  };\n  const show = (element: HTMLElement, rect: DOMRect, focus?: HTMLElement) => {\n    if (!source || !url) return;\n    setTarget({\n      source,\n      url,\n      anchor: { getBoundingClientRect: () => rect },\n      focus:\n        focus ??\n        (element.matches(\"button, a[href], [tabindex]\")\n          ? element\n          : (element.querySelector<HTMLElement>(\n              \"button, a[href], [tabindex]\",\n            ) ?? element)),\n      // Prefer the current full-resolution image over a thumbnail or departing"
+    },
+    {
+      "file": "src/features/messages/MediaContextMenu.tsx",
+      "line": 101,
+      "kind": "feedback",
+      "source": "notify(failure, \"error\");\n    } finally {\n      if (notice) dismiss(notice);\n      if (downloadSource) pending.delete(downloadSource);\n    }\n  };\n  const show = (element: HTMLElement, rect: DOMRect, focus?: HTMLElement) => {\n    if (!source || !url) return;\n    setTarget({\n      source,\n      url,\n      anchor: { getBoundingClientRect: () => rect },\n      focus:\n        focus ??\n        (element.matches(\"button, a[href], [tabindex]\")\n          ? element\n          : (element.querySelector<HTMLElement>(\n              \"button, a[href], [tabindex]\",\n            ) ?? element)),\n      // Prefer the current full-resolution image over a thumbnail or departing\n      // gallery frame, including originals adopted from the decoded-image pool.\n      image:"
+    },
+    {
+      "file": "src/features/messages/MediaDownloadAction.tsx",
+      "line": 131,
+      "kind": "feedback",
+      "source": "notify(FAILED, \"error\");\n    else notify(SAVED, \"success\");\n  });\n  useEffect(() => {\n    if (!isTauri()) return;\n    let active = true;\n    let unlisten = () => {};\n    listen<string | null>(\"media-menu-download\", ({ payload }) =>\n      show(payload),\n    ).then(\n      (stop) => {\n        if (active) unlisten = stop;\n        else stop();\n      },\n      () => {},\n    );\n    return () => {\n      active = false;\n      unlisten();\n    };\n  }, []);\n  return null;"
+    },
+    {
+      "file": "src/features/messages/MediaDownloadAction.tsx",
+      "line": 132,
+      "kind": "feedback",
+      "source": "notify(SAVED, \"success\");\n  });\n  useEffect(() => {\n    if (!isTauri()) return;\n    let active = true;\n    let unlisten = () => {};\n    listen<string | null>(\"media-menu-download\", ({ payload }) =>\n      show(payload),\n    ).then(\n      (stop) => {\n        if (active) unlisten = stop;\n        else stop();\n      },\n      () => {},\n    );\n    return () => {\n      active = false;\n      unlisten();\n    };\n  }, []);\n  return null;\n}"
+    },
+    {
+      "file": "src/features/messages/MessageActionBar.tsx",
+      "line": 547,
+      "kind": "notice",
+      "source": "<ToastNotice\n          title={notice.text}\n          tone={notice.error ? \"error\" : \"success\"}\n          timeout={notice.error ? 0 : 4000}\n          onDismiss={() => setNotice(undefined)}\n        />\n      )}\n    </>\n  );\n}"
+    },
+    {
+      "file": "src/features/messages/MessageComposer.tsx",
+      "line": 1410,
+      "kind": "feedback",
+      "source": "notify(\"Text copied\", \"success\");\n      } catch {\n        notify(\"Couldn\u2019t copy text\", \"error\", {\n          label: \"Try again\",\n          onClick: () => void copy(),\n          timeout: Infinity,\n        });\n      }\n    };\n    notify(`${solo ? \"Chat\" : \"Channel\"} archived: ${channelName}`, \"info\", {\n      label: \"Copy text\",\n      onClick: () => void copy(),\n      timeout: Infinity,\n    });\n  });\n  useLayoutEffect(() => () => handOffFocus(), []);\n  const canAttach = submission\n    ? !!submission.attachments && !!session.attachments?.uploadForNewChat\n    : !!session.attachments;\n  const voice = useVoiceCapture(\n    attachments.store,\n    !active || editingDisabled || !!editing.target || !canAttach,"
+    },
+    {
+      "file": "src/features/messages/MessageComposer.tsx",
+      "line": 1412,
+      "kind": "feedback",
+      "source": "notify(\"Couldn\u2019t copy text\", \"error\", {\n          label: \"Try again\",\n          onClick: () => void copy(),\n          timeout: Infinity,\n        });\n      }\n    };\n    notify(`${solo ? \"Chat\" : \"Channel\"} archived: ${channelName}`, \"info\", {\n      label: \"Copy text\",\n      onClick: () => void copy(),\n      timeout: Infinity,\n    });\n  });\n  useLayoutEffect(() => () => handOffFocus(), []);\n  const canAttach = submission\n    ? !!submission.attachments && !!session.attachments?.uploadForNewChat\n    : !!session.attachments;\n  const voice = useVoiceCapture(\n    attachments.store,\n    !active || editingDisabled || !!editing.target || !canAttach,\n    refuseAttachment,\n  );"
+    },
+    {
+      "file": "src/features/messages/MessageComposer.tsx",
+      "line": 1419,
+      "kind": "feedback",
+      "source": "notify(`${solo ? \"Chat\" : \"Channel\"} archived: ${channelName}`, \"info\", {\n      label: \"Copy text\",\n      onClick: () => void copy(),\n      timeout: Infinity,\n    });\n  });\n  useLayoutEffect(() => () => handOffFocus(), []);\n  const canAttach = submission\n    ? !!submission.attachments && !!session.attachments?.uploadForNewChat\n    : !!session.attachments;\n  const voice = useVoiceCapture(\n    attachments.store,\n    !active || editingDisabled || !!editing.target || !canAttach,\n    refuseAttachment,\n  );\n  useEffect(() => {\n    if (disabled) attachments.store.cancel();\n    else attachments.store.resume();\n  }, [disabled, attachments.store]);\n  useEffect(() => {\n    const pending = pickerFocus.current;\n    if (!pending) return;"
+    },
+    {
+      "file": "src/features/messages/MessageComposer.tsx",
+      "line": 3667,
+      "kind": "notice",
+      "source": "<ToastNotice\n            title={attachmentError.title}\n            description={attachmentError.description}\n            onDismiss={() => setAttachmentError(undefined)}\n          />\n        )}\n        <ComposerContext key={editing.target ? \"edit\" : \"reply\"}>\n          {editing.target ? (\n            <div className={styles.replyContext}>\n              <PencilSimpleIcon size={18} aria-hidden=\"true\" />\n              <div>Editing message</div>\n              <IconButton\n                type=\"button\"\n                size=\"sm\"\n                aria-label={editing.locked ? \"Close edit\" : \"Cancel edit\"}\n                disabled={editing.busy}\n                onClick={editing.close}\n                icon={<XIcon size={16} aria-hidden=\"true\" />}\n              />\n            </div>\n          ) : (\n            replyContext"
+    },
+    {
+      "file": "src/features/messages/MessageRow.tsx",
+      "line": 1307,
+      "kind": "notice",
+      "source": "<ToastNotice\n          tone=\"success\"\n          timeout={5000}\n          title=\"Report submitted to community moderators\"\n          onDismiss={() => setReporting(undefined)}\n        />\n      )}\n    </>\n  );\n  // Accessories may only point at a thread the row could open or start.\n  const summaryThread =\n    startsThreads || row.replyCount > 0 ? onOpenThread : undefined;\n  const renderMessageSummary = (activity?: MessageSummaryActivity) => {\n    const remainingThreadAgents = threadAgents.filter(\n      (agent) => !activity?.participants.includes(agent.pubkey),\n    );\n    const remainingWorkingLabel = remainingThreadAgents.length\n      ? `${remainingThreadAgents.map(({ pubkey, name }) => resolveName(pubkey, name)).join(\", \")} ${threadWaiting ? \"waiting\" : \"working\"}`\n      : undefined;\n    return (\n      ((row.replyCount > 0 ||\n        (startsThreads &&"
+    },
+    {
+      "file": "src/features/navigation/RejectedLinkNotice.tsx",
+      "line": 13,
+      "kind": "notice",
+      "source": "<ToastNotice\n      key={id}\n      title=\"This link doesn\u2019t work\"\n      description=\"It may be incomplete or out of date. Ask whoever shared it for a new link.\"\n      tone=\"warning\"\n      timeout={8000}\n      onDismiss={() => links.clear(id)}\n    />\n  );\n}"
+    },
+    {
+      "file": "src/features/notifications/AgentCompletionNotifications.tsx",
+      "line": 59,
+      "kind": "feedback",
+      "source": "notify(\n            completionToast(agentName(services, work.agent), work),\n            work.state === \"error\" ? \"error\" : \"success\",\n            {\n              label: \"View\",\n              onClick: () => void services.navigation.open(target),\n            },\n          );\n        },\n      }),\n    [notify, services],\n  );\n  return null;\n}\n\nfunction agentName(\n  services: Pick<AppServices, \"agents\">,\n  pubkey: string,\n): string {\n  return (\n    services.agents.local().agents.find((agent) => agent.pubkey === pubkey)\n      ?.name ?? \"Agent\""
+    },
+    {
+      "file": "src/features/relay/RecoveryNotice.tsx",
+      "line": 116,
+      "kind": "notice",
+      "source": "<ToastNotice\n      title={RECOVERY_TITLE}\n      description=\"Retrying automatically.\"\n      tone=\"info\"\n    />\n  );\n}"
+    },
+    {
+      "file": "src/features/settings/SavedApiKey.tsx",
+      "line": 118,
+      "kind": "feedback",
+      "source": "notify(\"Saved\", \"success\");\n      // A runtime refresh cannot undo the completed credential save.\n      await onSaved?.().catch(() => undefined);\n    } catch (failure) {\n      if (active()) setError(String(failure));\n    } finally {\n      writing.current = false;\n      setSaving(false);\n      onSavingChange(false);\n      if (\n        saved &&\n        active() &&\n        (document.activeElement === focused ||\n          document.activeElement === document.body)\n      )\n        input.current?.focus();\n    }\n  };\n  return (\n    <div aria-busy={saving}>\n      <Field\n        label={label ?? (editing ? \"Replacement API key\" : \"Saved API key\")}"
+    },
+    {
+      "file": "src/features/solo/ConvertToChannel.tsx",
+      "line": 258,
+      "kind": "feedback",
+      "source": "notify(\"Converted to channel.\", \"success\");\n          completed.current = true;\n          setOpen(false);\n        }\n      }\n    } catch (reason) {\n      if (!active.aborted)\n        setError(reason instanceof Error ? reason.message : String(reason));\n    } finally {\n      if (exact) {\n        delete exact.running;\n        if (chatConversion(session, id) === exact)\n          updateChatConversion(\n            session,\n            id,\n            exact.converted || details.snapshot(id) || action === \"finish\"\n              ? exact\n              : undefined,\n          );\n      }\n      if (!controller.signal.aborted) {\n        pending.current = false;"
+    },
+    {
+      "file": "src/features/solo/SoloDraft.tsx",
+      "line": 679,
+      "kind": "feedback",
+      "source": "notify(\n          \"Could not clear model and effort from New chat. Reset them before starting another chat.\",\n          \"error\",\n        );\n      if (!savedChatPicks)\n        notify(\n          \"Could not save model and effort for this chat. Choose them again before your next message.\",\n          \"error\",\n        );\n      // Only a start that made no chat ends here; the chat and its messages\n      // are dropped (see channelWrites.start), and what was sent returns to a\n      // New chat still blank. Any other miss leaves the chat listed, with its\n      // messages' own Retry.\n      void ready.catch((reason: unknown) => {\n        if (!(reason instanceof ChatNotStarted)) return;\n        if (startKey) writeView(scope, startKey, null);\n        let restoring = false;\n        let restored = false;\n        let prepared: { before: string | null; written: string } | undefined;\n        const restore = async () => {\n          if (restoring || restored) return;\n          restoring = true;"
+    },
+    {
+      "file": "src/features/solo/SoloDraft.tsx",
+      "line": 684,
+      "kind": "feedback",
+      "source": "notify(\n          \"Could not save model and effort for this chat. Choose them again before your next message.\",\n          \"error\",\n        );\n      // Only a start that made no chat ends here; the chat and its messages\n      // are dropped (see channelWrites.start), and what was sent returns to a\n      // New chat still blank. Any other miss leaves the chat listed, with its\n      // messages' own Retry.\n      void ready.catch((reason: unknown) => {\n        if (!(reason instanceof ChatNotStarted)) return;\n        if (startKey) writeView(scope, startKey, null);\n        let restoring = false;\n        let restored = false;\n        let prepared: { before: string | null; written: string } | undefined;\n        const restore = async () => {\n          if (restoring || restored) return;\n          restoring = true;\n          let failedPromptWrite = false;\n          try {\n            await lockSoloModelPicks(scope, async () => {\n              const open = () =>\n                [...openNewChats].filter("
+    },
+    {
+      "file": "src/features/updates/UpdateNotice.tsx",
+      "line": 38,
+      "kind": "notice",
+      "source": "<ToastNotice\n      title={state === \"error\" ? \"Update failed\" : \"Software Updates\"}\n      description={\n        status.state === \"error\" ? status.message : descriptions[state]\n      }\n      tone={state === \"error\" ? \"error\" : \"info\"}\n      onDismiss={updates.dismissNotice}\n      closeLabel=\"Dismiss update notification\"\n    >\n      <Button\n        type=\"button\"\n        size=\"sm\"\n        loading={[\"checking\", \"available\", \"downloading\"].includes(state)}\n        onClick={() => void updates.checkForUpdate()}\n      >\n        Retry\n      </Button>\n    </ToastNotice>\n  );\n}"
+    },
+    {
+      "file": "src/shared/identity/IdentityRow.tsx",
+      "line": 118,
+      "kind": "feedback",
+      "source": "notify(\"Copied npub\", \"success\"),\n                  () =>\n                    notify(\n                      \"Couldn\u2019t copy npub. Select the text to copy it.\",\n                      \"error\",\n                    ),\n                );\n            }}\n          />\n        </div>\n      </PreviewCard>\n    </>\n  );\n}"
+    },
+    {
+      "file": "src/shared/identity/IdentityRow.tsx",
+      "line": 120,
+      "kind": "feedback",
+      "source": "notify(\n                      \"Couldn\u2019t copy npub. Select the text to copy it.\",\n                      \"error\",\n                    ),\n                );\n            }}\n          />\n        </div>\n      </PreviewCard>\n    </>\n  );\n}"
+    }
+  ]
+}

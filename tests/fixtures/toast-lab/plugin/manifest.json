@@ -1,0 +1,6 @@
+{
+  "id": "example.toast-workshop",
+  "name": "Toast workshop",
+  "apiVersion": 1,
+  "description": "Local-only controls for toast experiments inside the mock Buzz shell."
+}

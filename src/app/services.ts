@@ -1,3 +1,4 @@
+import * as toastWorkshop from "../../tests/fixtures/toast-lab/native-plugin";
 import { ArtifactStorageService } from "../features/artifact-storage/service";
 import { provideArtifactStoreSync } from "../features/relay/artifact-store-sync";
 import { createAdminAccess } from "../bundled/admin-access";
@@ -103,7 +104,21 @@ export function createServices() {
     : undefined;
   const plugins = createPluginManager(ctx, {
     bundled: bundledPlugins,
-    builtIn: conversationFeatures,
+    builtIn: [
+      ...conversationFeatures,
+      ...(import.meta.env.DEV
+        ? [
+            {
+              manifest: {
+                id: "example.toast-workshop",
+                name: "Toast workshop",
+                apiVersion: 1 as const,
+              },
+              module: toastWorkshop,
+            },
+          ]
+        : []),
+    ],
   });
   new PluginDevelopmentService(ctx, () => plugins);
   const localAgents = createLocalAgents();

@@ -1,0 +1,255 @@
+/* Local experiment only: compact the real toast renderer inside the host toolbar. */
+.toolbar-toast-host {
+  min-width: 0;
+  flex-shrink: 1;
+  align-self: center;
+  position: relative;
+  height: 32px;
+  max-width: 100%;
+}
+.toolbar-toast-host > section {
+  display: contents;
+}
+.toolbar-toast-host
+  .buzz-toast-viewport[data-sonner-toaster][data-x-position][data-y-position] {
+  position: absolute;
+  inset: 0 0 auto auto;
+  width: 100%;
+  max-height: none;
+  padding: 0;
+  margin: 0;
+  overflow: visible;
+  transform: none;
+  gap: 0;
+}
+:is(.toolbar-toast-host, .toast-workshop-native) .buzz-toast.floating-surface {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 6px;
+  padding: 8px 10px;
+  min-height: 76px;
+  position: relative;
+}
+:is(.toolbar-toast-host, .toast-workshop-native) .buzz-toast-heading {
+  flex: 1;
+  min-width: 0;
+  align-items: flex-start;
+  gap: 4px;
+}
+:is(.toolbar-toast-host, .toast-workshop-native) .buzz-toast-message {
+  flex: 1;
+  min-width: 0;
+  gap: 0;
+}
+:is(.toolbar-toast-host, .toast-workshop-native) .buzz-toast-title {
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+:is(.toolbar-toast-host, .toast-workshop-native) .buzz-toast-actions {
+  display: flex;
+  flex-wrap: nowrap;
+  flex-shrink: 0;
+  gap: 4px;
+  margin: 0;
+  justify-content: flex-end;
+}
+/* Reuse Buzz's shared surface, typography, buttons, and X icon. */
+:is(.toolbar-toast-host, .toast-workshop-native)
+  .buzz-toast-heading
+  .buzz-toast-dismiss {
+  position: absolute;
+  z-index: 2;
+  top: 2px;
+  left: 2px;
+  margin: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+:is(.toolbar-toast-host, .toast-workshop-native)
+  .buzz-toast:hover
+  .buzz-toast-dismiss,
+:is(.toolbar-toast-host, .toast-workshop-native)
+  .buzz-toast:focus-within
+  .buzz-toast-dismiss {
+  opacity: 1;
+  pointer-events: auto;
+}
+:is(.toolbar-toast-host, .toast-workshop-native) .buzz-toast-message {
+  padding-inline-start: 24px;
+}
+@media (hover: none) {
+  :is(.toolbar-toast-host, .toast-workshop-native)
+    .buzz-toast-heading
+    .buzz-toast-dismiss {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+.toast-scenario-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+}
+.toast-scenario-grid .buzz-button {
+  width: 100%;
+  min-width: 0;
+  height: auto;
+  min-height: 32px;
+  text-align: left;
+  justify-content: flex-start;
+  white-space: normal;
+}
+.toast-scenario-grid .buzz-button-label {
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+.toolbar-toast-host
+  .buzz-toast-viewport[data-sonner-toaster]
+  [data-sonner-toast][data-mounted] {
+  transform: none;
+  --y: translateY(0);
+}
+[aria-label="Toast workshop controls"] > * {
+  flex-shrink: 0;
+}
+.toolbar-toast-host [data-sonner-toast][data-removed="true"] {
+  display: none;
+}
+
+/* Local native preview: all actual floating feedback shares the experiment. */
+.toast-workshop-native
+.buzz-toast-viewport[data-sonner-toaster][data-x-position][data-y-position]:not(
+  .toolbar-toast-host *
+) {
+  top: 6px;
+  bottom: auto;
+  right: 8px;
+  left: auto;
+  width: min(420px, calc(100vw - 32px));
+}
+.toast-workshop-native:has(.toolbar-toast-host .buzz-toast)
+  .buzz-toast-viewport[data-sonner-toaster][data-x-position][data-y-position]:not(
+    .toolbar-toast-host *
+  ) {
+  top: 94px;
+}
+
+/* Preserve Sonner's layout and transforms; consume Buzz's shared style roles. */
+.toast-sonner-reference[data-sonner-toaster][data-sonner-theme] {
+  font-family: var(--font-sans);
+  /* Measured native corner extent: approximately 24 CSS px at 2x scale.
+     macOS uses a continuous curve; this is a circular-radius approximation. */
+  --toast-window-radius: 24px;
+  --border-radius: max(
+    0px,
+    calc(var(--toast-window-radius) - var(--toast-window-inset, 8px))
+  );
+  --normal-bg: var(--surface-popover);
+  --normal-text: var(--text-primary);
+  --normal-border: transparent;
+  --normal-bg-hover: var(--surface-inset);
+  --normal-border-hover: var(--border-prominent);
+}
+.toast-sonner-reference [data-sonner-toast][data-styled="true"] {
+  color: var(--text-primary);
+  background: var(--surface-popover);
+  border-color: transparent;
+  box-shadow: var(--shadow-panel);
+}
+/* Match the shared floating-surface / elevated-material recipe while retaining
+   Sonner's positioning, radius, layout, and animation. */
+@supports (backdrop-filter: blur(1px)) {
+  .toast-sonner-reference [data-sonner-toast][data-styled="true"] {
+    background: var(--surface-elevated-glass);
+    backdrop-filter: blur(var(--blur-sm));
+  }
+}
+@media (prefers-reduced-transparency: reduce), (forced-colors: active) {
+  .toast-sonner-reference [data-sonner-toast][data-styled="true"] {
+    background: var(--surface-popover);
+    backdrop-filter: none;
+  }
+}
+@media (forced-colors: active) {
+  .toast-sonner-reference [data-sonner-toast][data-styled="true"] {
+    border-color: CanvasText;
+  }
+}
+.toast-sonner-reference [data-sonner-toast].toast-tone-error [data-title] {
+  color: var(--text-danger);
+}
+.toast-sonner-reference [data-sonner-toast].toast-tone-warning [data-title] {
+  color: var(--text-warning);
+}
+.toast-sonner-reference [data-sonner-toast][data-styled="true"] [data-title] {
+  font-size: var(--text-label-sm);
+  font-weight: var(--text-label-sm--font-weight);
+  line-height: var(--text-label-sm--line-height);
+  letter-spacing: var(--text-label-sm--letter-spacing);
+}
+.toast-sonner-reference
+  [data-sonner-toast][data-styled="true"]
+  [data-description] {
+  color: var(--text-subtle);
+  font-size: var(--text-body-sm);
+  font-weight: var(--text-body-sm--font-weight);
+  line-height: var(--text-body-sm--line-height);
+  letter-spacing: var(--text-body-sm--letter-spacing);
+}
+.toast-sonner-action {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--space-1);
+  margin-inline-start: auto;
+  flex-shrink: 0;
+}
+
+.toast-sonner-reference [data-sonner-toast] [data-close-button] {
+  opacity: 0;
+  pointer-events: none;
+}
+.toast-sonner-reference [data-sonner-toast]:hover [data-close-button],
+.toast-sonner-reference [data-sonner-toast]:focus-within [data-close-button] {
+  opacity: 1;
+  pointer-events: auto;
+}
+@media (hover: none) {
+  .toast-sonner-reference [data-sonner-toast] [data-close-button] {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+
+/* Sonner injects its stylesheet at runtime. Keep its light defaults from
+   overriding the host app's semantic colors, including close-button states. */
+.toast-sonner-reference[data-sonner-toaster]
+  [data-sonner-toast][data-styled="true"]:hover
+  [data-close-button]:hover {
+  background: var(--surface-inset);
+  border-color: var(--border-prominent);
+  color: var(--text-primary);
+}
+.toast-sonner-reference[data-sonner-toaster]
+  [data-sonner-toast][data-styled="true"]
+  [data-close-button]:focus-visible {
+  outline: 2px solid var(--border-focus);
+  outline-offset: 2px;
+}
+
+/* Local toast preview: lift dark action fills while retaining shared Button
+   hover, pressed, focus, and disabled behavior. Light mode is unchanged. */
+:where(.dark, [data-color-mode="dark"]) .toast-sonner-action {
+  --interaction-fill: var(--affordance-subtle-hover);
+  --interaction-hover: color-mix(
+    in srgb,
+    var(--affordance-subtle-hover),
+    var(--text-primary) 8%
+  );
+  --interaction-pressed: color-mix(
+    in srgb,
+    var(--affordance-subtle-hover),
+    var(--text-primary) 14%
+  );
+}
