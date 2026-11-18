@@ -29,6 +29,7 @@ import { Button } from "../../shared/design-system/ui/Button";
 import { EmptyState } from "../../shared/design-system/ui/EmptyState";
 import { NavigationItem } from "../../shared/design-system/ui/NavigationItem";
 import { Switch } from "../../shared/design-system/ui/Switch";
+import { shortRelativeTimestamp } from "../../shared/relative-timestamp";
 import { readView, writeView } from "../../shared/view-state";
 import {
   hasUnread,
@@ -44,20 +45,6 @@ import styles from "./InboxPreview.module.css";
 const maxRows = 50;
 /** The card's own Unread only choice, separate from the Activity page filters. */
 const unreadOnlyKey = "inbox:preview-unread-only";
-
-// The card is narrower than the Activity page, so it abbreviates its timestamps
-// as the channel activity preview does, with a date after a week.
-const shortAge = (createdAt: number, now = Date.now()) => {
-  const seconds = Math.max(0, Math.floor(now / 1000) - createdAt);
-  if (seconds < 60) return "now";
-  if (seconds < 3600) return `${Math.floor(seconds / 60)}m`;
-  if (seconds < 86400) return `${Math.floor(seconds / 3600)}h`;
-  if (seconds < 604800) return `${Math.floor(seconds / 86400)}d`;
-  return new Date(createdAt * 1000).toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-  });
-};
 
 /** Recent activity, shown while the pointer rests on the sidebar's Activity row. */
 export function InboxPreview({
@@ -330,7 +317,7 @@ function InboxPreviewCard({
                     profiles={profiles}
                     name={name}
                     channel={channelOf(item.channelId)}
-                    time={shortAge(item.createdAt)}
+                    time={shortRelativeTimestamp(item.createdAt)}
                     onClick={() => open(row)}
                   />
                 ) : (
@@ -344,7 +331,7 @@ function InboxPreviewCard({
                     )}
                     media={session.media}
                     feed={feed}
-                    time={shortAge(item.createdAt)}
+                    time={shortRelativeTimestamp(item.createdAt)}
                     onClick={() => open(row)}
                   />
                 )}
