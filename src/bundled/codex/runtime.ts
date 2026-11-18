@@ -28,7 +28,7 @@ import {
   startedSections,
   type StartedSections,
 } from "../../features/agent-harness/sections/compose";
-import type { Facts } from "../../features/agent-harness/sections";
+import { type Facts, LAYOUT } from "../../features/agent-harness/sections";
 import type { AgentKey } from "../../features/agents/membership";
 import type { AgentReads } from "../../features/agents/reads";
 import {
@@ -2713,7 +2713,10 @@ export class CodexRuntime {
   private async prepare(
     rpc: AppServer,
     // Protected when it has a policy, bound or not yet.
-    agent: Pick<AgentHandle, "key" | "name" | "pubkey" | "relay"> & {
+    agent: Pick<
+      AgentHandle,
+      "key" | "name" | "pubkey" | "relay" | "promptSections"
+    > & {
       protection?: unknown;
     },
     settings: Config,
@@ -2760,7 +2763,10 @@ export class CodexRuntime {
       : undefined;
     // Codex sets it on this thread's commands only; app-server has none.
     const credential = await rpc.toolCredential(agent);
-    const base = composeBase(baseFacts(settings, home));
+    const base = composeBase(
+      baseFacts(settings, home),
+      agent.promptSections?.(),
+    );
     const params = {
       model,
       cwd: workspace,
@@ -2831,8 +2837,13 @@ export class CodexRuntime {
       // tools starts fresh.
       const added = this.added();
       const tools = addedKey(added);
+      // Nor can a thread from before its sections were kept be told which
+      // of them the owner changed, so it starts fresh once. A remote thread
+      // is kept: the owner's New gives it the current sections.
       const resuming =
-        existing?.workspace === workspace && (existing.tools ?? "") === tools;
+        existing?.workspace === workspace &&
+        (existing.tools ?? "") === tools &&
+        (!base.custom || existing.sections?.layout === LAYOUT || !!this.target);
       type Started = { thread: { id: string; cwd: string } };
       const start = () =>
         rpc.request<Started>("thread/start", {
@@ -2898,6 +2909,7 @@ export class CodexRuntime {
       const sections: Saved["sections"] = fresh
         ? startedSections(base.parts)
         : existing?.sections;
+      const facts = baseFacts(settings, home);
       return {
         threadId,
         workspace,
@@ -2912,10 +2924,11 @@ export class CodexRuntime {
         resuming,
         fresh,
         base,
+        facts,
         sections,
         updates: fresh
           ? ""
-          : sectionUpdates(existing?.sections, baseFacts(settings, home)),
+          : sectionUpdates(existing?.sections, facts, agent.promptSections?.()),
       };
     } catch (error) {
       if (threadId)
@@ -3009,10 +3022,15 @@ export class CodexRuntime {
         saved,
         resuming,
         fresh,
-        base,
         sections,
-        updates,
       } = loaded;
+      // A seat keeps its loaded thread between turns, and the owner can
+      // change a section meanwhile: its turns get the sections as they are.
+      const choices = seat && agent.promptSections?.();
+      const base = seat ? composeBase(loaded.facts, choices) : loaded.base;
+      const updates = seat
+        ? sectionUpdates(sections, loaded.facts, choices)
+        : loaded.updates;
       active.threadId = threadId;
       // A refusal outside this turn does not explain how it ends.
       explain = server.explainer?.(threadId);
@@ -3104,7 +3122,7 @@ export class CodexRuntime {
         // loaded thread.
         const last = entry.saved[key]?.sections?.shown ?? sections?.shown;
         const shown =
-          !fresh &&
+          (seat || !fresh) &&
           sections &&
           base.key !== (last ?? sectionsKey(sections.parts));
         if (shown)

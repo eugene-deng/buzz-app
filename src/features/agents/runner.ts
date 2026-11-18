@@ -568,6 +568,10 @@ export type RunnerHost = {
     channelId: string,
     root?: string,
   ): ReturnType<NonNullable<AgentHandle["conversationInstructions"]>>;
+  /** The choices for the sections of the agent's base prompt. */
+  promptSections?(
+    agent: Agent,
+  ): ReturnType<NonNullable<AgentHandle["promptSections"]>>;
   /** The owner's channel templates as the agent's handle offers them. */
   templates(agent: Agent): ReturnType<AgentHandle["templates"]>;
   soloWorkspaces?(agent: Agent): SoloWorkspaces | undefined;
@@ -3345,6 +3349,7 @@ export class AgentRunners {
         instructions: () => this.host.instructions?.(agent) ?? [],
         conversationInstructions: (channelId: string, root?: string) =>
           this.host.conversationInstructions?.(agent, channelId, root),
+        promptSections: () => this.host.promptSections?.(agent) ?? {},
         tabs: () => this.host.tabs(agent),
         // Only a run's: a plugin acting through the agent doesn't get them.
         ...(settings && { settings }),

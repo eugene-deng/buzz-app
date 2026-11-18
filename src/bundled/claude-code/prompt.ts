@@ -9,6 +9,7 @@ import {
   type ConversationWake,
   wakeSection,
 } from "../../features/agent-harness/plugin-wake";
+import type { SectionChoices } from "../../features/agent-harness/sections/choices";
 import { composeBase } from "../../features/agent-harness/sections/compose";
 import {
   type AuthorNames,
@@ -46,12 +47,14 @@ export function systemPrompt(
     memory?: string | null;
     /** Its recent notes, as `recentNotesSection` gives them. */
     notes?: string;
+    /** The choices for the base prompt's sections, from the agent's handle. */
+    sections?: SectionChoices | undefined;
   }>,
 ) {
-  const base = composeBase({
-    scope: input.scope,
-    ownFolder: input.workspace,
-  });
+  const base = composeBase(
+    { scope: input.scope, ownFolder: input.workspace },
+    input.sections,
+  );
   return [
     input.agent
       ? section(

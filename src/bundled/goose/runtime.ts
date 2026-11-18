@@ -997,6 +997,7 @@ export class GooseRuntime {
             instructions,
             team: entry.team,
             ...(memory === undefined ? {} : { memory }),
+            sections: entry.handle?.promptSections?.(),
           }),
         };
       },
