@@ -75,7 +75,12 @@ import type {
   SearchViews,
 } from "./SearchChoices";
 import { type SearchChip, SearchChoices } from "./SearchChoices";
-import { MatchRank, matchName, matchRank } from "../../features/search/match";
+import {
+  MatchRank,
+  matchedPositions,
+  matchRank,
+  rankTerms,
+} from "../../features/search/match";
 import { useUnreadFirstPreference } from "../../features/search/unread-first-preference";
 import {
   noSearchUsage,
@@ -1185,9 +1190,14 @@ export function SearchResults({
     }
   }
   // Several passes below rank the same names; rank each once per render.
-  const ranks = new Map<string, MatchRank | undefined>();
+  // The whole typed text, or failing that each of its words (`rankTerms`).
+  const ranks = new Map<string, number | undefined>();
   const rankName = (label: string) => {
-    if (!ranks.has(label)) ranks.set(label, matchRank(label, needle));
+    if (!ranks.has(label))
+      ranks.set(
+        label,
+        rankTerms(needle, (text) => matchRank(label, text)),
+      );
     return ranks.get(label);
   };
   // What the viewer chose before for this typed text. Only candidates that
@@ -1207,13 +1217,29 @@ export function SearchResults({
     ]),
   );
   // Rank before the limit, so an exact name beyond the first eight still shows.
-  // The store matches public channels by the same rule (`matchRank`).
+  // The store matches public channels by the same rule (`publicRank`).
   // The shared search order, with archived channels half a step behind live
   // ones in the same place.
   const rankOf = (label: string, key: string, archived?: boolean) => {
     const rank = rankName(label) ?? MatchRank.inOrder + 1;
     return searchOrder(usage, picked, { key, rank }) + (archived ? 0.5 : 0);
   };
+  // A page comes from PageSearch, which matches its label or its detail. One
+  // found through its detail follows every name. One found only word by word
+  // follows every whole match, by its weakest word (`rankTerms`).
+  const pageRank = ({ key, label, detail }: SearchDestination) =>
+    searchOrder(usage, picked, {
+      key,
+      rank:
+        rankTerms(
+          needle,
+          (text) =>
+            matchRank(label, text) ??
+            (detail && matchRank(detail, text) !== undefined
+              ? MatchRank.inOrder + 1
+              : undefined),
+        ) ?? MatchRank.inOrder + 1,
+    });
   /** Whether a search order is an exact name, live (-2) or archived (-1.5). */
   const exact = (rank: number) => rank < -1;
   const byMatch = <T,>(rows: readonly T[], rank: (row: T) => number) =>
@@ -1247,6 +1273,7 @@ export function SearchResults({
       peopleNeedle,
       usage,
       picked,
+      { terms: true },
     )
       .slice(0, PERSON_ROWS)
       .filter(({ person }) => sessionAgents.has(person.pubkey))
@@ -1289,6 +1316,7 @@ export function SearchResults({
     peopleNeedle,
     usage,
     picked,
+    { terms: true },
   );
   // Solo chats, by name or by a shown agent among their members. A chat whose
   // name is the exact text comes first. Chats with that agent come next, in
@@ -1360,7 +1388,7 @@ export function SearchResults({
     channel: ChannelSummary,
   ): SearchDestination => {
     const label = names.get(channel.id) ?? channel.name;
-    const matches = needle ? matchName(label, needle)?.positions : undefined;
+    const matches = needle ? matchedPositions(label, needle) : undefined;
     const key = `channel:${channel.id}`;
     return {
       key,
@@ -1501,7 +1529,7 @@ export function SearchResults({
   }: (typeof rankedPeople)[number]): SearchDestination & {
     score: number;
   } => {
-    const matches = matchPerson(person.label, peopleNeedle)?.positions;
+    const matches = matchedPositions(person.label, peopleNeedle, matchPerson);
     const key = personKey(person.pubkey);
     const newSession = !!openAgentSession && sessionAgents.has(person.pubkey);
     const dm = !!directMessageWith(list.channels, person.pubkey);
@@ -1872,14 +1900,12 @@ export function SearchResults({
       icon: GearIcon,
       // PageSearch already ranked these by text and underlined them; here
       // usage and earlier choices adjust the order.
-      destinations: byMatch(pages, (page) => rankOf(page.label, page.key)).map(
-        (page) => ({
-          ...page,
-          action: `Open ${page.label}`,
-          run: choose(page.key, page.run),
-        }),
-      ),
-      best: Math.min(...pages.map((page) => rankOf(page.label, page.key))),
+      destinations: byMatch(pages, pageRank).map((page) => ({
+        ...page,
+        action: `Open ${page.label}`,
+        run: choose(page.key, page.run),
+      })),
+      best: Math.min(...pages.map(pageRank)),
     },
   ]
     .map(({ exactName, ...group }) => {

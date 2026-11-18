@@ -1,4 +1,4 @@
-import { matchRank } from "../../features/search/match";
+import { matchRank, rankTerms } from "../../features/search/match";
 import {
   useLayoutEffect,
   useRef,
@@ -290,10 +290,14 @@ export function SearchChoices({
       ...group.destinations.map(
         (row) =>
           row.rank ??
-          Math.min(
-            matchRank(row.label, needle) ?? Infinity,
-            matchRank(row.detail ?? "", needle) ?? Infinity,
-          ),
+          // As the row was found: the whole text, or each of its words.
+          rankTerms(needle, (text) =>
+            Math.min(
+              matchRank(row.label, text) ?? Infinity,
+              matchRank(row.detail ?? "", text) ?? Infinity,
+            ),
+          ) ??
+          Infinity,
       ),
     );
   // Upstream order includes usage and remembered choices. Only insert the new
