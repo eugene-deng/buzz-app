@@ -3292,6 +3292,10 @@
   }
   .buzz-preference-row[data-variant="search"] .buzz-preference-row-description {
     @apply text-body-sm;
+  }
+  /* A disabled row keeps the shared unavailable color on both lines. */
+  .buzz-preference-row[data-variant="search"]:not([data-disabled])
+  .buzz-preference-row-description {
     color: var(--text-subtle);
   }
 }

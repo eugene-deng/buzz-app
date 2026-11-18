@@ -397,7 +397,6 @@ function NotificationPreference({
         variant="search"
         icon={<GearIcon size={21} />}
         label={entry.label}
-        aria-label={entry.label}
         description={
           state.developmentPaused
             ? entry.section + " · Paused in this development build"
