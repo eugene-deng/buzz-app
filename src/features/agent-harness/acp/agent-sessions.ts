@@ -176,6 +176,9 @@ type Live = {
 export class AgentSessions {
   /** The latest process its sessions opened in, whose exit drops them. */
   private process: AcpProcess | undefined;
+  /** Earlier processes a newer one replaced, each stopped once no session is
+   * in it. */
+  private readonly replaced = new Set<AcpProcess>();
   private readonly live = new Map<string, Live>();
   /** One-off turns running or starting, by label. */
   private readonly once = new Map<string, Live | undefined>();
@@ -558,7 +561,10 @@ export class AgentSessions {
   ) {
     const opening = this.start(key, title, use, named);
     this.opens.add(opening);
-    const done = () => this.opens.delete(opening);
+    const done = () => {
+      this.opens.delete(opening);
+      this.retire();
+    };
     opening.then(done, done);
     return opening;
   }
@@ -580,8 +586,10 @@ export class AgentSessions {
       absolute(resolveDirectory, launch.workspace),
     ]);
     if (process !== this.process) {
+      if (this.process) this.replaced.add(this.process);
       this.process = process;
       void process.exited.then(() => {
+        this.replaced.delete(process);
         for (const [key, live] of this.live)
           if (live.process === process) this.drop(key, live);
       });
@@ -765,9 +773,24 @@ export class AgentSessions {
    * have acknowledged it. */
   private strict(live: Live) {
     this.closing.add(live);
-    return live.process
-      .close(live.session, true)
-      .then(() => void this.closing.delete(live));
+    return live.process.close(live.session, true).then(() => {
+      this.closing.delete(live);
+      this.retire();
+    });
+  }
+  /** Stops each replaced process that no session is in or opening in. */
+  private retire() {
+    if (this.opens.size) return;
+    const used = [
+      ...this.live.values(),
+      ...this.once.values(),
+      ...this.closing,
+    ];
+    for (const process of this.replaced)
+      if (!used.some((live) => live?.process === process)) {
+        this.replaced.delete(process);
+        void process.kill().catch(() => undefined);
+      }
   }
   private close(live: Live) {
     return this.strict(live).catch(() => undefined);

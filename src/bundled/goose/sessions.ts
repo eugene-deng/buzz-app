@@ -32,6 +32,8 @@ export class AgentProcess {
   /** The process `ready` started, kept until it exits, even when its start
    * failed. */
   private process: GooseProcess | undefined;
+  /** The token limit `ready` started with: goose reads it at start. */
+  private limit: number | undefined;
   constructor(
     private readonly host: GooseHost,
     /** Starts a session's MCP server for its agent's tools. */
@@ -41,13 +43,20 @@ export class AgentProcess {
     private readonly agent: () =>
       | Readonly<{ pubkey: string; relay: string }>
       | undefined = () => undefined,
+    /** The context size, in tokens, its sessions compact at. */
+    private readonly compactAt: () => number | undefined = () => undefined,
   ) {}
 
   /** The running process. One that failed to start is started again on the
-   * next call once it has exited. */
+   * next call once it has exited. One started with another compaction limit
+   * is left to its sessions, which stop it once none needs it. */
   get(): Promise<GooseProcess> {
     this.protection?.assertAvailable();
-    if (this.ready) return this.ready;
+    const limit = this.compactAt();
+    if (this.ready && limit === this.limit) return this.ready;
+    this.ready = undefined;
+    this.process = undefined;
+    this.limit = limit;
     const agent = this.agent();
     const ready = (async () => {
       const bridge =
@@ -60,9 +69,13 @@ export class AgentProcess {
               ? this.protection.spawn(options ?? {})
               : this.host.spawn(id, options),
           {
+            ...(limit && { compactAt: limit }),
             cwd: await this.host.resolveDirectory("~"),
             serve: this.serve,
-            onProcess: (goose) => (this.process = goose),
+            // A start replaced meanwhile leaves its process to its sessions.
+            onProcess: (goose) => {
+              if (this.ready === ready) this.process = goose;
+            },
             ...(agent && {
               agent: { pubkey: agent.pubkey, relay: agent.relay },
             }),

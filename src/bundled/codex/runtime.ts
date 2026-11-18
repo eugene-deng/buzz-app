@@ -21,6 +21,7 @@ import {
   wakeAnchor,
   wakeLands,
 } from "../../features/agent-harness/plugin-wake";
+import { compactAt } from "../../features/agents/compact-at";
 import type { AgentKey } from "../../features/agents/membership";
 import type { AgentReads } from "../../features/agents/reads";
 import {
@@ -2749,6 +2750,10 @@ export class CodexRuntime {
           : { "features.plugins": false, "features.apps": false }),
         ...(credential && {
           [`shell_environment_policy.set.${CREDENTIAL_ENV}`]: credential,
+        }),
+        // Codex compacts at the lower of this and its own limit.
+        ...(compactAt(settings.compactAt) && {
+          model_auto_compact_token_limit: compactAt(settings.compactAt),
         }),
       },
     };

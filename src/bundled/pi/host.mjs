@@ -26,6 +26,7 @@ import { builtinModels } from "@earendil-works/pi-ai/providers/all";
 import {
   AssistantEntry,
   createRegistry,
+  DEFAULT_COMPACTION_POLICY,
   defineDoc,
   defineExtension,
   defineTool,
@@ -281,6 +282,30 @@ const UNRUN = new Set([
 ]);
 /** Messages that arrive while Pi works join its run at the next boundary. */
 const SETTINGS = { steeringMode: "all" };
+/** An agent's compaction at `tokens`, for the models its turns ran on: a
+ * compaction starts in the background there, or at Pi's own blocking
+ * threshold if that is lower. */
+export class Compaction {
+  tokens;
+  overrides = {};
+  /** For a turn on `found`, `model`, compacting at `tokens` or Pi's default. */
+  use({ found, model }, tokens) {
+    if (tokens !== this.tokens) this.overrides = {};
+    this.tokens = tokens;
+    if (!tokens || !(found.contextWindow > 0)) return;
+    const blocking =
+      found.contextWindow - DEFAULT_COMPACTION_POLICY.reserveTokens;
+    this.overrides[`${model.provider}/${model.modelId}`] = {
+      backgroundTokens: Math.max(0, blocking - tokens),
+    };
+  }
+  /** Pi's settings, read at each use. */
+  settings() {
+    return this.tokens
+      ? { ...SETTINGS, compaction: { modelOverrides: this.overrides } }
+      : SETTINGS;
+  }
+}
 /** Pi's own default thinking level, for a model that thinks. */
 const THINKING = "medium";
 /** A lock left by a host that was killed is taken over after this long. */
@@ -880,6 +905,7 @@ export function serve({
       install(createToolSearchExtension());
       for (const extension of packages.extensions) install(extension);
       const storage = await openNodeSqliteStorage(path);
+      const compaction = new Compaction();
       harness = await Harness.open(
         storage,
         {
@@ -887,7 +913,7 @@ export function serve({
             ? protectModels(models, inspect, conversationFor)
             : models,
           registry,
-          settings: SETTINGS,
+          settings: () => compaction.settings(),
           // Its tools' commands, and only theirs, act as this agent.
           env: ({ cwd }) => {
             const credential = credentials.get(agent);
@@ -908,6 +934,7 @@ export function serve({
         harness,
         storage,
         registry,
+        compaction,
         install,
         conversations,
         release,
@@ -1319,6 +1346,7 @@ export function serve({
     opened.cores.set(conversation.id, turn.core?.text);
     const steers = busy && turn.steer;
     const chosen = await choose(turn);
+    opened.compaction.use(chosen, turn.compactAt);
     const change = steers
       ? {
           ...(turn.pick?.model ? { model: chosen.model } : {}),

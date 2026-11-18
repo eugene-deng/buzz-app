@@ -284,6 +284,22 @@ faux.setResponses([(context) => { staleSaw = context.messages.filter((m) => m.ro
 const stale = await pi.rpc("deliver", { ...turn("ST", "stale"), key: "chan/stale", context: { channel: "chan", root: "stale" } });
 staleSnapshot = false;
 out.stale = { wait: await pi.rpc("wait", { agent, submission: stale.submission }), saw: staleSaw };
+// An agent's compaction threshold starts compacting in the background once a
+// conversation passes it, well before Pi's own; without one, Pi's stands.
+const compacting = async (key, compactAt) => {
+  const from = faux.state.callCount;
+  faux.setResponses(Array.from({ length: 3 }, () => () => fauxAssistantMessage("Read it")));
+  let conversation;
+  for (const request of ["1", "2"]) {
+    const long = await pi.rpc("deliver", { ...turn(key + request, "word ".repeat(25_000)), key, context: { channel: "chan", root: key }, ...(compactAt ? { compactAt } : {}) });
+    conversation = long.conversation;
+    await pi.rpc("wait", { agent, submission: long.submission });
+  }
+  const kinds = async () => (await pi.rpc("entries", { agent, conversation })).entries.map((entry) => entry.kind);
+  for (let tries = 0; tries < 100 && !(await kinds()).includes("pi.compaction"); tries++) await new Promise((resolve) => setTimeout(resolve, 20));
+  return { compacted: (await kinds()).includes("pi.compaction"), calls: faux.state.callCount - from };
+};
+out.threshold = { at: await compacting("chan/threshold", 40_000), unset: await compacting("chan/unset") };
 // Past what Pi keeps verbatim, so compacting summarizes the older turn.
 faux.setResponses([() => fauxAssistantMessage("Read it"), () => fauxAssistantMessage("Read it too"), () => fauxAssistantMessage("Summary of the chat")]);
 for (const request of ["S2", "S3"]) {
@@ -855,6 +871,10 @@ describe.skipIf(!DEPS)("the Pi host on Pi durable", () => {
     // A later turn's first-turn check stops at the session's first prompt,
     // well short of the hundreds of entries since the reset.
     expect(out.sessions.deliverRead).toBeLessThan(50);
+    expect(out.threshold).toEqual({
+      at: { compacted: true, calls: 3 },
+      unset: { compacted: false, calls: 2 },
+    });
     expect(out.renewed).toEqual({
       place: { seen: 0 },
       kinds: ["pi.reset", "pi.compaction"],

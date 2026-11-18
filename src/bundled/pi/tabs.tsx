@@ -17,6 +17,8 @@ import {
   whenShown,
 } from "../../features/agents/TranscriptPanel";
 import { AgentInstructions } from "../../features/agents/AgentInstructions";
+import { CompactionSelect } from "../../features/agents/Compaction";
+import { withCompactAt } from "../../features/agents/compact-at";
 import { AgentSaveButton } from "../../features/agents/AgentSaveButton";
 import { ModelPicker } from "../../features/agents/ModelPicker";
 import {
@@ -966,6 +968,12 @@ export function createTabs({
                 {...(!draft.effort ? { valueLabel: resting } : {})}
                 groups={[{ label: "", options: efforts }]}
                 onValueChange={(effort) => setDraft({ ...draft, effort })}
+              />
+              <CompactionSelect
+                value={draft.compactAt}
+                description="Pi compacts at this size, or just before the model's context window if smaller."
+                disabled={saving}
+                onChange={(value) => setDraft(withCompactAt(draft, value))}
               />
             </SettingsGroup>
             <AgentInstructions

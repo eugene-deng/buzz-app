@@ -33,6 +33,7 @@ import {
   mentionAuthority,
   workflowOf,
 } from "../../features/agents/owner-attestation";
+import { compactAt } from "../../features/agents/compact-at";
 import { type AgentKey, pubkeyOf } from "../../features/agents/membership";
 import { sessionPrompts } from "../../features/agents/session-prompts";
 import { standaloneSessions } from "../../features/agents/standalone-sessions";
@@ -86,6 +87,9 @@ export type Config = Readonly<{
   workspace: string;
   /** Whether each thread is its own conversation, or the whole channel is one. */
   scope: Scope;
+  /** The context size, in tokens, its conversations compact at; unset is
+   * Pi's own. This device's only. */
+  compactAt?: string;
 }>;
 export const DEFAULT_CONFIG: Config = Object.freeze({
   provider: "",
@@ -1220,6 +1224,9 @@ export class PiRuntime {
       provider: entry.config.provider,
       model: entry.config.model,
       thinking: entry.config.effort,
+      ...(compactAt(entry.config.compactAt) && {
+        compactAt: compactAt(entry.config.compactAt),
+      }),
       // Apart, so a request that steers a working run changes only these.
       pick: { model, thinking: effort },
       cwd: workspace,

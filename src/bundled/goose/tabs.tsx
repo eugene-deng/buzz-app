@@ -15,6 +15,8 @@ import { TranscriptPanel } from "../../features/agents/TranscriptPanel";
 import { AgentSaveButton } from "../../features/agents/AgentSaveButton";
 import { AgentInstructions } from "../../features/agents/AgentInstructions";
 import { AISettings, runsOnDetails } from "../../features/agents/AISettings";
+import { CompactionSelect } from "../../features/agents/Compaction";
+import { withCompactAt } from "../../features/agents/compact-at";
 import {
   candidatesFor,
   offRecommended,
@@ -1426,6 +1428,12 @@ export function createTabs({
               ) : (
                 manual
               )}
+              <CompactionSelect
+                value={draft.compactAt}
+                description="Goose compacts at this size, or sooner at its own limit."
+                disabled={saving}
+                onChange={(value) => setDraft(withCompactAt(draft, value))}
+              />
             </SettingsGroup>
             <AgentInstructions
               value={draft.instructions}

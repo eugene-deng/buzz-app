@@ -30,6 +30,8 @@ import { AgentInstructions } from "../../features/agents/AgentInstructions";
 import { CreateModelChoices } from "../../features/agents/CreateModelChoices";
 import { ModelPicker } from "../../features/agents/ModelPicker";
 import { AISettings, runsOnDetails } from "../../features/agents/AISettings";
+import { CompactionSelect } from "../../features/agents/Compaction";
+import { withCompactAt } from "../../features/agents/compact-at";
 import {
   candidatesFor,
   followRecommended,
@@ -1489,6 +1491,12 @@ export function createTabs(
                   {customization}
                 </>
               )}
+              <CompactionSelect
+                value={draft.compactAt}
+                description="Codex compacts at this size, or sooner at its own limit."
+                disabled={saving}
+                onChange={(value) => setDraft(withCompactAt(draft, value))}
+              />
             </SettingsGroup>
             <AgentInstructions
               value={draft.instructions}

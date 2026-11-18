@@ -40,6 +40,7 @@ const setup = (
     delay,
     fingerprint = (settings: Launch) =>
       JSON.stringify([settings.workspace, settings.systemPrompt]),
+    compactAt,
   }: Readonly<{
     pool?: ServerPool;
     started?: SessionsOptions["started"];
@@ -54,6 +55,8 @@ const setup = (
     fingerprint?: (settings: Launch) => string;
     /** Holds each launch, which reads the settings when asked. */
     delay?: () => Promise<void>;
+    /** The agent's compaction threshold, which its goose starts with. */
+    compactAt?: () => number | undefined;
   }> = {},
 ) => {
   const fake = fakeSpawn({
@@ -65,6 +68,9 @@ const setup = (
   const process = new AgentProcess(
     wrap ? { ...fake, spawn: wrap(fake.spawn) } : fake,
     serve ? serve(fake.serve) : fake.serve,
+    undefined,
+    undefined,
+    compactAt,
   );
   /** Another agent in the same goose. */
   const agent = (
@@ -559,6 +565,32 @@ describe("AgentSessions", () => {
       "/home/test/other",
     ]);
     expect(goose?.killed).toBe(false);
+  });
+
+  it("opens sessions in a goose started with a changed compaction threshold, stopping the old one once its turns end", async () => {
+    let limit: number | undefined;
+    const { fake, sessions, change } = setup({}, true, {
+      compactAt: () => limit,
+      fingerprint: (settings) => JSON.stringify([settings.workspace, limit]),
+    });
+    const one = sessions.deliver("a", "one", 1);
+    await vi.waitFor(() => expect(fake.geese[0]?.turns).toHaveLength(1));
+    expect(fake.geese[0]?.env).not.toHaveProperty(
+      "GOOSE_AUTO_COMPACT_TOKEN_LIMIT",
+    );
+    limit = 200000;
+    change({});
+    const other = sessions.deliver("b", "other", 2);
+    await vi.waitFor(() => expect(fake.geese[1]?.turns).toHaveLength(1));
+    expect(fake.geese[1]?.env.GOOSE_AUTO_COMPACT_TOKEN_LIMIT).toBe("200000");
+    // The turn already running keeps its goose until it ends.
+    expect(fake.geese[0]?.killed).toBe(false);
+    fake.geese[0]?.turns[0]?.finish();
+    await expect(one).resolves.toMatchObject({ ok: true });
+    await vi.waitFor(() => expect(fake.geese[0]?.killed).toBe(true));
+    expect(fake.geese[1]?.killed).toBe(false);
+    fake.geese[1]?.turns[0]?.finish();
+    await expect(other).resolves.toMatchObject({ ok: true });
   });
 
   it("reports a failed immediate compaction", async () => {
