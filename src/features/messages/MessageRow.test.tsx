@@ -1603,7 +1603,6 @@ it.each(["peer", "own"] as const)(
               "Copy link",
               "Delete message",
               "Follow thread",
-              "Report",
             ]
           : [
               "Mark unread",

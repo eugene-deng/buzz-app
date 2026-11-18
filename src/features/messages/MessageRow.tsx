@@ -616,7 +616,10 @@ function MessageRowContent({
     () => keepMounted && (() => keepMounted(row.id)),
     [keepMounted, row.id],
   );
+  // Reporting yourself is not a real action. Messages from the viewer's agents
+  // keep Report; that is a separate product decision.
   const report =
+    row.authorId !== viewer &&
     !row.membership &&
     !row.huddle &&
     (!row.delivery || ["accepted", "seen"].includes(row.delivery))
