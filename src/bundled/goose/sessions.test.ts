@@ -1541,3 +1541,23 @@ it.each(["startup", "provider"] as const)(
     sessions.dispose();
   },
 );
+
+it("stops a goose replaced by a compaction change when retired", async () => {
+  const fake = fakeSpawn();
+  let limit: number | undefined;
+  const process = new AgentProcess(
+    fake,
+    fake.serve,
+    undefined,
+    undefined,
+    () => limit,
+  );
+  await process.get();
+  limit = 200000;
+  await process.get();
+  expect(fake.geese).toHaveLength(2);
+  const shutdown = tracked(process.shutdown());
+  await flush(30);
+  expect(fake.geese.map((goose) => goose.killed)).toEqual([true, true]);
+  await shutdown.work;
+});
