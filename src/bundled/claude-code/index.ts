@@ -15,12 +15,10 @@ import { ClaudeLogoIcon } from "../../shared/design-system/icons";
 import { claudeRun, TYPE_ID } from "./run";
 import {
   followRecommended,
-  onRecommended,
   recommendedRun,
 } from "../../features/agents/recommended";
 import type { AgentHandle } from "../../features/agents/service";
 import { ClaudeDefaults } from "./defaults";
-import { readModelSettings } from "../../features/agents/model-settings";
 import { ClaudeRuntime, type Config, config, DEFAULT_CONFIG } from "./runtime";
 import { ClaudeSetup, withScript } from "./setup";
 import { createTabs } from "./tabs";
@@ -221,8 +219,8 @@ export const apply: PluginModule["apply"] = (ctx) => {
     description:
       "Claude on this computer. Each thread it is mentioned in is one continuing session.",
     defaults: () => ({ config: DEFAULT_CONFIG }),
-    readModelSettings: (saved) =>
-      readModelSettings(config(saved), { recommended: onRecommended(saved) }),
+    readModelSettings: (saved, context) =>
+      providerDefaults.readModelSettings(saved, context),
     Create,
     CreateAction,
     CreateConfiguration,
@@ -321,10 +319,11 @@ export const apply: PluginModule["apply"] = (ctx) => {
         );
         return runtime
           .conversations(key)
-          .map(({ key, channelId, root, at }) => {
+          .map(({ key, channelId, root, community, at }) => {
             const working = busy.get(key);
             return {
               channelId,
+              ...(community ? { community } : {}),
               ...(root && { root }),
               at,
               ...(working !== undefined && {

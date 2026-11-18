@@ -1590,18 +1590,20 @@ export function serve({
             { ownership: { kind: "ownerless" } },
             context,
           );
-          // Recorded before it has the turn, so a host that stops before it
-          // answers leaves the next one the conversation to find the turn in,
-          // by its request, when it is asked again.
-          await harness.commit(async (tx) => {
-            const places = await tx.doc(Places);
-            places[key] = {
-              conversation: conversation.id,
-              context: tools,
-              seen: 0,
-            };
-          }, context);
         }
+        // Tools must recover at this source even if the host stops after
+        // acceptance, before the history watermark can advance.
+        await harness.commit(async (tx) => {
+          const places = await tx.doc(Places);
+          places[key] = {
+            conversation: conversation.id,
+            context: tools,
+            seen:
+              places[key]?.conversation === conversation.id
+                ? places[key].seen
+                : 0,
+          };
+        }, context);
         opened.conversations.add(conversation.id);
         opened.contexts.set(conversation.id, tools);
         const { busy } = await watch(opened, conversation.id);
@@ -1663,6 +1665,10 @@ export function serve({
     async unfinished({ agent }) {
       const opened = await agentOf(agent);
       const { submissions } = await opened.harness.inspect(context);
+      const places = (await opened.harness.snapshot(Places, context)) ?? {};
+      const keys = new Map(
+        Object.entries(places).map(([key, place]) => [place.conversation, key]),
+      );
       const replies = (await opened.harness.snapshot(Replies, context)) ?? {};
       return {
         submissions: submissions.flatMap(
@@ -1673,6 +1679,9 @@ export function serve({
                   {
                     submission: id,
                     conversation: conversationId,
+                    ...(keys.has(conversationId)
+                      ? { key: keys.get(conversationId) }
+                      : {}),
                     request: requestId,
                     ...(replies[requestId]
                       ? { reply: replies[requestId] }

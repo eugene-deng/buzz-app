@@ -1,3 +1,7 @@
+import {
+  sessionScope,
+  type SessionScope,
+} from "../../features/agent-harness/session-scope";
 import { PRESET } from "../../features/agents/recommended";
 
 export type Config = {
@@ -7,7 +11,7 @@ export type Config = {
   effort: string;
   instructions: string;
   workspace: string;
-  scope: "thread" | "channel";
+  scope: SessionScope;
   /** Leaves Codex's Apps and plugins features to its own configuration
    * instead of turning them off. This device's only, as Apps follow its
    * Codex sign-in; never for protected agents. */
@@ -26,6 +30,21 @@ export type Model = {
 /** Buzz owns model preferences; an unset choice follows Codex's recommendation. */
 export function resolveModel(selected: string, models: readonly Model[]) {
   return selected || models.find((model) => model.isDefault)?.model;
+}
+/** A turn uses the first supported choice, then the selected model's default. */
+export function resolveEffort(
+  model: Model,
+  ...choices: (string | undefined)[]
+) {
+  return (
+    choices.find(
+      (choice) =>
+        choice &&
+        model.supportedReasoningEfforts.some(
+          (level) => level.reasoningEffort === choice,
+        ),
+    ) ?? model.defaultReasoningEffort
+  );
 }
 export const defaults: Config = {
   model: "",
@@ -49,7 +68,7 @@ export function config(raw: unknown): Config {
       typeof value.workspace === "string" && value.workspace.trim()
         ? value.workspace.trim()
         : defaults.workspace,
-    scope: value.scope === "channel" ? "channel" : "thread",
+    scope: sessionScope(value.scope),
     ...(value.apps === true ? { apps: true as const } : {}),
     ...(value.preset === PRESET ? { preset: PRESET } : {}),
   };
