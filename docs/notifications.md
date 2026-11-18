@@ -293,8 +293,8 @@ and exit under an isolated packaged identity. First permission, explicit
 missing-badge setup, deny/disable and legacy-banner interaction also need native
 acceptance. So does the automatic request on entering the app, on a fresh
 identity with a community and a signed bundle. An earlier unanswered run is
-done (macOS 27, isolated identity, Buzz in the background): the request
-from an arriving alert as Buzz then did): the request showed the system banner,
+done (macOS 27, isolated identity, Buzz in the background, the request sent by
+an arriving alert as Buzz then did): the request showed the system banner,
 which left the screen when Buzz quit; the status read denied while the banner
 was unanswered, after the native 60-second wait timed out and after a relaunch;
 and a second request after the relaunch returned denied at once with no banner.
