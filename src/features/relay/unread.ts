@@ -550,8 +550,10 @@ export function createUnread({
   const keyFor = (target: ReadTarget) =>
     `${target.channelId}:${targetKey(target)}`;
   /** Counted evidence, or a fetched parent/root kept only for structure. */
-  const structural = (id: string) => knownEvent(id) ?? lookupEvents.get(id);
-  function root(event: RelayEvent): string | undefined {
+  const structural = (id: string) => events.get(id) ?? lookupEvents.get(id);
+  /** Also a held event, only to place a message a read or unread mark names. */
+  const placing = (id: string) => structural(id) ?? evidence?.(id);
+  function root(event: RelayEvent, lookup = structural): string | undefined {
     const channel = channelOf(event);
     let current = event;
     const seen = new Set<string>();
@@ -560,7 +562,7 @@ export function createUnread({
       seen.add(current.id);
       const reference = threadReference(current);
       if (!reference) return current.id;
-      const next = structural(reference.rootId);
+      const next = lookup(reference.rootId);
       if (!next || !contentKind(next) || channelOf(next) !== channel) return;
       current = next;
     }
@@ -2508,7 +2510,7 @@ export function createUnread({
     )
       throw new Error("Verified readable message evidence unavailable");
     if (
-      (target.kind === "thread" && root(event) !== target.rootId) ||
+      (target.kind === "thread" && root(event, placing) !== target.rootId) ||
       (target.kind === "message" && target.messageId !== id)
     )
       throw new Error("Message does not belong to the read target");
@@ -2974,7 +2976,7 @@ export function createUnread({
                 reads.state(),
                 targetKey(target),
                 channelId,
-                threadReference(event) ? root(event) : undefined,
+                threadReference(event) ? root(event, placing) : undefined,
               ) ?? -1) >= event.created_at
             ) {
               observed.add(id);
@@ -2992,7 +2994,7 @@ export function createUnread({
                   state,
                   targetKey(target),
                   channelId,
-                  threadReference(event) ? root(event) : undefined,
+                  threadReference(event) ? root(event, placing) : undefined,
                 ),
             );
             observed.add(id);
@@ -3134,8 +3136,8 @@ export function createUnread({
               key: `msg:${row.id}`,
               timestamp: row.created_at,
               channelId,
-              ...(threadReference(row) && root(row)
-                ? { rootId: root(row) }
+              ...(threadReference(row) && root(row, placing)
+                ? { rootId: root(row, placing) }
                 : {}),
             })),
           remaining ? undefined : messageForceKey(channelId),
@@ -3151,7 +3153,7 @@ export function createUnread({
     },
     async markCapturedMessagesRead(messageIds) {
       const selected = [...new Set(messageIds)].map((id) => {
-        const event = events.get(id);
+        const event = knownEvent(id);
         const channelId = event && channelOf(event);
         if (!channelId)
           throw new Error("Verified readable message evidence unavailable");
@@ -3186,7 +3188,7 @@ export function createUnread({
         !closed &&
         channelValid.get(channelId)?.() &&
         (visits.get(channelId) ?? 0) === visit.get(channelId) &&
-        events.get(id) === event &&
+        knownEvent(id) === event &&
         !deleted(event) &&
         channelOf(event) === channelId;
       const valid = () => generation === epoch && selected.every(messageValid);
@@ -3215,8 +3217,8 @@ export function createUnread({
               key: `msg:${id}`,
               timestamp: event.created_at,
               channelId,
-              ...(threadReference(event) && root(event)
-                ? { rootId: root(event) }
+              ...(threadReference(event) && root(event, placing)
+                ? { rootId: root(event, placing) }
                 : {}),
             })),
           undefined,
@@ -3358,7 +3360,7 @@ export function createUnread({
       const channelValid = channelIntentValid(channelId);
       const valid = () =>
         channelValid() &&
-        events.get(rootId) === selected &&
+        knownEvent(rootId) === selected &&
         !deleted(selected) &&
         root(selected) === rootId &&
         rows.every(
