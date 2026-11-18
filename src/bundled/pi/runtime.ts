@@ -28,7 +28,11 @@ import {
   READ_TIMEOUT_MS,
 } from "../../features/agent-harness/core-memory";
 import { readAuthorNames } from "../../features/agent-harness/author-names";
-import { readProject } from "../../features/agent-harness/project";
+import {
+  readProject,
+  worksElsewhere,
+} from "../../features/agent-harness/project";
+import { sectionsOf } from "../../features/agent-harness/sections/compose";
 import {
   mentionAuthority,
   workflowOf,
@@ -667,7 +671,7 @@ export class PiRuntime {
         ...(acknowledged ? { acknowledged } : {}),
         ...(superseded ? { superseded } : {}),
       });
-      const picked = await this.turnOf(entry, agent.key, model, effort);
+      const picked = await this.turnOf(entry, agent.key, model, effort, key);
       const text = await prompt();
       this.live(entry, agent.key);
       if (interrupted || (wake && current && !current())) return;
@@ -1213,6 +1217,8 @@ export class PiRuntime {
     agent: AgentKey,
     model?: string,
     effort?: string,
+    /** The conversation the turn is in; none for a one-off turn. */
+    conversation?: string,
   ) {
     const { workspace, instructions, scope } = entry.config;
     const memory = await this.core(agent);
@@ -1232,7 +1238,9 @@ export class PiRuntime {
           : {}),
         instructions,
         team: entry.team,
-        sections: entry.handle?.promptSections?.(),
+        // A conversation's prompt has the sections of the plugin that
+        // manages it.
+        sections: sectionsOf(entry.handle, conversation),
       }),
       ...(memory === undefined
         ? {}
@@ -1308,6 +1316,10 @@ export class PiRuntime {
     const reading = solo
       ? readProject(
           canvas && owner ? () => canvas(channelId, owner) : undefined,
+          worksElsewhere(
+            undefined,
+            this.agents.get(agent.key)?.handle?.promptSections?.(channelId),
+          ),
         )
       : Promise.resolve(undefined);
     let earlier: readonly EventData[] = [];
