@@ -657,28 +657,27 @@ export class PiRuntime {
         agent: agent.key,
         key,
       });
+      const noteRoot = key === channel ? undefined : root;
+      let notes: readonly string[] = [];
+      const turn = async () =>
+        turnPrompt({
+          ...(await this.turn(
+            agent,
+            event,
+            channel,
+            key,
+            topLevel,
+            seen,
+            solo,
+          )),
+          agent: agent.key,
+          channelLevel: topLevel && !solo,
+          ...(wake
+            ? { wake: { ...wake, text: (await wakeText?.()) ?? wake.text } }
+            : {}),
+        });
       const prompt = async () =>
-        this.review(
-          entry,
-          turnPrompt({
-            ...(await this.turn(
-              agent,
-              event,
-              channel,
-              key,
-              topLevel,
-              seen,
-              solo,
-            )),
-            agent: agent.key,
-            channelLevel: topLevel && !solo,
-            ...(wake
-              ? { wake: { ...wake, text: (await wakeText?.()) ?? wake.text } }
-              : {}),
-          }),
-          channel,
-          key === channel ? undefined : root,
-        );
+        this.review(entry, await turn(), notes, channel, noteRoot);
       // A conversation's tools default to its thread; a conversation shared
       // by several threads is told which to reply in instead.
       const context: Context = topLevel
@@ -706,9 +705,13 @@ export class PiRuntime {
         ...(superseded ? { superseded } : {}),
       });
       const picked = await this.turnOf(entry, agent.key, model, effort, key);
-      const text = await prompt();
+      const turned = await turn();
       this.live(entry, agent.key);
       if (interrupted || (wake && current && !current())) return;
+      // Plugins' notes wait until the turn is handed over, so one that fails
+      // or is cancelled before then leaves them for the next.
+      notes = agent.notes?.(channel, noteRoot) ?? [];
+      const text = this.review(entry, turned, notes, channel, noteRoot);
       submitted = await this.deliver(
         entry,
         agent.key,
@@ -726,6 +729,8 @@ export class PiRuntime {
         },
         () => !interrupted && (!wake || !current || current()),
       );
+      // Pi answered that it did not take the turn.
+      if (submitted === false) agent.restoreNotes?.(channel, notes, noteRoot);
       if (!submitted) return;
       if (submitted.session !== undefined)
         void this.prompts(agent.key).save(
@@ -1301,16 +1306,18 @@ export class PiRuntime {
     };
   }
 
-  /** `text` with the Buzz tools' end-of-turn note for its conversation, when
-   * they have one. */
+  /** `text` with plugins' notes and the Buzz tools' end-of-turn note for its
+   * conversation, when they have one. */
   private review(
     entry: Entry,
     text: string,
+    notes: readonly string[],
     channelId: string,
     root: string | undefined,
   ) {
-    const note = turnNote(entry.handle, channelId, root);
-    return note ? `${text}\n\n${note}` : text;
+    return [text, ...notes, turnNote(entry.handle, channelId, root)]
+      .filter(Boolean)
+      .join("\n\n");
   }
 
   /** Says in the thread that a turn failed, so nobody waits on it. Tells the
