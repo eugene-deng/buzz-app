@@ -1,0 +1,1 @@
+Evidence for block/buzz-app#3867 (AIDA-2729): live macOS Blox runs of the Codex to Claude harness switch. main-* = buzz-app main 1b1351326 (fails with thread not found). branch-* = PR head 1d8211904 (save succeeds).
