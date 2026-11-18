@@ -162,8 +162,8 @@ export function useSearchSettings({
       {
         ...controlDestination(
           key,
-          entry.section,
           entry.label,
+          entry.section,
           entry.id === "mode" && appearance ? (
             <ColorMode appearance={appearance} />
           ) : notifications && entry.id !== "mode" ? (
@@ -248,15 +248,15 @@ export function useSearchSettings({
             return [
               controlDestination(
                 key,
-                category,
                 plugin.manifest.name,
+                category,
                 <>
                   {plugin.manifest.id === "buzz.channels" ? (
                     <PreferenceRow
                       variant="search"
                       icon={<SquaresFourIcon size={21} />}
-                      title={category}
-                      subtitle={plugin.manifest.name}
+                      title={plugin.manifest.name}
+                      subtitle={category}
                       trailing={
                         <span className="text-body-sm text-subtle">
                           Required
@@ -267,8 +267,8 @@ export function useSearchSettings({
                     <SwitchPreferenceRow
                       variant="search"
                       icon={<SquaresFourIcon size={21} />}
-                      label={category}
-                      description={plugin.manifest.name}
+                      label={plugin.manifest.name}
+                      description={category}
                       aria-label={`Enable ${plugin.manifest.name}`}
                       checked={plugin.enabled}
                       readOnly={blocked}
@@ -340,8 +340,8 @@ function ColorMode({ appearance }: { appearance: AppServices["appearance"] }) {
       <PreferenceRow
         variant="search"
         icon={<GearIcon size={21} />}
-        title="Appearance"
-        subtitle="Color mode"
+        title="Color mode"
+        subtitle="Appearance"
         trailing={
           <Select
             label="Color mode"
@@ -396,12 +396,12 @@ function NotificationPreference({
       <SwitchPreferenceRow
         variant="search"
         icon={<GearIcon size={21} />}
-        label="Notifications"
+        label={entry.label}
         aria-label={entry.label}
         description={
           state.developmentPaused
-            ? entry.label + " · Paused in this development build"
-            : entry.label
+            ? entry.section + " · Paused in this development build"
+            : entry.section
         }
         checked={state.preferences[key]}
         disabled={state.developmentPaused || !state.preferences.enabled}

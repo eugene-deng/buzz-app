@@ -267,7 +267,7 @@ it("announces selected rows and lets arrows leave inline switches", () => {
       (child) => child.getAttribute("role") === "rowgroup",
     ),
   ).toBe(true);
-  const row = screen.getByRole("row", { name: "Notifications — Sound" });
+  const row = screen.getByRole("row", { name: "Sound — Notifications" });
   expect(row).toHaveAttribute("aria-selected", "true");
   const input = screen.getByRole("combobox", { name: "Search Buzz" });
   expect(input).toHaveAttribute("aria-activedescendant", row.id);
@@ -357,8 +357,8 @@ it("ignores portaled control clicks while retaining row navigation", () => {
           destinations: [
             {
               key: "color",
-              label: "Appearance",
-              detail: "Color mode",
+              label: "Color mode",
+              detail: "Appearance",
               icon: GearIcon,
               run,
               content: (
@@ -505,7 +505,7 @@ it("leads plugin switches with Manage plugins and notification switches with the
       .map((group) => group.getAttribute("aria-label")),
   ).toEqual(["Settings", "Plugins"]);
   expect(rows("Settings")).toEqual(["Manage plugins — Plugins"]);
-  expect(rows("Plugins")[0]).toBe("Other — Profiles");
+  expect(rows("Plugins")[0]).toBe("Profiles — Other");
   fireEvent.keyDown(screen.getByRole("combobox", { name: "Search Buzz" }), {
     key: "Enter",
   });
@@ -514,8 +514,8 @@ it("leads plugin switches with Manage plugins and notification switches with the
   view.rerender(<Palette query="notifications" />);
   expect(rows("Settings")).toEqual([
     "Notifications — Buzz",
-    "Notifications — Sound",
-    "Notifications — Notify while viewing",
+    "Sound — Notifications",
+    "Notify while viewing — Notifications",
   ]);
 });
 
